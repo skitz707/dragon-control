@@ -1,12 +1,12 @@
 div#mainContainer {
 	text-align: center;
 	font-family: Arial, sans-serif;
-	width: 1700px;
-	height: 900px;
+	width: 1850px;
 }
 
 .playerCard {
 	width: 260px;
+	height: 350px;
 	font-size: 20pt;
 	float: left;
 	margin: 15px;
@@ -20,6 +20,7 @@ div#mainContainer {
 
 .adminPlayerCard {
 	width: 160px;
+	height: 370px;
 	font-size: 14pt;
 	float: left;
 	margin: 5px;
