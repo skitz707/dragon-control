@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// heal.php - Take heal/update HP.
+// newBattle.php - Updates set inititative.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// December 1st, 2017
+// December 21st, 2017
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -23,8 +23,6 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
-require_once("classes/DDPlayer.php");
-require_once("classes/DDEnemy.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -34,26 +32,21 @@ require_once("classes/DDEnemy.php");
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
 $battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
-$currentRecord = $database->getDatabaseRecord("dragons.battleDetail", array("entryId"=>$_POST['id']));
+$i = 1;
 
-// find max hp
-if ($currentRecord['entryType'] == "P") {
-	$playerRecord = $database->getDatabaseRecord("dragons.players", array("playerId"=>$currentRecord['associatedId']));
-	$maxHP = $playerRecord['maxHP'];
-} else if ($currentRecord['entryType'] == "M") {
-	$monsterRecord = $database->getDatabaseRecord("dragons.monsters", array("entryId"=>$currentRecord['associatedId']));
-	$maxHP = $monsterRecord['health'];
-}
-
-$newHP = $currentRecord['currentHP'] + $_POST['heal'];
-
-if ($newHP > $maxHP) {
-	$newHP = $maxHP;
-}
-
-$updateData['currentHP'] = $newHP;
+while ($i <= $_POST['quantity']) {
+	$monsterRecord = $database->getDatabaseRecord("dragons.monsters", array("entryId"=>$_POST['monsterId']));
 	
-$database->updateDatabaseRecord("dragons.battleDetail", $updateData, array("entryId"=>$_POST['id']));
+	$battleData['battleId'] = $battleId;
+	$battleData['entryType'] = "M";
+	$battleData['associatedId'] = $_POST['monsterId'];
+	$battleData['currentHP'] = $monsterRecord['health'];
+	$battleData['initiative'] = 0;
+	
+	$database->insertDatabaseRecord("dragons.battleDetail", $battleData);
+	
+	$i++;
+}
 
 header("Location: DDBattleManager.php");
 //-------------------------------------------------------------------------------------------

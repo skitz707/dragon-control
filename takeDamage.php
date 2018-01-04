@@ -33,28 +33,17 @@ require_once("classes/DDEnemy.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-if ($_GET['type'] == "enemy") {
-	$enemyRecord = $database->getDatabaseRecord("dragons.enemies", array("enemyId"=>$_POST['id']));
-	$newHP = $enemyRecord['currentHP'] - $_POST['damage'];
-	
-	if ($newHP < 0) {
-		$newHP = 0;
-		$updateData['statusFlag'] = 'D';
-	}
-	
-	$updateData['currentHP'] = $newHP;
-	
-	$database->updateDatabaseRecord("dragons.enemies", $updateData, array("enemyId"=>$_POST['id']));
-} else if ($_GET['type'] == "player") {
-	$playerRecord = $database->getDatabaseRecord("dragons.players", array("playerId"=>$_POST['id']));
-	$newHP = $playerRecord['currentHP'] - $_POST['damage'];
-	
-	if ($newHP < 0) {
-		$newHP = 0;
-	}
-	
-	$database->updateDatabaseRecord("dragons.players", array("currentHP"=>$newHP), array("playerId"=>$_POST['id']));
+$currentRecord = $database->getDatabaseRecord("dragons.battleDetail", array("entryId"=>$_POST['id']));
+
+$newHP = $currentRecord['currentHP'] - $_POST['damage'];
+
+if ($newHP < 0) {
+	$newHP = 0;
 }
+
+$updateData['currentHP'] = $newHP;
+	
+$database->updateDatabaseRecord("dragons.battleDetail", $updateData, array("entryId"=>$_POST['id']));
 
 header("Location: DDBattleManager.php");
 //-------------------------------------------------------------------------------------------

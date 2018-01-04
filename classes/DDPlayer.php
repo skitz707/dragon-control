@@ -23,6 +23,7 @@ include_once("classes/DDObject.php");
 class DDPlayer extends DDObject {
 	// class properties
 	protected $playerId;
+	protected $battleDetailId;
 	protected $playerName;
 	protected $playerRace;
 	protected $playerClass;
@@ -57,7 +58,6 @@ class DDPlayer extends DDObject {
 		$this->playerLevel = $playerRecord['playerLevel'];
 		$this->playerXP = $playerRecord['playerXP'];
 		$this->maxHP = $playerRecord['maxHP'];
-		$this->currentHP = $playerRecord['currentHP'];
 		$this->armorClass = $playerRecord['armorClass'];
 		$this->strength = $playerRecord['strength'];
 		$this->dexterity = $playerRecord['dexterity'];
@@ -65,11 +65,31 @@ class DDPlayer extends DDObject {
 		$this->intelligence = $playerRecord['intelligence'];
 		$this->wisdom = $playerRecord['wisdom'];
 		$this->charisma = $playerRecord['charisma'];
-		$this->initiative = $playerRecord['initiative'];
 		$this->imageLocation = $playerRecord['imageLocation'];
 		$this->statusFlag = $playerRecord['statusFlag'];
 		$this->lastChange = $playerRecord['lastChange'];
 		$this->creationDate = $playerRecord['creationDate'];
+		
+		// check for hp override
+		$battleCount = $this->database->getUniqueCount("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+		
+		if (!isset($this->currentHP)) {
+			$this->currentHP = $playerRecord['currentHP'];
+		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// load player by battle detail id
+	//------------------------------------------------------------------------
+	public function loadPlayerByBattleDetailId($battleDetailId) {
+		$battleRecord = $this->database->getDatabaseRecord("dragons.battleDetail", array("entryId"=>$battleDetailId));
+		$this->battleDetailId = $battleDetailId;
+		$this->initiative = $battleRecord['initiative'];
+		$this->currentHP = $battleRecord['currentHP'];
+		
+		$this->loadPlayerById($battleRecord['associatedId']);
 	}
 	//------------------------------------------------------------------------
 	
@@ -111,6 +131,12 @@ class DDPlayer extends DDObject {
 			$class = "adminPlayerCard";
 		}
 		
+		if ($this->battleDetailId > 0) {
+			$playerReference = $this->battleDetailId;
+		} else {
+			$playerReference = $this->playerId;
+		}
+		
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
@@ -119,7 +145,7 @@ class DDPlayer extends DDObject {
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
-				<div class="blueButton" onClick="setInit(\'player\', ' . $this->playerId . ');">Set Init</div> <div class="redButton" onClick="takeDamage(\'player\', ' . $this->playerId . ');">Take Damage</div> <div class="greenButton" onClick="heal(\'player\', ' . $this->playerId . ');">Heal</div>
+				<div class="blueButton" onClick="setInit(\'P\', ' . $playerReference . ');">Set Init</div> <div class="redButton" onClick="takeDamage(\'P\', ' . $playerReference . ');">Take Damage</div> <div class="greenButton" onClick="heal(\'P\', ' . $playerReference . ');">Heal</div>
 			</div>
 		';
 	}

@@ -23,8 +23,9 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
+require_once("classes/DDBattle.php");
 require_once("classes/DDPlayer.php");
-require_once("classes/DDEnemy.php");
+require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -33,33 +34,32 @@ require_once("classes/DDEnemy.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
+$battle = new DDBattle($database);
 $player = new DDPlayer($database);
-$enemy = new DDEnemy($database);
-$selectStmt = "select playerId as characterId, 'P' as characterType, initiative from dragons.players where statusFlag = 'A' 
-			   union 
-			   select enemyId as characterId, 'E' as characterType, initiative from dragons.enemies where statusFlag = 'A'
-					order by initiative desc";
+$monster = new DDMonster($database);
+
+// check for active battle
+$battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+$battleRecord = $database->getDatabaseRecord("dragons.battleHeader", array("entryId"=>$battleId));
+
+if ($battleRecord['entryId'] > 0) {
+	$battle->loadBattleById($battleRecord['entryId']);
+	$inBattle = true;
+	$battleOrder = $battle->getBattleOrder();
+}
 					
 $pageTitle = "DD Battle Tracker";
 
 require_once("includes/header.php");
 
-if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
-	if (!$selectHandle->execute()) {
-		var_dump($database->databaseConnection->errorInfo());
+foreach ($battleOrder as $unitInBattle) {
+	if ($unitInBattle['type'] == "P") {
+		$player->loadPlayerByBattleDetailId($unitInBattle['detailId']);
+		$player->printPlayerCard();
+	} else if ($unitInBattle['type'] == "M") {
+		$monster->loadMonsterByBattleDetailId($unitInBattle['detailId']);
+		$monster->printMonsterCard();
 	}
-	
-	while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-		if ($data['characterType'] == "P") {
-			$player->loadPlayerById($data['characterId']);
-			$player->printPlayerCard();
-		} else if ($data['characterType'] == "E") {
-			$enemy->loadEnemyById($data['characterId']);
-			$enemy->printEnemyCard();
-		}
-	}
-} else {
-	var_dump($database->databaseConnection->errorInfo());
 }
 
 ?>
