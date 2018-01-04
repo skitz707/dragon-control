@@ -33,11 +33,9 @@ require_once("classes/DDEnemy.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-if ($_GET['type'] == "enemy") {
-	$database->updateDatabaseRecord("dragons.enemies", array("initiative"=>$_POST['initiative']), array("enemyId"=>$_POST['id']));;
-} else if ($_GET['type'] == "player") {
-	$database->updateDatabaseRecord("dragons.players", array("initiative"=>$_POST['initiative']), array("playerId"=>$_POST['id']));
-}
+$database->updateDatabaseRecord("dragons.battleDetail", array("initiative"=>$_POST['initiative']), array("entryId"=>$_POST['id']));
+
+
 
 header("Location: DDBattleManager.php");
 //-------------------------------------------------------------------------------------------

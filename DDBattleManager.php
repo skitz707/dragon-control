@@ -23,8 +23,9 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
+require_once("classes/DDBattle.php");
 require_once("classes/DDPlayer.php");
-require_once("classes/DDEnemy.php");
+require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -34,37 +35,94 @@ require_once("classes/DDEnemy.php");
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
 $player = new DDPlayer($database);
-$enemy = new DDEnemy($database);
-$selectStmt = "select playerId as characterId, 'P' as characterType, initiative from dragons.players where statusFlag = 'A' 
-			   union 
-			   select enemyId as characterId, 'E' as characterType, initiative from dragons.enemies where statusFlag = 'A'
-					order by initiative desc";
-					
+$monster = new DDMonster($database);
+$battle = new DDBattle($database);					
 $pageTitle = "DD Battle Manager";
+
+// check for active battle
+$battleCount = $database->getUniqueCount("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+
+if ($battleCount > 0) {
+	$inBattle = true;
+	$battleStatus = "In-Battle";
+	$battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+	$battle->loadBattleById($battleId);
+	$battleOrder = $battle->getBattleOrder();
+} else {
+	$inBattle = false;
+	$battleStatus = "Open Exploration";
+	
+	// get players array
+}
+
+// calculate battle difficulty
+if ($inBattle) {
+	$battleDifficulty = $battle->getBattleDifficulty();
+} else {
+	$battleDifficulty = "N/A";
+}
 
 require_once("includes/header.php");
 
-if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
-	if (!$selectHandle->execute()) {
-		var_dump($database->databaseConnection->errorInfo());
+?>
+<div class="battleHeader">
+	Battle Status: <span style="font-weight: bold;"><?php echo $battleStatus; ?></span> | Difficulty Rating: <span style="font-weight: bold;"> <?php echo $battleDifficulty ?></span> | <div class="blueButton" onClick="createBattle();">New Battle</div> <div class="redButton" onClick="addMonsters();">Add Monster</div>
+</div>
+<?php
+
+foreach ($battleOrder as $unitInBattle) {
+	if ($unitInBattle['type'] == "P") {
+		$player->loadPlayerByBattleDetailId($unitInBattle['detailId']);
+		$player->printAdminPlayerCard();
+	} else if ($unitInBattle['type'] == "M") {
+		$monster->loadMonsterByBattleDetailId($unitInBattle['detailId']);
+		$monster->printAdminMonsterCard();
 	}
-	
-	while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-		if ($data['characterType'] == "P") {
-			$player->loadPlayerById($data['characterId']);
-			$player->printAdminPlayerCard();
-		} else if ($data['characterType'] == "E") {
-			$enemy->loadEnemyById($data['characterId']);
-			$enemy->printAdminEnemyCard();
-		}
-	}
-} else {
-	var_dump($database->databaseConnection->errorInfo());
 }
 
 ?>
 <div id="popUpBox" title="Enter Values"></div>
 <script>
+//----------------------------------------------------------------------------
+// create battle
+//----------------------------------------------------------------------------
+function createBattle() {
+	inBattle = <?php if ($inBattle) { echo "true"; } else { echo "false"; } ?>;
+	
+	//if (!inBattle) {
+		document.location.href = "newBattle.php";
+	//}
+}
+//----------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------
+// add monsters
+//----------------------------------------------------------------------------
+function addMonsters() {
+	inBattle = <?php if ($inBattle) { echo "true"; } else { echo "false"; } ?>;
+	divObj = document.getElementById('popUpBox');
+	
+	if (inBattle) {
+		divHTML = "";
+		divHTML += '<form method="post" action="addMonster.php" id="monsterForm">';
+		divHTML += 'Monster: <?php printMonsterList($database); ?> Qty: <input type="text" size="2" id="quantity" name="quantity" /> <div class="redButton" onClick="document.getElementById(\'monsterForm\').submit();">Add</div>';
+		divHTML += '</form>';
+		
+		divHTML = divHTML.replace(/null/g, '');
+		divObj.innerHTML = divHTML;
+		
+		$(function() {
+			$( "#popUpBox" ).dialog({
+				width: 550,
+				height: 150
+			});
+		});
+	}
+}
+//----------------------------------------------------------------------------
+
+
 //----------------------------------------------------------------------------
 // set initiative
 //----------------------------------------------------------------------------
@@ -136,7 +194,33 @@ function heal(type, id) {
 }
 //----------------------------------------------------------------------------
 </script>
+</div>
 <?php
 
 require_once("includes/footer.php");
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// print monster list
+//-------------------------------------------------------------------------------------------
+function printMonsterList($database) {
+	$selectStmt = "select * from dragons.monsters order by monsterName";
+	
+	echo '<select id="monsterId" name="monsterId">';
+	
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute()) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+			echo '<option value="' . $data['entryId'] . '">' . str_replace("'", "\'", $data['monsterName']) . '</option>';
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+	
+	echo '</select>';
+}
 //-------------------------------------------------------------------------------------------
