@@ -17,7 +17,7 @@ div#mainContent {
 	width: 99%;
 }
 
-.playerCard {
+.characterCard {
 	width: 260px;
 	height: 350px;
 	font-size: 20pt;
@@ -26,12 +26,12 @@ div#mainContent {
 	padding: 2px;
 }
 
-.playerName {
+.characterName {
 	font-size: 24pt;
 	font-weight: bold;
 }
 
-.adminPlayerCard {
+.adminCharacterCard {
 	width: 200px;
 	height: 370px;
 	font-size: 14pt;
@@ -40,7 +40,7 @@ div#mainContent {
 	padding: 2px;
 }
 
-.adminPlayerName {
+.adminCharacterName {
 	font-size: 16pt;
 	font-weight: bold;
 }

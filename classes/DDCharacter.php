@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// DDPlayer.php
+// DDCharacter.php
 // Written by: Michael C. Szczepanik
 // November 19th, 2017
-// DDPlayer() class definition.
+// DDCharacter() class definition.
 //
 // Change Log:
 //-------------------------------------------------------------------------------------------
@@ -18,17 +18,17 @@ include_once("classes/DDObject.php");
 
 
 //-------------------------------------------------------------------------------------------
-// database class definition
+// character class definition
 //-------------------------------------------------------------------------------------------
-class DDPlayer extends DDObject {
+class DDCharacter extends DDObject {
 	// class properties
-	protected $playerId;
+	protected $characterId;
 	protected $battleDetailId;
-	protected $playerName;
-	protected $playerRace;
-	protected $playerClass;
-	protected $playerLevel;
-	protected $playerXP;
+	protected $characterName;
+	protected $characterRace;
+	protected $characterClass;
+	protected $characterLevel;
+	protected $characterXP;
 	protected $maxHP;
 	protected $currentHP;
 	protected $armorClass;
@@ -52,29 +52,29 @@ class DDPlayer extends DDObject {
 	
 	
 	//------------------------------------------------------------------------
-	// load player by playerId
+	// load character by idd
 	//------------------------------------------------------------------------
-	public function loadPlayerById($playerId) {
-		$playerRecord = $this->database->getDatabaseRecord("dragons.players", array("playerId"=>$playerId));
+	public function loadCharacterById($characterId) {
+		$characterRecord = $this->database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
 		
-		$this->playerId = $playerId;
-		$this->playerName = $playerRecord['playerName'];
-		$this->playerRace = $playerRecord['playerRace'];
-		$this->playerClass = $playerRecord['playerClass'];
-		$this->playerLevel = $playerRecord['playerLevel'];
-		$this->playerXP = $playerRecord['playerXP'];
-		$this->maxHP = $playerRecord['maxHP'];
-		$this->armorClass = $playerRecord['armorClass'];
-		$this->strength = $playerRecord['strength'];
-		$this->dexterity = $playerRecord['dexterity'];
-		$this->constitution = $playerRecord['constitution'];
-		$this->intelligence = $playerRecord['intelligence'];
-		$this->wisdom = $playerRecord['wisdom'];
-		$this->charisma = $playerRecord['charisma'];
-		$this->imageLocation = $playerRecord['imageLocation'];
-		$this->statusFlag = $playerRecord['statusFlag'];
-		$this->lastChange = $playerRecord['lastChange'];
-		$this->creationDate = $playerRecord['creationDate'];
+		$this->characterId = $characterId;
+		$this->characterName = $characterRecord['characterName'];
+		$this->characterRace = $characterRecord['characterRace'];
+		$this->characterClass = $characterRecord['characterClass'];
+		$this->characterLevel = $characterRecord['characterLevel'];
+		$this->characterXP = $characterRecord['characterXP'];
+		$this->maxHP = $characterRecord['maxHP'];
+		$this->armorClass = $characterRecord['armorClass'];
+		$this->strength = $characterRecord['strength'];
+		$this->dexterity = $characterRecord['dexterity'];
+		$this->constitution = $characterRecord['constitution'];
+		$this->intelligence = $characterRecord['intelligence'];
+		$this->wisdom = $characterRecord['wisdom'];
+		$this->charisma = $characterRecord['charisma'];
+		$this->imageLocation = $characterRecord['imageLocation'];
+		$this->statusFlag = $characterRecord['statusFlag'];
+		$this->lastChange = $characterRecord['lastChange'];
+		$this->creationDate = $characterRecord['creationDate'];
 		
 		// calculate modifiers
 		$this->strengthModifier = $this->calculateModifier($this->strength);
@@ -88,43 +88,43 @@ class DDPlayer extends DDObject {
 		$battleCount = $this->database->getUniqueCount("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
 		
 		if (!isset($this->currentHP)) {
-			$this->currentHP = $playerRecord['currentHP'];
+			$this->currentHP = $characterRecord['currentHP'];
 		}
 	}
 	//------------------------------------------------------------------------
 	
 	
 	//------------------------------------------------------------------------
-	// load player by battle detail id
+	// load character by battle detail id
 	//------------------------------------------------------------------------
-	public function loadPlayerByBattleDetailId($battleDetailId) {
+	public function loadCharacterByBattleDetailId($battleDetailId) {
 		$battleRecord = $this->database->getDatabaseRecord("dragons.battleDetail", array("entryId"=>$battleDetailId));
 		$this->battleDetailId = $battleDetailId;
 		$this->initiative = $battleRecord['initiative'];
 		$this->currentHP = $battleRecord['currentHP'];
 		
-		$this->loadPlayerById($battleRecord['associatedId']);
+		$this->loadCharacterById($battleRecord['associatedId']);
 	}
 	//------------------------------------------------------------------------
 	
 	
 	//------------------------------------------------------------------------
-	// print player card
+	// print character card
 	//------------------------------------------------------------------------
-	public function printPlayerCard() {
-		// check if player is unconscious
+	public function printCharacterCard() {
+		// check if character is unconscious
 		if ($this->currentHP == 0) {
-			$class = "playerCard playerUnconscious";
+			$class = "characterCard characterUnconscious";
 		} else {
-			$class = "playerCard";
+			$class = "characterCard";
 		}
 		
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
-				<span class="playerName">' . $this->playerName . '</span><br />
-				<em>' . $this->playerRace . ' / ' . $this->playerClass . '</em><br />
-				AC: ' . $this->armorClass . '<br />
+				<span class="characterName">' . $this->playerName . '</span><br />
+				<em>' . $this->characterRace . ' / ' . $this->characterClass . '</em><br />
+				AC: ' . $this->characterClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
 			</div>
@@ -135,34 +135,34 @@ class DDPlayer extends DDObject {
 	
 	
 	//------------------------------------------------------------------------
-	// print player card
+	// print admin character card
 	//------------------------------------------------------------------------
-	public function printAdminPlayerCard() {
-		// check if player is unconscious
+	public function printAdminCharacterCard() {
+		// check if character is unconscious
 		if ($this->currentHP == 0) {
-			$class = "adminPlayerCard playerUnconscious";
+			$class = "adminCharacterCard characterUnconscious";
 		} else {
-			$class = "adminPlayerCard";
+			$class = "adminCharacterCard";
 		}
 		
 		if ($this->battleDetailId > 0) {
-			$playerReference = $this->battleDetailId;
+			$characterReference = $this->battleDetailId;
 		} else {
-			$playerReference = $this->playerId;
+			$characterReference = $this->characterId;
 		}
 		
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
-				<span class="adminPlayerName">' . $this->playerName . '</span><br />
-				<em>' . $this->playerRace . ' / ' . $this->playerClass . '</em><br />
+				<span class="adminCharacterName">' . $this->characterName . '</span><br />
+				<em>' . $this->characterRace . ' / ' . $this->characterClass . '</em><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '<br />
 				Str: ' . $this->strength . ' (' . $this->strengthModifier . ') | Dex: ' . $this->dexterity . ' (' . $this->dexterityModifier . ')<br />
 				Con: ' . $this->constitution . 	' (' . $this->constitutionModifier . ') | Int: ' . $this->intelligence . ' (' . $this->intelligenceModifier . ')<br />
 				Wis: ' . $this->wisdom . ' (' . $this->wisdomModifier . ') | Cha: ' . $this->charisma . ' (' . $this->charismaModifier . ')<br />
-				<div class="blueButton" onClick="setInit(\'P\', ' . $playerReference . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'P\', ' . $playerReference . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'P\', ' . $playerReference . ');">Heal</div>
+				<div class="blueButton" onClick="setInit(\'P\', ' . $characterReference . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'P\', ' . $characterReference . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'P\', ' . $characterReference . ');">Heal</div>
 			</div>
 		';
 	}

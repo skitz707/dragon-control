@@ -23,8 +23,12 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
+require_once("classes/DDSecurity.php");
+require_once("classes/DDUser.php");
+require_once("classes/DDCampaign.php");
+require_once("classes/DDQuest.php");
 require_once("classes/DDBattle.php");
-require_once("classes/DDPlayer.php");
+require_once("classes/DDCharacter.php");
 require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 
@@ -34,7 +38,9 @@ require_once("classes/DDMonster.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$player = new DDPlayer($database);
+$security = new DDSecurity($database);
+$campaign = new DDCampaign($database);
+$character = new DDCharacter($database);
 $monster = new DDMonster($database);
 $battle = new DDBattle($database);					
 $pageTitle = "DD Battle Manager";
@@ -72,8 +78,8 @@ require_once("includes/header.php");
 
 foreach ($battleOrder as $unitInBattle) {
 	if ($unitInBattle['type'] == "P") {
-		$player->loadPlayerByBattleDetailId($unitInBattle['detailId']);
-		$player->printAdminPlayerCard();
+		$character->loadCharacterByBattleDetailId($unitInBattle['detailId']);
+		$character->printAdminCharacterCard();
 	} else if ($unitInBattle['type'] == "M") {
 		$monster->loadMonsterByBattleDetailId($unitInBattle['detailId']);
 		$monster->printAdminMonsterCard();
