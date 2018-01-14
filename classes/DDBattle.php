@@ -27,6 +27,10 @@ class DDBattle extends DDObject {
 	protected $monstersArray;
 	protected $battleOrder;
 	protected $battleDifficulty;
+	protected $easyEncounter;
+	protected $mediumEncounter;
+	protected $hardEncounter;
+	protected $deadlyEncounter;
 	protected $statusFlag;
 	protected $lastChange;
 	protected $creationDate;
@@ -47,6 +51,7 @@ class DDBattle extends DDObject {
 		// load players
 		$playersStmt = "select * from dragons.battleDetail where battleId = ? and entryType = 'P'";
 		$this->playersArray = array();
+		$this->playerXPStrength = 0;
 		
 		if ($playersHandle = $this->database->databaseConnection->prepare($playersStmt)) {
 			if (!$playersHandle->execute(array(0=>$this->battleId))) {
@@ -54,7 +59,9 @@ class DDBattle extends DDObject {
 			}
 			
 			while ($playerData = $playersHandle->fetch(PDO::FETCH_ASSOC)) {
+				$playerMaster = $this->database->getDatabaseRecord("dragons.players", array("playerId"=>$playerData['associatedId']));
 				$this->playersArray[] = $playerData['associatedId'];
+				$this->playerXPStrength += $this->addPlayerXPFromLevel($playerMaster['playerLevel']);
 			}
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -101,6 +108,35 @@ class DDBattle extends DDObject {
 			}
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
+		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get player xp based on level
+	//------------------------------------------------------------------------
+	private function addPlayerXPFromLevel($level) {
+		if ($level == 1) {
+			$this->easyEncounter += 25;
+			$tihs->mediumEncounter += 50;
+			$this->hardEncounter += 75;
+			$this->deadlyEncounter += 100;
+		} else if ($level == 2) {
+			$this->easyEncounter += 50;
+			$this->mediumEncounter += 100;
+			$this->hardEncounter += 150;
+			$this->deadlyEncounter += 200;
+		} else if ($level == 3) {
+			$this->easyEncounter += 75;
+			$this->mediumEncounter += 150;
+			$this->hardEncounter += 225;
+			$this->deadlyEncounter += 300;
+		} else if ($level == 4) {
+			$this->easyEncounter += 100;
+			$this->mediumEncounter += 200;
+			$this->hardEncounter += 300;
+			$this->deadlyEncounter += 400;
 		}
 	}
 	//------------------------------------------------------------------------
