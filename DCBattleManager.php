@@ -44,22 +44,32 @@ $character = new DDCharacter($database);
 $monster = new DDMonster($database);
 $battle = new DDBattle($database);					
 $pageTitle = "DD Battle Manager";
+$campaignId = $_GET['campaignId'];
+$campaign->loadCampaignById($campaignId);
 
-// check for active battle
-$battleCount = $database->getUniqueCount("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+// get active quest
+$questHeader = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$campaignId, "statusFlag"=>"A"));
 
-if ($battleCount > 0) {
-	$inBattle = true;
-	$battleStatus = "In-Battle";
-	$battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
-	$battle->loadBattleById($battleId);
-	$battleOrder = $battle->getBattleOrder();
+if ($questHeader['questId'] > 0) {
+	// check for active battle
+	$battleCount = $database->getUniqueCount("dragons.battleHeader", "battleId", array("questId"=>$questHeader['questId'], "statusFlag"=>"A"));
+
+	if ($battleCount > 0) {
+		$inBattle = true;
+		$battleStatus = "In-Battle";
+		$battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+		$battle->loadBattleById($battleId);
+		$battleOrder = $battle->getBattleOrder();
+	} else {
+		$inBattle = false;
+		$battleStatus = "Open Exploration";
+		$activeCharacters = $campaign->getActiveCharacters();
+	}
 } else {
 	$inBattle = false;
-	$battleStatus = "Open Exploration";
-	
-	// get players array
+	$battleStatus = "Between Quests";
 }
+
 
 // calculate battle difficulty
 if ($inBattle) {
@@ -76,13 +86,21 @@ require_once("includes/header.php");
 </div>
 <?php
 
-foreach ($battleOrder as $unitInBattle) {
-	if ($unitInBattle['type'] == "P") {
-		$character->loadCharacterByBattleDetailId($unitInBattle['detailId']);
+// battle or expoloration views
+if ($inBattle) {
+	foreach ($battleOrder as $unitInBattle) {
+		if ($unitInBattle['type'] == "P") {
+			$character->loadCharacterByBattleDetailId($unitInBattle['detailId']);
+			$character->printAdminCharacterCard();
+		} else if ($unitInBattle['type'] == "M") {
+			$monster->loadMonsterByBattleDetailId($unitInBattle['detailId']);
+			$monster->printAdminMonsterCard();
+		}
+	}
+} else {
+	foreach ($activeCharacters as $characterId) {
+		$character->loadCharacterById($characterId);
 		$character->printAdminCharacterCard();
-	} else if ($unitInBattle['type'] == "M") {
-		$monster->loadMonsterByBattleDetailId($unitInBattle['detailId']);
-		$monster->printAdminMonsterCard();
 	}
 }
 
@@ -162,6 +180,7 @@ function takeDamage(type, id) {
 	divHTML += '<form method="post" action="takeDamage.php?type=' + type + '" id="damageForm">';
 	divHTML += 'Damage: <input type="text" size="2" id="damage" name="damage" /> <div class="redButton" onClick="document.getElementById(\'damageForm\').submit();">Damage</div>';
 	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
+	divHTML += '<input type="hidden" name="campaignId" id="campaignId" value="<?php print($campaignId); ?>" />';
 	divHTML += '</form>';
 	
 	divHTML = divHTML.replace(/null/g, '');
@@ -186,6 +205,7 @@ function heal(type, id) {
 	divHTML += '<form method="post" action="heal.php?type=' + type + '" id="healForm">';
 	divHTML += 'Heal: <input type="text" size="2" id="heal" name="heal" /> <div class="greenButton" onClick="document.getElementById(\'damageForm\').submit();">Heal</div>';
 	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
+	divHTML += '<input type="hidden" name="campaignId" id="campaignId" value="<?php print($campaignId); ?>" />';
 	divHTML += '</form>';
 	
 	divHTML = divHTML.replace(/null/g, '');
@@ -221,7 +241,7 @@ function printMonsterList($database) {
 		}
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-			echo '<option value="' . $data['entryId'] . '">' . str_replace("'", "\'", $data['monsterName']) . '</option>';
+			echo '<option value="' . $data['monsterId'] . '">' . str_replace("'", "\'", $data['monsterName']) . '</option>';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());

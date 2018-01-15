@@ -46,5 +46,29 @@ class DDCampaign extends DDObject {
 		$this->creationDate = $campaignHeader['creationDate'];
 	}
 	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get active players in campaign
+	//------------------------------------------------------------------------
+	public function getActiveCharacters() {
+		$selectStmt = "select characterId from dragons.characters where campaignId = ? and statusFlag = 'A'";
+		$returnArray = array();
+		
+		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
+			if (!$selectHandle->execute(array(0=>$this->campaignId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+				$returnArray[] = $data['characterId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		return $returnArray;
+	}
+	//------------------------------------------------------------------------
 }
 //-------------------------------------------------------------------------------------------
