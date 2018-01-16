@@ -23,8 +23,6 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
-require_once("classes/DDCharacter.php");
-require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -33,16 +31,8 @@ require_once("classes/DDMonster.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$character = new DDCharacter($database);
-$monster = new DDMonster($database);
+$questHeader = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$_GET['campaignId'], "statusFlag"=>"A"));
+$database->updateDatabaseRecord("dragons.battleHeader", array("statusFlag"=>"F"), array("questId"=>$questHeader['questId'], "statusFlag"=>"A"));
 
-if ($_GET['type'] == "C") {
-	$character->loadCharacterById($_POST['id']);
-	$character->takeDamage($_POST['damage']);
-} else if ($_GET['type'] == "M") {
-	$monster->loadMonsterByBattleDetailId($_POST['id']);
-	$monster->takeDamage($_POST['damage']);
-}
-
-header("Location: DCBattleManager.php?campaignId=" . $_POST['campaignId']);
+header("Location: DCBattleManager.php?campaignId=" . $_GET['campaignId']);
 //-------------------------------------------------------------------------------------------

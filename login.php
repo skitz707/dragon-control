@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// takeDamage.php - Take damage/update HP.
+// index.php - Index/login page.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// December 1st, 2017
+// January 14th, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -23,8 +23,13 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
-require_once("classes/DDCharacter.php");
-require_once("classes/DDMonster.php");
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// program directives
+//-------------------------------------------------------------------------------------------
+session_start();
 //-------------------------------------------------------------------------------------------
 
 
@@ -33,16 +38,15 @@ require_once("classes/DDMonster.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$character = new DDCharacter($database);
-$monster = new DDMonster($database);
 
-if ($_GET['type'] == "C") {
-	$character->loadCharacterById($_POST['id']);
-	$character->takeDamage($_POST['damage']);
-} else if ($_GET['type'] == "M") {
-	$monster->loadMonsterByBattleDetailId($_POST['id']);
-	$monster->takeDamage($_POST['damage']);
+$passwordHash = md5($_POST['password']);
+
+$userMaster = $database->getDatabaseRecord("dragons.userMaster", array("emailAddress"=>$_POST['emailAddress'], "passwordHash"=>$passwordHash));
+
+if ($userMaster['userId'] > 0) {
+	$_SESSION['userId'] = $userMaster['userId'];
+	header("Location: userHome.php");
+} else {
+	header("Location: index.php?error=loginFailed");
 }
-
-header("Location: DCBattleManager.php?campaignId=" . $_POST['campaignId']);
 //-------------------------------------------------------------------------------------------

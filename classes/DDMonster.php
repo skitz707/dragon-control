@@ -20,35 +20,18 @@ include_once("classes/DDObject.php");
 //-------------------------------------------------------------------------------------------
 // database class definition
 //-------------------------------------------------------------------------------------------
-class DDMonster extends DDObject {
+class DDMonster extends DDCreature {
 	// class properties
-	protected $monsterId;
-	protected $battleDetailId;
-	protected $enemyName;
-	protected $maxHP;
-	protected $currentHP;
-	protected $armorClass;
-	protected $strength;
-	protected $dexterity;
-	protected $constitution;
-	protected $intelligence;
-	protected $wisdom;
-	protected $charisma;
-	protected $initiative;
-	protected $imageLocation;
-	protected $statusFlag;
-	protected $lastChange;
-	protected $creationDate;
-	
+	protected $challengeRating;
 	
 	//------------------------------------------------------------------------
 	// load player by playerId
 	//------------------------------------------------------------------------
-	public function loadMonsterById($entryId) {
-		$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("entryId"=>$entryId));
+	public function loadMonsterById($monsterId) {
+		$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("monsterId"=>$monsterId));
 		
-		$this->monsterId = $entryId;
-		$this->enemyName = $monsterRecord['monsterName'];
+		$this->monsterId = $monsterId;
+		$this->monsterName = $monsterRecord['monsterName'];
 		$this->maxHP = $monsterRecord['health'];
 		$this->currentHP = $monsterRecord['health'];
 		$this->armorClass = $monsterRecord['armorClass'];
@@ -61,6 +44,14 @@ class DDMonster extends DDObject {
 		$this->imageLocation = $monsterRecord['imageLocation'];
 		$this->lastChange = $monsterRecord['lastChange'];
 		$this->creationDate = $monsterRecord['creationDate'];
+		
+		// calculate modifiers
+		$this->strengthModifier = $this->calculateModifier($this->strength);
+		$this->dexterityModifier = $this->calculateModifier($this->dexterity);
+		$this->constitutionModifier = $this->calculateModifier($this->constitution);
+		$this->intelligenceModifier = $this->calculateModifier($this->intelligence);
+		$this->wisdomModifier = $this->calculateModifier($this->wisdom);
+		$this->charismaModifier = $this->calculateModifier($this->charisma);
 		
 		// check for battle detail id to override hp
 		if ($this->battleDetailId > 0) {
@@ -89,9 +80,9 @@ class DDMonster extends DDObject {
 	//------------------------------------------------------------------------
 	public function printMonsterCard() {
 		echo '
-			<div class="playerCard">
+			<div class="monsterCard">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
-				<span class="playerName">' . $this->enemyName . '</span><br />
+				<span class="monsterName">' . $this->monsterName . '</span><br />
 				AC: ' . $this->armorClass . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
 			</div>
@@ -106,16 +97,28 @@ class DDMonster extends DDObject {
 	//------------------------------------------------------------------------
 	public function printAdminMonsterCard() {
 		echo '
-			<div class="adminPlayerCard">
+			<div class="adminMonsterCard">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
-				<span class="adminPlayerName">' . $this->enemyName . '</span><br />
+				<span class="adminMonsterName">' . $this->monsterName . '</span><br />
 				<em>Enemy</em><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
-				Initiative: ' . number_format($this->initiative, 0, "", "") . '
-				<div class="blueButton" onClick="setInit(\'M\', ' . $this->battleDetailId . ');">Set Init</div> <div class="redButton" onClick="takeDamage(\'M\', ' . $this->battleDetailId . ');">Take Damage</div> <div class="greenButton" onClick="heal(\'M\', ' . $this->battleDetailId . ');">Heal</div>
+				Initiative: ' . number_format($this->initiative, 0, "", "") . '<br />
+				Str: ' . $this->strength . ' (' . $this->strengthModifier . ') | Dex: ' . $this->dexterity . ' (' . $this->dexterityModifier . ')<br />
+				Con: ' . $this->constitution . 	' (' . $this->constitutionModifier . ') | Int: ' . $this->intelligence . ' (' . $this->intelligenceModifier . ')<br />
+				Wis: ' . $this->wisdom . ' (' . $this->wisdomModifier . ') | Cha: ' . $this->charisma . ' (' . $this->charismaModifier . ')<br />
+				<div class="blueButton" onClick="setInit(\'M\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'M\', ' . $this->battleDetailId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'M\', ' . $this->battleDetailId . ');">Heal</div>
 			</div>
 		';
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// update hp
+	//------------------------------------------------------------------------
+	protected function updateHP() {
+		$this->database->updateDatabaseRecord("dragons.battleDetail", array("currentHP"=>$this->currentHP), array("entryId"=>$this->battleDetailId));
 	}
 	//------------------------------------------------------------------------
 }

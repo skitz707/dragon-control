@@ -31,11 +31,12 @@ require_once("classes/DDDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+$battleId = $database->getColumnMax("dragons.battleHeader", "battleId", array("questId"=>$_POST['questId'], "statusFlag"=>"A"));
+$questMaster = $database->getDatabaseRecord("dragons.questHeader", array("questId"=>$_POST['questId']));
 $i = 1;
 
 while ($i <= $_POST['quantity']) {
-	$monsterRecord = $database->getDatabaseRecord("dragons.monsters", array("entryId"=>$_POST['monsterId']));
+	$monsterRecord = $database->getDatabaseRecord("dragons.monsters", array("monsterId"=>$_POST['monsterId']));
 	
 	$battleData['battleId'] = $battleId;
 	$battleData['entryType'] = "M";
@@ -48,5 +49,5 @@ while ($i <= $_POST['quantity']) {
 	$i++;
 }
 
-header("Location: DDBattleManager.php");
+header("Location: DCBattleManager.php?campaignId=" . $questMaster['campaignId']);
 //-------------------------------------------------------------------------------------------

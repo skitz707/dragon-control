@@ -4,12 +4,20 @@ div#mainContainer {
 	width: 1850px;
 }
 
+div#mainContent {
+	text-align: center;
+	font-family: Arial, sans-serif;
+	width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .battleHeader {
 	text-align: left;
 	width: 99%;
 }
 
-.playerCard {
+.characterCard {
 	width: 260px;
 	height: 350px;
 	font-size: 20pt;
@@ -18,21 +26,49 @@ div#mainContainer {
 	padding: 2px;
 }
 
-.playerName {
+.characterName {
 	font-size: 24pt;
 	font-weight: bold;
 }
 
-.adminPlayerCard {
+.adminCharacterCard {
 	width: 200px;
-	height: 370px;
+	height: 450px;
 	font-size: 14pt;
 	float: left;
 	margin: 5px;
 	padding: 2px;
 }
 
-.adminPlayerName {
+.adminCharacterName {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+.monsterCard {
+	width: 260px;
+	height: 350px;
+	font-size: 20pt;
+	float: left;
+	margin: 15px;
+	padding: 2px;
+}
+
+.monsterName {
+	font-size: 24pt;
+	font-weight: bold;
+}
+
+.adminMonsterCard {
+	width: 200px;
+	height: 450px;
+	font-size: 14pt;
+	float: left;
+	margin: 5px;
+	padding: 2px;
+}
+
+.adminMonsterName {
 	font-size: 16pt;
 	font-weight: bold;
 }
@@ -99,4 +135,35 @@ div#mainContainer {
 
 .redButton:active {
 	background: linear-gradient(#990000, #790000);
+}
+
+.largeHeading {
+	font-size: 18pt;
+}
+
+.mediumHeading {
+	font-size: 16pt;
+}
+
+.standardResultTable {
+	font-size: 12pt;
+	font-family: Arial, sans-serif;
+	margin-left: auto;
+	margin-right: auto;
+	border-spacing: 0px;
+    border-collapse: separate;
+}
+
+.standardResultTable th {
+	font-size: 13pt;
+	font-weight: bold;
+	text-align: left;
+}
+
+.standardResultTable tr:nth-child(even) {
+	background: #cccccc;
+}
+
+.standardResultTable tr:nth-child(even) {
+	background: #cccccc;
 }

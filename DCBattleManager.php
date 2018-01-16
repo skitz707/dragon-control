@@ -23,8 +23,12 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
+require_once("classes/DDSecurity.php");
+require_once("classes/DDUser.php");
+require_once("classes/DDCampaign.php");
+require_once("classes/DDQuest.php");
 require_once("classes/DDBattle.php");
-require_once("classes/DDPlayer.php");
+require_once("classes/DDCharacter.php");
 require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 
@@ -34,26 +38,38 @@ require_once("classes/DDMonster.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$player = new DDPlayer($database);
+$security = new DDSecurity($database);
+$campaign = new DDCampaign($database);
+$character = new DDCharacter($database);
 $monster = new DDMonster($database);
 $battle = new DDBattle($database);					
 $pageTitle = "DD Battle Manager";
+$campaignId = $_GET['campaignId'];
+$campaign->loadCampaignById($campaignId);
 
-// check for active battle
-$battleCount = $database->getUniqueCount("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+// get active quest
+$questHeader = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$campaignId, "statusFlag"=>"A"));
 
-if ($battleCount > 0) {
-	$inBattle = true;
-	$battleStatus = "In-Battle";
-	$battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
-	$battle->loadBattleById($battleId);
-	$battleOrder = $battle->getBattleOrder();
+if ($questHeader['questId'] > 0) {
+	// check for active battle
+	$battleCount = $database->getUniqueCount("dragons.battleHeader", "battleId", array("questId"=>$questHeader['questId'], "statusFlag"=>"A"));
+
+	if ($battleCount > 0) {
+		$inBattle = true;
+		$battleStatus = "In-Battle";
+		$battleId = $database->getColumnMax("dragons.battleHeader", "battleId", array("statusFlag"=>"A"));
+		$battle->loadBattleById($battleId);
+		$battleOrder = $battle->getBattleOrder();
+	} else {
+		$inBattle = false;
+		$battleStatus = "Open Exploration";
+		$activeCharacters = $campaign->getActiveCharacters();
+	}
 } else {
 	$inBattle = false;
-	$battleStatus = "Open Exploration";
-	
-	// get players array
+	$battleStatus = "Between Quests";
 }
+
 
 // calculate battle difficulty
 if ($inBattle) {
@@ -66,17 +82,26 @@ require_once("includes/header.php");
 
 ?>
 <div class="battleHeader">
-	Battle Status: <span style="font-weight: bold;"><?php echo $battleStatus; ?></span> | Difficulty Rating: <span style="font-weight: bold;"> <?php echo $battleDifficulty ?></span> | <div class="blueButton" onClick="createBattle();">New Battle</div> <div class="redButton" onClick="addMonsters();">Add Monster</div>
+	Battle Status: <span style="font-weight: bold;"><?php echo $battleStatus; ?> | </span> Easy: <span style="font-weight: bold;"><?php echo $battle->getEasyEncounter(); ?></span> | Medium: <span style="font-weight: bold;"><?php echo $battle->getMediumEncounter(); ?></span> | 
+	Hard: <span style="font-weight: bold;"><?php echo $battle->getHardEncounter(); ?></span> | Deadly: <span style="font-weight: bold;"><?php echo $battle->getDeadlyEncounter(); ?></span> | Difficulty Rating: <span style="font-weight: bold;"> <?php echo $battleDifficulty ?></span> | <div class="greenButton" onClick="createBattle();">New Battle</div> <div class="blueButton" onClick="addMonsters();">Add Monster</div> <div class="redButton" onClick="endBattle();">End Battle</div>
 </div>
 <?php
 
-foreach ($battleOrder as $unitInBattle) {
-	if ($unitInBattle['type'] == "P") {
-		$player->loadPlayerByBattleDetailId($unitInBattle['detailId']);
-		$player->printAdminPlayerCard();
-	} else if ($unitInBattle['type'] == "M") {
-		$monster->loadMonsterByBattleDetailId($unitInBattle['detailId']);
-		$monster->printAdminMonsterCard();
+// battle or expoloration views
+if ($inBattle) {
+	foreach ($battleOrder as $unitInBattle) {
+		if ($unitInBattle['type'] == "C") {
+			$character->loadCharacterByBattleDetailId($unitInBattle['detailId']);
+			$character->printAdminCharacterCard();
+		} else if ($unitInBattle['type'] == "M") {
+			$monster->loadMonsterByBattleDetailId($unitInBattle['detailId']);
+			$monster->printAdminMonsterCard();
+		}
+	}
+} else {
+	foreach ($activeCharacters as $characterId) {
+		$character->loadCharacterById($characterId);
+		$character->printAdminCharacterCard();
 	}
 }
 
@@ -89,9 +114,22 @@ foreach ($battleOrder as $unitInBattle) {
 function createBattle() {
 	inBattle = <?php if ($inBattle) { echo "true"; } else { echo "false"; } ?>;
 	
-	//if (!inBattle) {
-		document.location.href = "newBattle.php";
-	//}
+	if (!inBattle) {
+		document.location.href = "newBattle.php?questId=<?php print($questHeader['questId']); ?>";
+	}
+}
+//----------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------
+// end battle
+//----------------------------------------------------------------------------
+function endBattle() {
+	inBattle = <?php if ($inBattle) { echo "true"; } else { echo "false"; } ?>;
+	
+	if (inBattle) {
+		document.location.href = "endBattle.php?campaignId=<?php print($campaignId); ?>";
+	}
 }
 //----------------------------------------------------------------------------
 
@@ -107,6 +145,7 @@ function addMonsters() {
 		divHTML = "";
 		divHTML += '<form method="post" action="addMonster.php" id="monsterForm">';
 		divHTML += 'Monster: <?php printMonsterList($database); ?> Qty: <input type="text" size="2" id="quantity" name="quantity" /> <div class="redButton" onClick="document.getElementById(\'monsterForm\').submit();">Add</div>';
+		divHTML += '<input type="hidden" id="questId" name="questId" value="<?php print($questHeader['questId']); ?>" ?>';
 		divHTML += '</form>';
 		
 		divHTML = divHTML.replace(/null/g, '');
@@ -132,6 +171,7 @@ function setInit(type, id) {
 	divHTML += '<form method="post" action="setInitiative.php?type=' + type + '" id="initForm">';
 	divHTML += 'Initiative: <input type="text" size="2" id="initiative" name="initiative" /> <div class="blueButton" onClick="document.getElementById(\'initForm\').submit();">Set</div>';
 	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
+	divHTML += '<input type="hidden" name="campaignId" id="campaignId" value="<?php print($campaignId); ?>" />';
 	divHTML += '</form>';
 	
 	divHTML = divHTML.replace(/null/g, '');
@@ -156,6 +196,7 @@ function takeDamage(type, id) {
 	divHTML += '<form method="post" action="takeDamage.php?type=' + type + '" id="damageForm">';
 	divHTML += 'Damage: <input type="text" size="2" id="damage" name="damage" /> <div class="redButton" onClick="document.getElementById(\'damageForm\').submit();">Damage</div>';
 	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
+	divHTML += '<input type="hidden" name="campaignId" id="campaignId" value="<?php print($campaignId); ?>" />';
 	divHTML += '</form>';
 	
 	divHTML = divHTML.replace(/null/g, '');
@@ -180,6 +221,7 @@ function heal(type, id) {
 	divHTML += '<form method="post" action="heal.php?type=' + type + '" id="healForm">';
 	divHTML += 'Heal: <input type="text" size="2" id="heal" name="heal" /> <div class="greenButton" onClick="document.getElementById(\'damageForm\').submit();">Heal</div>';
 	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
+	divHTML += '<input type="hidden" name="campaignId" id="campaignId" value="<?php print($campaignId); ?>" />';
 	divHTML += '</form>';
 	
 	divHTML = divHTML.replace(/null/g, '');
@@ -215,7 +257,7 @@ function printMonsterList($database) {
 		}
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-			echo '<option value="' . $data['entryId'] . '">' . str_replace("'", "\'", $data['monsterName']) . '</option>';
+			echo '<option value="' . $data['monsterId'] . '">' . str_replace("'", "\'", $data['monsterName']) . '</option>';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());
