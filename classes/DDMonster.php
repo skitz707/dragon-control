@@ -24,7 +24,7 @@ class DDMonster extends DDObject {
 	// class properties
 	protected $monsterId;
 	protected $battleDetailId;
-	protected $enemyName;
+	protected $monsterName;
 	protected $maxHP;
 	protected $currentHP;
 	protected $armorClass;
@@ -44,11 +44,11 @@ class DDMonster extends DDObject {
 	//------------------------------------------------------------------------
 	// load player by playerId
 	//------------------------------------------------------------------------
-	public function loadMonsterById($entryId) {
-		$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("entryId"=>$entryId));
+	public function loadMonsterById($monsterId) {
+		$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("monsterId"=>$monsterId));
 		
-		$this->monsterId = $entryId;
-		$this->enemyName = $monsterRecord['monsterName'];
+		$this->monsterId = $monsterId;
+		$this->monsterName = $monsterRecord['monsterName'];
 		$this->maxHP = $monsterRecord['health'];
 		$this->currentHP = $monsterRecord['health'];
 		$this->armorClass = $monsterRecord['armorClass'];
@@ -89,9 +89,9 @@ class DDMonster extends DDObject {
 	//------------------------------------------------------------------------
 	public function printMonsterCard() {
 		echo '
-			<div class="playerCard">
+			<div class="monsterCard">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
-				<span class="playerName">' . $this->enemyName . '</span><br />
+				<span class="monsterName">' . $this->monsterName . '</span><br />
 				AC: ' . $this->armorClass . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
 			</div>
@@ -106,14 +106,14 @@ class DDMonster extends DDObject {
 	//------------------------------------------------------------------------
 	public function printAdminMonsterCard() {
 		echo '
-			<div class="adminPlayerCard">
+			<div class="adminMonsterCard">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
-				<span class="adminPlayerName">' . $this->enemyName . '</span><br />
+				<span class="adminMonsterName">' . $this->monsterName . '</span><br />
 				<em>Enemy</em><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
-				Initiative: ' . number_format($this->initiative, 0, "", "") . '
-				<div class="blueButton" onClick="setInit(\'M\', ' . $this->battleDetailId . ');">Set Init</div> <div class="redButton" onClick="takeDamage(\'M\', ' . $this->battleDetailId . ');">Take Damage</div> <div class="greenButton" onClick="heal(\'M\', ' . $this->battleDetailId . ');">Heal</div>
+				Initiative: ' . number_format($this->initiative, 0, "", "") . '<br />
+				<div class="blueButton" onClick="setInit(\'M\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'M\', ' . $this->battleDetailId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'M\', ' . $this->battleDetailId . ');">Heal</div>
 			</div>
 		';
 	}

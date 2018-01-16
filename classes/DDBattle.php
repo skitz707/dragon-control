@@ -40,7 +40,7 @@ class DDBattle extends DDObject {
 	// load battle by battleId
 	//------------------------------------------------------------------------
 	public function loadBattleById($battleId) {
-		$battleRecord = $this->database->getDatabaseRecord("dragons.battleHeader", array("entryId"=>$battleId));
+		$battleRecord = $this->database->getDatabaseRecord("dragons.battleHeader", array("battleId"=>$battleId));
 		
 		$this->battleId = $battleId;
 		$this->battleDifficulty = 0;
@@ -49,7 +49,7 @@ class DDBattle extends DDObject {
 		$this->creationDate = $battleRecord['creationDate'];
 		
 		// load players
-		$playersStmt = "select * from dragons.battleDetail where battleId = ? and entryType = 'P'";
+		$playersStmt = "select * from dragons.battleDetail where battleId = ? and entryType = 'C'";
 		$this->playersArray = array();
 		$this->playerXPStrength = 0;
 		
@@ -77,7 +77,7 @@ class DDBattle extends DDObject {
 			}
 			
 			while ($monsterData = $playersHandle->fetch(PDO::FETCH_ASSOC)) {
-				$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("entryId"=>$monsterData['associatedId']));
+				$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("monsterId"=>$monsterData['associatedId']));
 				$this->monstersArray[] = $monsterData['associatedId'];
 				$this->battleDifficulty += $monsterRecord['xpRating'];
 			}

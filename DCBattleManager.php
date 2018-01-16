@@ -57,7 +57,7 @@ if ($questHeader['questId'] > 0) {
 	if ($battleCount > 0) {
 		$inBattle = true;
 		$battleStatus = "In-Battle";
-		$battleId = $database->getColumnMax("dragons.battleHeader", "entryId", array("statusFlag"=>"A"));
+		$battleId = $database->getColumnMax("dragons.battleHeader", "battleId", array("statusFlag"=>"A"));
 		$battle->loadBattleById($battleId);
 		$battleOrder = $battle->getBattleOrder();
 	} else {
@@ -89,7 +89,7 @@ require_once("includes/header.php");
 // battle or expoloration views
 if ($inBattle) {
 	foreach ($battleOrder as $unitInBattle) {
-		if ($unitInBattle['type'] == "P") {
+		if ($unitInBattle['type'] == "C") {
 			$character->loadCharacterByBattleDetailId($unitInBattle['detailId']);
 			$character->printAdminCharacterCard();
 		} else if ($unitInBattle['type'] == "M") {
@@ -113,9 +113,9 @@ if ($inBattle) {
 function createBattle() {
 	inBattle = <?php if ($inBattle) { echo "true"; } else { echo "false"; } ?>;
 	
-	//if (!inBattle) {
-		document.location.href = "newBattle.php";
-	//}
+	if (!inBattle) {
+		document.location.href = "newBattle.php?questId=<?php print($questHeader['questId']); ?>";
+	}
 }
 //----------------------------------------------------------------------------
 
@@ -131,6 +131,7 @@ function addMonsters() {
 		divHTML = "";
 		divHTML += '<form method="post" action="addMonster.php" id="monsterForm">';
 		divHTML += 'Monster: <?php printMonsterList($database); ?> Qty: <input type="text" size="2" id="quantity" name="quantity" /> <div class="redButton" onClick="document.getElementById(\'monsterForm\').submit();">Add</div>';
+		divHTML += '<input type="hidden" id="campaignId" name="questId" value="<?php print($questHeader['questId']); ?>" ?>';
 		divHTML += '</form>';
 		
 		divHTML = divHTML.replace(/null/g, '');

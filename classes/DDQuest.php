@@ -46,5 +46,45 @@ class DDQuest extends DDObject {
 		$this->creationDate = $questHeader['creationDate'];
 	}
 	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// create new battle
+	//------------------------------------------------------------------------
+	public function createNewBattle() {
+		$this->database->insertDatabaseRecord("dragons.battleHeader", array("questId"=>$this->questId, "statusFlag"=>"A"));
+		$battleId = $this->database->getColumnMax("dragons.battleHeader", "battleId", array("questId"=>$this->questId));
+
+		// add characters to the battle
+		$characterStmt = "select * from dragons.characters where campaignId = ? and statusFlag = 'A'";
+
+		if ($characterHandle = $this->database->databaseConnection->prepare($characterStmt)) {
+			if (!$characterHandle->execute(array(0=>$this->campaignId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($characterData = $characterHandle->fetch(PDO::FETCH_ASSOC)) {
+				$detail['battleId'] = $battleId;
+				$detail['entryType'] = "C";
+				$detail['associatedId'] = $characterData['characterId'];
+				$detail['currentHP'] = $characterData['currentHP'];
+				$detail['initiative'] = 0;
+				
+				$this->database->insertDatabaseRecord("dragons.battleDetail", $detail);
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get campaign id
+	//------------------------------------------------------------------------
+	public function getCampaignId() {
+		return $this->campaignId;
+	}
+	//------------------------------------------------------------------------
 }
 //-------------------------------------------------------------------------------------------

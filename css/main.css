@@ -33,7 +33,7 @@ div#mainContent {
 
 .adminCharacterCard {
 	width: 200px;
-	height: 370px;
+	height: 450px;
 	font-size: 14pt;
 	float: left;
 	margin: 5px;
@@ -41,6 +41,34 @@ div#mainContent {
 }
 
 .adminCharacterName {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+.monsterCard {
+	width: 260px;
+	height: 350px;
+	font-size: 20pt;
+	float: left;
+	margin: 15px;
+	padding: 2px;
+}
+
+.monsterName {
+	font-size: 24pt;
+	font-weight: bold;
+}
+
+.adminMonsterCard {
+	width: 200px;
+	height: 450px;
+	font-size: 14pt;
+	float: left;
+	margin: 5px;
+	padding: 2px;
+}
+
+.adminMonsterName {
 	font-size: 16pt;
 	font-weight: bold;
 }
