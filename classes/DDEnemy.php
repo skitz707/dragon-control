@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// DDMonster.php
+// DDEnemy.php
 // Written by: Michael C. Szczepanik
 // November 19th, 2017
 // DDEnemy() class definition.
@@ -20,10 +20,9 @@ include_once("classes/DDObject.php");
 //-------------------------------------------------------------------------------------------
 // database class definition
 //-------------------------------------------------------------------------------------------
-class DDMonster extends DDObject {
+class DDEnemy extends DDObject {
 	// class properties
-	protected $monsterId;
-	protected $battleDetailId;
+	protected $enemyId;
 	protected $enemyName;
 	protected $maxHP;
 	protected $currentHP;
@@ -44,50 +43,33 @@ class DDMonster extends DDObject {
 	//------------------------------------------------------------------------
 	// load player by playerId
 	//------------------------------------------------------------------------
-	public function loadMonsterById($entryId) {
-		$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("entryId"=>$entryId));
+	public function loadEnemyById($enemyId) {
+		$enemyRecord = $this->database->getDatabaseRecord("dragons.enemies", array("enemyId"=>$enemyId));
 		
-		$this->monsterId = $entryId;
-		$this->enemyName = $monsterRecord['monsterName'];
-		$this->maxHP = $monsterRecord['health'];
-		$this->currentHP = $monsterRecord['health'];
-		$this->armorClass = $monsterRecord['armorClass'];
-		$this->strength = $monsterRecord['strength'];
-		$this->dexterity = $monsterRecord['dexterity'];
-		$this->constitution = $monsterRecord['constitution'];
-		$this->intelligence = $monsterRecord['intelligence'];
-		$this->wisdom = $monsterRecord['wisdom'];
-		$this->charisma = $monsterRecord['charisma'];
-		$this->imageLocation = $monsterRecord['imageLocation'];
-		$this->lastChange = $monsterRecord['lastChange'];
-		$this->creationDate = $monsterRecord['creationDate'];
-		
-		// check for battle detail id to override hp
-		if ($this->battleDetailId > 0) {
-			$battleDetail = $this->database->getDatabaseRecord("dragons.battleDetail", array("entryId"=>$this->battleDetailId));
-			$this->currentHP = $battleDetail['currentHP'];
-		}
+		$this->enemyId = $enemyId;
+		$this->enemyName = $enemyRecord['enemyName'];
+		$this->maxHP = $enemyRecord['maxHP'];
+		$this->currentHP = $enemyRecord['currentHP'];
+		$this->armorClass = $enemyRecord['armorClass'];
+		$this->strength = $enemyRecord['strength'];
+		$this->dexterity = $enemyRecord['dexterity'];
+		$this->constitution = $enemyRecord['constitution'];
+		$this->intelligence = $enemyRecord['intelligence'];
+		$this->wisdom = $enemyRecord['wisdom'];
+		$this->charisma = $enemyRecord['charisma'];
+		$this->initiative = $enemyRecord['initiative'];
+		$this->imageLocation = $enemyRecord['imageLocation'];
+		$this->statusFlag = $enemyRecord['statusFlag'];
+		$this->lastChange = $enemyRecord['lastChange'];
+		$this->creationDate = $enemyRecord['creationDate'];
 	}
 	//------------------------------------------------------------------------
 	
 	
 	//------------------------------------------------------------------------
-	// load monster by battle id
+	// print player card
 	//------------------------------------------------------------------------
-	public function loadMonsterByBattleDetailId($battleDetailId) {
-		$battleRecord = $this->database->getDatabaseRecord("dragons.battleDetail", array("entryId"=>$battleDetailId));
-		$this->battleDetailId = $battleDetailId;
-		$this->initiative = $battleRecord['initiative'];
-		
-		$this->loadMonsterById($battleRecord['associatedId']);
-	}
-	//------------------------------------------------------------------------
-	
-	
-	//------------------------------------------------------------------------
-	// print monster card
-	//------------------------------------------------------------------------
-	public function printMonsterCard() {
+	public function printEnemyCard() {
 		echo '
 			<div class="playerCard">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
@@ -102,9 +84,9 @@ class DDMonster extends DDObject {
 	
 	
 	//------------------------------------------------------------------------
-	// print admin monster card
+	// print player card
 	//------------------------------------------------------------------------
-	public function printAdminMonsterCard() {
+	public function printAdminEnemyCard() {
 		echo '
 			<div class="adminPlayerCard">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
@@ -113,7 +95,7 @@ class DDMonster extends DDObject {
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
-				<div class="blueButton" onClick="setInit(\'M\', ' . $this->battleDetailId . ');">Set Init</div> <div class="redButton" onClick="takeDamage(\'M\', ' . $this->battleDetailId . ');">Take Damage</div> <div class="greenButton" onClick="heal(\'M\', ' . $this->battleDetailId . ');">Heal</div>
+				<div class="blueButton" onClick="setInit(\'M\', ' . $this->enemyId . ');">Set Init</div> <div class="redButton" onClick="takeDamage(\'M\', ' . $this->enemyId . ');">Take Damage</div> <div class="greenButton" onClick="heal(\'M\', ' . $this->enemyId . ');">Heal</div>
 			</div>
 		';
 	}

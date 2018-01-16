@@ -1,0 +1,102 @@
+div#mainContainer {
+	text-align: center;
+	font-family: Arial, sans-serif;
+	width: 1850px;
+}
+
+.battleHeader {
+	text-align: left;
+	width: 99%;
+}
+
+.playerCard {
+	width: 260px;
+	height: 350px;
+	font-size: 20pt;
+	float: left;
+	margin: 15px;
+	padding: 2px;
+}
+
+.playerName {
+	font-size: 24pt;
+	font-weight: bold;
+}
+
+.adminPlayerCard {
+	width: 200px;
+	height: 370px;
+	font-size: 14pt;
+	float: left;
+	margin: 5px;
+	padding: 2px;
+}
+
+.adminPlayerName {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+.playerUnconscious {
+	background-color: #ffb2b2;
+}
+
+.greenButton {
+	display: inline-block;
+	border: 1px solid #000000;
+	-moz-border-radius: 5px;
+	border-radius: 4px;
+	color: #eeeeee;
+	background: linear-gradient(#007900, #005900);
+	cursor: pointer;
+	cursor: hand;
+	margin: 2px;
+	padding: 2px;
+}
+.greenButton:hover {
+	background: linear-gradient(#008900, #006900);
+}
+
+.greenButton:active {
+	background: linear-gradient(#009900, #007900);
+}
+
+.blueButton {
+	display: inline-block;
+	border: 1px solid #000000;
+	-moz-border-radius: 5px;
+	border-radius: 4px;
+	color: #eeeeee;
+	background: linear-gradient(#000079, #000059);
+	cursor: pointer;
+	cursor: hand;
+	margin: 2px;
+	padding: 2px;
+}
+.blueButton:hover {
+	background: linear-gradient(#000089, #000069);
+}
+
+.blueButton:active {
+	background: linear-gradient(#000099, #000079);
+}
+
+.redButton {
+	display: inline-block;
+	border: 1px solid #000000;
+	-moz-border-radius: 5px;
+	border-radius: 4px;
+	color: #eeeeee;
+	background: linear-gradient(#790000, #590000);
+	cursor: pointer;
+	cursor: hand;
+	margin: 2px;
+	padding: 2px;
+}
+.redButton:hover {
+	background: linear-gradient(#890000, #690000);
+}
+
+.redButton:active {
+	background: linear-gradient(#990000, #790000);
+}
