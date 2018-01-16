@@ -40,7 +40,7 @@ if ($_GET['type'] == "C") {
 	$character->loadCharacterById($_POST['id']);
 	$character->heal($_POST['heal']);
 } else if ($_GET['type'] == "M") {
-	$monster->loadMonsterByBattleId($_POST['id']);
+	$monster->loadMonsterByBattleDetailId($_POST['id']);
 	$monster->heal($_POST['heal']);
 }
 

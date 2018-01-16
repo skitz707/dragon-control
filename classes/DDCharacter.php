@@ -13,45 +13,16 @@
 //-------------------------------------------------------------------------------------------
 // includes
 //-------------------------------------------------------------------------------------------
-include_once("classes/DDObject.php");
+include_once("classes/DDCreature.php");
 //-------------------------------------------------------------------------------------------
 
 
 //-------------------------------------------------------------------------------------------
 // character class definition
 //-------------------------------------------------------------------------------------------
-class DDCharacter extends DDObject {
+class DDCharacter extends DDCreature {
 	// class properties
-	protected $characterId;
 	protected $ownerId;
-	protected $campaignId;
-	protected $questId;
-	protected $battleDetailId;
-	protected $characterName;
-	protected $characterRace;
-	protected $characterClass;
-	protected $characterLevel;
-	protected $characterXP;
-	protected $maxHP;
-	protected $currentHP;
-	protected $armorClass;
-	protected $strength;
-	protected $strengthModifier;
-	protected $dexterity;
-	protected $dexterityModifier;
-	protected $constitution;
-	protected $constitutionModifier;
-	protected $intelligence;
-	protected $intelligenceModifier;
-	protected $wisdom;
-	protected $wisdomModifier;
-	protected $charisma;
-	protected $charismaModifier;
-	protected $initiative;
-	protected $imageLocation;
-	protected $statusFlag;
-	protected $lastChange;
-	protected $creationDate;
 	
 	
 	//------------------------------------------------------------------------
@@ -100,6 +71,14 @@ class DDCharacter extends DDObject {
 		
 		if (!$this->battleDetailId > 0) {
 			$this->currentHP = $characterRecord['currentHP'];
+		}
+		
+		// check for active battle id 
+		$activeBattle = $this->database->getDatabaseRecord("dragons.battleHeader", array("questId"=>$this->questId, "statusFlag"=>"A"));
+		$activeBattleDetail = $this->database->getDatabaseRecord("dragons.battleDetail", array("battleId"=>$activeBattle['battleId'], "associatedId"=>$this->characterId, "entryType"=>"C"));
+
+		if ($activeBattleDetail['entryId'] > 0) {
+			$this->battleDetailId = $activeBattleDetail['entryId'];
 		}
 	}
 	//------------------------------------------------------------------------
@@ -156,14 +135,6 @@ class DDCharacter extends DDObject {
 			$class = "adminCharacterCard";
 		}
 		
-		if ($this->battleDetailId > 0) {
-			$characterReference = $this->battleDetailId;
-			$battleStatus = "B";
-		} else {
-			$characterReference = $this->characterId;
-			$battleStatus = "O";
-		}
-		
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
@@ -175,7 +146,7 @@ class DDCharacter extends DDObject {
 				Str: ' . $this->strength . ' (' . $this->strengthModifier . ') | Dex: ' . $this->dexterity . ' (' . $this->dexterityModifier . ')<br />
 				Con: ' . $this->constitution . 	' (' . $this->constitutionModifier . ') | Int: ' . $this->intelligence . ' (' . $this->intelligenceModifier . ')<br />
 				Wis: ' . $this->wisdom . ' (' . $this->wisdomModifier . ') | Cha: ' . $this->charisma . ' (' . $this->charismaModifier . ')<br />
-				<div class="blueButton" onClick="setInit(\'C\', ' . $characterReference . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $characterReference . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $characterReference . ');">Heal</div>
+				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $this->characterId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $this->characterId . ');">Heal</div>
 			</div>
 		';
 	}
@@ -183,84 +154,13 @@ class DDCharacter extends DDObject {
 	
 	
 	//------------------------------------------------------------------------
-	// heal character
-	//------------------------------------------------------------------------
-	public function heal($value) {
-		$this->currentHP = $this->currentHP + $value;
-		
-		if ($this->currentHP > $this->maxHP) {
-			$this->currentHP = $this->maxHP;
-		}
-		
-		$this->updateHP();
-	}
-	//------------------------------------------------------------------------
-	
-	
-	//------------------------------------------------------------------------
-	// take damage
-	//------------------------------------------------------------------------
-	public function takeDamage($damage) {
-		$this->currentHP = $this->currentHP - $damage;
-		
-		if ($this->currentHP < 0) {
-			$this->currentHP = 0;
-		}
-		
-		$this->updateHP();
-	}
-	//------------------------------------------------------------------------
-	
-	
-	//------------------------------------------------------------------------
 	// update hp
 	//------------------------------------------------------------------------
-	private function updateHP() {
+	protected function updateHP() {
 		if ($this->battleDetailId > 0) {
-			$this->database->updateDatabaseRecord("dragons.battleDetail", array("currentHP"=>$this->currentHP), array("battleId"=>$this->battleDetailId, "associatedId"=>$this->characterId));
+			$this->database->updateDatabaseRecord("dragons.battleDetail", array("currentHP"=>$this->currentHP), array("entryId"=>$this->battleDetailId));
 		} else {
 			$this->database->updateDatabaseRecord("dragons.characters", array("currentHP"=>$this->currentHP), array("characterId"=>$this->characterId));
-		}
-	}
-	//------------------------------------------------------------------------
-	
-	
-	//------------------------------------------------------------------------
-	// calculate modifier
-	//------------------------------------------------------------------------
-	private function calculateModifier($value) {
-		if ($value == 1) {
-			return -5;
-		} else if ($value == 2 || $value == 3) {
-			return -4;
-		} else if ($value == 4 || $value == 5) {
-			return -3;
-		} else if ($value == 6 || $value == 7) {
-			return -2;
-		} else if ($value == 8 || $value == 9) {
-			return -1; 
-		} else if ($value == 10 || $value == 11) {
-			return 0;
-		} else if ($value == 12 || $value == 13) {
-			return 1;
-		} else if ($value == 14 || $value == 15) {
-			return 2;
-		} else if ($value == 16 || $value == 17) {
-			return 3;
-		} else if ($value == 18 || $value == 19) {
-			return 4;
-		} else if ($value == 20 || $value == 21) {
-			return 5;
-		} else if ($value == 22 || $value == 23) {
-			return 6;
-		} else if ($value == 24 || $value == 25) {
-			return 7;
-		} else if ($value == 26 || $value == 27) {
-			return 8;
-		} else if ($value == 28 || $value == 29) {
-			return 9;
-		} else if ($value >= 30) {
-			return 10;
 		}
 	}
 	//------------------------------------------------------------------------
