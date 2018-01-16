@@ -38,5 +38,5 @@ $quest->loadQuestById($_GET['questId']);
 $quest->createNewBattle();
 $campaignId = $quest->getCampaignId();
 
-header("Location: DDBattleManager.php");
+header("Location: DCBattleManager.php?campaignId=" . $campaignId);
 //-------------------------------------------------------------------------------------------

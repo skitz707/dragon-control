@@ -133,8 +133,8 @@ function getActiveCharactersHTML($database, $user) {
 	
 	foreach ($characterIds as $characterId) {
 		$characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
-		$campaignMaster = $database->getDatabaseRecord("dragons.campaignMaster", array("campaignId"=>$characterMaster['campaignId']));
-		$questMaster = $database->getDatabaseRecord("dragons.questMaster", array("campaignId"=>$characterMaster['campaignId'], "statusFlag"=>"A"));
+		$campaignMaster = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$characterMaster['campaignId']));
+		$questMaster = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$characterMaster['campaignId'], "statusFlag"=>"A"));
 		
 		if ($questMaster['questId'] > 0) {
 			$activeQuest = $questMaster['questName'];
