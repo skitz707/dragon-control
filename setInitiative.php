@@ -35,7 +35,5 @@ require_once("classes/DDEnemy.php");
 $database = new DDDatabase();
 $database->updateDatabaseRecord("dragons.battleDetail", array("initiative"=>$_POST['initiative']), array("entryId"=>$_POST['id']));
 
-
-
-header("Location: DDBattleManager.php");
+header("Location: DCBattleManager.php?campaignId=" . $_POST['campaignId']);
 //-------------------------------------------------------------------------------------------
