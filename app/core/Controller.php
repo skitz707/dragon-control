@@ -19,4 +19,9 @@ class Controller
             header ('Location: /Dragon-Control/public/Login');
         }
     }
+    
+    protected function DisplayMenu()
+    {
+        require_once '../app/views/Menu/Index.php';
+    }
 }
