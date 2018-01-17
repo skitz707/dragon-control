@@ -11,17 +11,38 @@
  *
  * @author Nick Orloski
  */
-class Admin {
+class Admin extends Controller{
     
     public function index()
     {
         $this->CheckAuth();
+        $this->CheckAdminAuth();
+        $this->DisplayMenu();
         $user = $this->model('User');       
-        $this->view('Home/index', $user);
+        $this->view('Dashboard/index', $user);
     }
     
     public function Users()
     {
         
+    }
+    
+    public function CreateUser()
+    {
+        $this->CheckAuth();
+        $user = $this->model('User');       
+        $this->view('Dashboard/index', $user);
+    }
+    
+    private function CheckAdminAuth()
+    {
+        if(isset($_SESSION['IsAdmin']))
+        {
+            $_SESSION['IsAdmin'] == 1;
+        }
+        else
+        {
+           header ('Location: /Dragon-Control/public/Login');
+        }
     }
 }

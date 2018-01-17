@@ -30,6 +30,8 @@ class Login extends Controller
             
             if($auth->Login($un, $pw))
             {
+                $_SESSION['username'] = $un;
+                $_SWSSUIB['isAdmin'] = false; //fix this to pull from user's account.
                 header ('Location: /Dragon-Control/public/');
             }
             else

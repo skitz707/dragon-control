@@ -9,6 +9,7 @@ class User extends Model{
     }
     
     public function GetCharacterName(){
+        //static function for tetsing, needs to be replaced with data from the view.
         $qry = "SELECT * FROM Characters WHERE characterID ='2'";
         $result = mysqli_query($this->db->conn, $qry);
         $row = mysqli_fetch_assoc($result);

@@ -7,6 +7,6 @@ class Dashboard extends Controller
         $this->CheckAuth();
         $this->DisplayMenu();
         $user = $this->model('User');       
-        $this->view('Home/index', $user);
+        $this->view('Dashboard/index', $user);
     }
 }

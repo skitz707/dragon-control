@@ -50,7 +50,7 @@ Handle
 </a>
 <div class="dropdown-menu dropdown-menu-right text-muted" aria-labelledby="Preview">
 <a class="dropdown-item" href="#">Info</a>
-<a class="dropdown-item" href="#">Sign Off</a>
+<a class="dropdown-item" href="login/logoff">Sign Off</a>
 </div>
 </li>
 </ul>
