@@ -12,7 +12,7 @@
  */
 class App
 { 
-    protected $controller = 'home';
+    protected $controller = 'Dashboard';
     protected $method = 'index';
     protected $params = [];
     
