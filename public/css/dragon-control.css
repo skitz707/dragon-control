@@ -1,0 +1,24 @@
+.ability-circle{
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px orange;
+  border: 4px solid orange;
+  background: radial-gradient(white 50%, orange 90%);
+  width: 4em;
+  height: 4em;
+}
+
+.bg-deleted{
+  background-color: rgba(255,0,0,.1);
+}
+
+tr:not(:first-child):hover{
+  background-color: rgba(109, 186, 251, 0.55);
+}
+
+.dc-bg{
+    background-image: url("../images/system/app_background.jpg");
+}
+.dc-push{
+    display: block;
+    height:16em;
+}
