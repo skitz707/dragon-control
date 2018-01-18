@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------------------------
 // includes
 //-------------------------------------------------------------------------------------------
-include_once("classes/DDObject.php");
+include_once("classes/DDCreature.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -22,7 +22,8 @@ include_once("classes/DDObject.php");
 //-------------------------------------------------------------------------------------------
 class DDMonster extends DDCreature {
 	// class properties
-	protected $challengeRating;
+	protected $xpRating;
+	protected $monsterAttacks;
 	
 	//------------------------------------------------------------------------
 	// load player by playerId
@@ -31,7 +32,7 @@ class DDMonster extends DDCreature {
 		$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("monsterId"=>$monsterId));
 		
 		$this->monsterId = $monsterId;
-		$this->monsterName = $monsterRecord['monsterName'];
+		$this->characterName = $monsterRecord['monsterName'];
 		$this->maxHP = $monsterRecord['health'];
 		$this->currentHP = $monsterRecord['health'];
 		$this->armorClass = $monsterRecord['armorClass'];
@@ -41,6 +42,7 @@ class DDMonster extends DDCreature {
 		$this->intelligence = $monsterRecord['intelligence'];
 		$this->wisdom = $monsterRecord['wisdom'];
 		$this->charisma = $monsterRecord['charisma'];
+		$this->xpRating = $monsterRecord['xpRating'];
 		$this->imageLocation = $monsterRecord['imageLocation'];
 		$this->lastChange = $monsterRecord['lastChange'];
 		$this->creationDate = $monsterRecord['creationDate'];
@@ -57,6 +59,71 @@ class DDMonster extends DDCreature {
 		if ($this->battleDetailId > 0) {
 			$battleDetail = $this->database->getDatabaseRecord("dragons.battleDetail", array("entryId"=>$this->battleDetailId));
 			$this->currentHP = $battleDetail['currentHP'];
+		}
+		
+		// load damage resistacnes
+		$this->damageResistances = array();
+		$damageResistancesStmt = "select * from dragons.monsterResistances where monsterId = ?";
+		
+		if ($damageResistanceHandle = $this->database->databaseConnection->prepare($damageResistancesStmt)) {
+			if (!$damageResistanceHandle->execute(array(0=>$this->monsterId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($damageResistanceData = $damageResistanceHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->damageResistances[] = $damageResistanceData['damageTypeId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		// load damage immunities
+		$this->damageImmunities = array();
+		$damageImmunitiesStmt = "select * from dragons.monsterDamageImmunities where monsterId = ?";
+		
+		if ($damageImmunitiesHandle = $this->database->databaseConnection->prepare($damageImmunitiesStmt)) {
+			if (!$damageImmunitiesHandle->execute(array(0=>$this->monsterId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($damageImmunityData = $damageImmunitiesHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->damageImmunities[] = $damageImmunityData['damageTypeId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		// load condition immunities
+		$this->conditionImmunities = array();
+		$conditionImmunitiesStmt = "select * from dragons.monsterConditionImmunities where monsterId = ?";
+		
+		if ($conditionImmunitiesHandle = $this->database->databaseConnection->prepare($conditionImmunitiesStmt)) {
+			if (!$conditionImmunitiesHandle->execute(array(0=>$this->monsterId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($conditionImmunityData = $conditionImmunitiesHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->conditionImmunities[] = $conditionImmunityData['conditionId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		// load attacks
+		$this->monsterAttacks = array();
+		
+		$monsterAttackStmt = "select * from dragons.monsterAttacks where monsterId = ?";
+		
+		if ($monsterAttackHandle = $this->database->databaseConnection->prepare($monsterAttackStmt)) {
+			if (!$monsterAttackHandle->execute(array($this->monsterId))) {
+				var_dump($database->databaseConnection->errorInfo());
+			}
+			
+			while ($monsterAttackData = $monsterAttackHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->monsterAttacks[] = $monsterAttackData['monsterAttackId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
 		}
 	}
 	//------------------------------------------------------------------------
@@ -91,15 +158,14 @@ class DDMonster extends DDCreature {
 	//------------------------------------------------------------------------
 	
 	
-	
 	//------------------------------------------------------------------------
 	// print admin monster card
 	//------------------------------------------------------------------------
 	public function printAdminMonsterCard() {
 		echo '
 			<div class="adminMonsterCard">
-				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
-				<span class="adminMonsterName">' . $this->monsterName . '</span><br />
+				<img src="' . $this->imageLocation . '" width="80px" height="120px" onClick="monsterDetails(\'' . $this->monsterId . '\');" /><br />
+				<span class="adminMonsterName">' . $this->characterName . '</span><br />
 				<em>Enemy</em><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
@@ -119,6 +185,24 @@ class DDMonster extends DDCreature {
 	//------------------------------------------------------------------------
 	protected function updateHP() {
 		$this->database->updateDatabaseRecord("dragons.battleDetail", array("currentHP"=>$this->currentHP), array("entryId"=>$this->battleDetailId));
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get xp rating
+	//------------------------------------------------------------------------
+	public function getXPRating() {
+		return $this->xpRating;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get monster attacks
+	//------------------------------------------------------------------------
+	public function getMonsterAttacks() {
+		return $this->monsterAttacks;
 	}
 	//------------------------------------------------------------------------
 }

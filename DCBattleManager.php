@@ -107,6 +107,7 @@ if ($inBattle) {
 
 ?>
 <div id="popUpBox" title="Enter Values"></div>
+<div id="monsterDetail" title="Monster Detail"></div>
 <script>
 //----------------------------------------------------------------------------
 // create battle
@@ -231,6 +232,52 @@ function heal(type, id) {
 		$( "#popUpBox" ).dialog({
 			width: 350,
 			height: 150
+		});
+	});
+}
+//----------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------
+// pop monster details
+//----------------------------------------------------------------------------
+function monsterDetails(monsterId) {
+	divObj = document.getElementById('monsterDetail');
+	divHTML = "";
+	
+	$.ajax({
+		url: "getMonsterDetail.php?monsterId=" + monsterId,
+		data: "{}",
+		dataType: "json",
+		error: function (res, status) {
+			if (status === "error") {
+				var errorMessage = $.parseJSON(res.responseText);
+				alert(errorMessage.Message);
+			}
+		},
+		success: function (data) {
+
+			divHTML += '<span style="font-size: 14pt; font-style: italic;">' + data.monsterName + ' - ' + data.xpRating + 'xp</span><br /><br />';
+			divHTML += '<span style="font-weight: bold;">AC:</span> ' + data.armorClass + ' | <span style="font-weight: bold;">Health:</span> ' + data.health + '<br />';
+			divHTML += '<span style="font-weight: bold;">STR:</span> ' + data.strength + '(' + data.strengthModifier + ') | <span style="font-weight: bold;">DEX:</span> ' + data.dexterity + '(' + data.dexterityModifier + ')<br />';
+			divHTML += '<span style="font-weight: bold;">CON:</span> ' + data.constitution + '(' + data.constitutionModifier + ') | <span style="font-weight: bold;">INT:</span> ' + data.intelligence + '(' + data.intelligenceModifier + ')<br />';
+			divHTML += '<span style="font-weight: bold;">WIS:</span> ' + data.wisdom + '(' + data.wisdomModifier + ') | <span style="font-weight: bold;">CHA:</span> ' + data.charisma + '(' + data.charismaModifier + ')<br /><br />';
+			divHTML += '<span style="font-weight: bold;">Damage Resistances:</span> <span style="font-style: italic;">' + data.damageResistances + '</span><br /><br />';
+			divHTML += '<span style="font-weight: bold;">Damage Immunities:</span> <span style="font-style: italic;">' + data.damageImmunities + '</span><br /><br />';
+			divHTML += '<span style="font-weight: bold;">Condition Immunities:</span> <span style="font-style: italic;">' + data.conditionImmunities + '</span><br /><br />';
+			divHTML += 'Attacks:<br />';
+			divHTML += data.monsterAttacks;
+			
+			divHTML = divHTML.replace(/null/g, '');
+
+			divObj.innerHTML = divHTML;
+		}
+	});
+	
+	$(function() {
+		$( "#monsterDetail" ).dialog({
+			width: 450,
+			height: 550
 		});
 	});
 }
