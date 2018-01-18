@@ -54,6 +54,7 @@ $returnData['xpRating'] = $monster->getXPRating();
 
 // get damage resistances
 $damageResistances = $monster->getDamageResistances();
+$damageResistanceNames = array();
 
 foreach($damageResistances as $damageResistance) {
 	$damageType = $database->getDatabaseRecord("dragons.damageTypes", array("damageTypeId"=>$damageResistance));
@@ -65,6 +66,7 @@ $returnData['damageResistances'] = implode(",", $damageResistanceNames);
 
 // get damage immunities
 $damageImmunities = $monster->getDamageImmunities();
+$damageImmunityNames = array();
 
 foreach($damageImmunities as $damageImmunity) {
 	$damageType = $database->getDatabaseRecord("dragons.damageTypes", array("damageTypeId"=>$damageImmunity));
@@ -75,6 +77,7 @@ $returnData['damageImmunities'] = implode(",", $damageImmunityNames);
 
 // get condition immunities
 $conditionImmunities = $monster->getConditionImmunities();
+$conditionImmunityNames = array();
 
 foreach($conditionImmunities as $conditionImmunity) {
 	$conditionType = $database->getDatabaseRecord("dragons.conditions", array("conditionId"=>$conditionImmunity));
@@ -104,7 +107,7 @@ foreach($monsterAttacks as $attackId) {
 			$dice = $database->getDatabaseRecord("dragons.diceRolls", array("rollId"=>$diceData['rollId']));
 			$damageType = $database->getDatabaseRecord("dragons.damageTypes", array("damageTypeId"=>$diceData['damageTypeId']));
 			
-			$attackText .= '(' . $dice['diceRoll'] . '+' . $diceData['damageModifier'] . ') ' . $damageType['damageType'] . ' ';
+			$attackText .= '(' . $diceData['numberOfDice'] . $dice['diceRoll'] . '+' . $diceData['damageModifier'] . ') ' . $damageType['damageType'] . ' ';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());
