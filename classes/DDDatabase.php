@@ -8,9 +8,6 @@
 // Change Log:
 //-------------------------------------------------------------------------------------------
 
-
-
-
 //-------------------------------------------------------------------------------------------
 // database class definition
 //-------------------------------------------------------------------------------------------
@@ -22,9 +19,10 @@ class DDDatabase {
 	// constructor function
 	//-------------------------------------------------------------------------------------------
 	public function __construct() {
+            $host = 'localhost';
 		$database = "dragons";
-		$username = "mcs";
-		$password = "C@m31w@1K";
+		$username = "dc_admin";
+		$password = "dc_admin";
 		
 		try {
 			$this->databaseConnection = new PDO('mysql:' . $database, $username, $password);

@@ -1,20 +1,26 @@
 <?php
 
-class User extends Model{
-    public $name  = 'handle';
+class User extends Model
+{
+    public $FirstName  = 'handle';
+    public $LastName;
+    public $email;
+    public $activeCharacterId;
     
     function __construct(){
         $this->db = new Database();
-        $this->name = $this->GetCharacterName();
     }
     
-    public function GetCharacterName(){
-        //static function for tetsing, needs to be replaced with data from the view.
-        $qry = "SELECT * FROM Characters WHERE characterID ='2'";
-        $result = mysqli_query($this->db->conn, $qry);
-        $row = mysqli_fetch_assoc($result);
-        $characterName = $row['CharacterName'];
+    public function Insert($fn, $ln, $email, $pw)
+    {
+        $stmt = "Insert into userMaster (firstName, lastName, emailAddress, passwordHash)"
+                . "values ('".$fn ."','" . $ln . "','" . $email. "','". $pw . "')";
+        echo $stmt;
+        $result = mysqli_query($this->db->conn, $stmt);
         
-        return $characterName;
+        if($result == null){
+            echo "<br>This failed for some reason";
+            echo mysqli_error($this->db->conn);
+        }
     }
 }

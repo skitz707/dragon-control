@@ -16,7 +16,7 @@ class Database {
     private $db_server = 'localhost';
     private $username = 'dc_admin';
     private $password = 'dc_admin';
-    private $database = 'dragoncontrol';
+    private $database = 'dragons';
     public $conn;
     
     function __construct(){
