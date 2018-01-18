@@ -164,6 +164,6 @@ div#mainContent {
 	background: #cccccc;
 }
 
-.standardResultTable tr:nth-child(even) {
-	background: #cccccc;
+.standardResultTable tr:nth-child(odd) {
+	background: #eeeeee;
 }

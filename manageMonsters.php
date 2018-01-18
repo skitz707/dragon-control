@@ -31,37 +31,64 @@ require_once("classes/DDDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$pageTitle = "DC - Campaign Detail";
+$pageTitle = "DC - Manage Monsters";
 $campaignId = $_GET['campaignId'];
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
-
 
 require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-	<span class="largeHeading">Campaign: <?php print($campaignHeader['campaignName']); ?></span>
+	<span class="largeHeading">Manage Monsters: <?php echo $campaignHeader['campaignName']; ?></span>
 	<br /><br />
-	<table style="margin-left: auto; margin-right: auto;">
-		<tr>
-			<td>1. </td>
-			<td><a href="DCSessionManager.php?campaignId=<?php print($campaignId); ?>">Session Manager</a></td>
-		</tr>
-		<tr>
-			<td>2. </td>
-			<td><a href="DCBattleManager.php?campaignId=<?php print($campaignId); ?>">Battle Manager</a></td>
-		</tr>
-		<tr>
-			<td>3. </td>
-			<td><a href="manageCampaignCharacters.php?campaignId=<?php print($campaignId); ?>">Manage Characters</a></td>
-		</tr>
-		<tr>
-			<td>4. </td>
-			<td><a href="manageMonsters.php?campaignId=<?php print($campaignId); ?>">Manage Monsters</a></td>
-		</tr>
-	</table>
+	<a href="createMonster.php?campaignId=<?php echo $campaignId; ?>">Create Monster</a>
+	<br /><br />
+	<?php echo getMonsterTableHTML($database, $campaignId); ?>
 </div>
 
 <?php
 require_once("includes/footer.php");
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// get monster table
+//-------------------------------------------------------------------------------------------
+function getMonsterTableHTML($database, $campaignId) {
+	$selectStmt = "select * from dragons.monsters where campaignId = ? order by xpRating, monsterName";
+	$returnHTML = "";
+	
+	$returnHTML .= '<table class="standardResultTable">
+						<tr>
+							<th>Name</th>
+							<th>XP</th>
+							<th>HP</th>
+							<th>AC</th>
+							<th></th>
+						</tr>
+	';
+	
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute(array(0=>$campaignId))) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+			$returnHTML .= '<tr>
+								<td>' . $data['monsterName'] . '</td>
+								<td>' . $data['xpRating'] . '</td>
+								<td>' . $data['health'] . '</td>
+								<td>' . $data['armorClass'] . '</td>
+								<td><a href="editMonster.php?monsterId=' . $data['monsterId'] . '">Edit</a></td>
+							</tr>
+			';
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+	
+	$returnHTML .= '</table>';
+	
+	return $returnHTML;
+}
 //-------------------------------------------------------------------------------------------
