@@ -50,6 +50,7 @@ class DDCreature extends DDObject {
 	protected $damageResistances;
 	protected $damageImmunities;
 	protected $conditionImmunities;
+	protected $magicSpells;
 	protected $imageLocation;
 	protected $statusFlag;
 	protected $lastChange;
@@ -285,6 +286,15 @@ class DDCreature extends DDObject {
 	//------------------------------------------------------------------------
 	public function getConditionImmunities() {
 		return $this->conditionImmunities;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get magic spells
+	//------------------------------------------------------------------------
+	public function getMagicSpells() {
+		return $this->magicSpells;
 	}
 	//------------------------------------------------------------------------
 }	

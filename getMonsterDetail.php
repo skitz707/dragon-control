@@ -116,5 +116,15 @@ foreach($monsterAttacks as $attackId) {
 
 $returnData['monsterAttacks'] = $attackText;
 
+// build magic spell text
+$magicSpells = $monster->getMagicSpells();
+$spell
+
+foreach ($magicSpells as $spellId) {
+	$spellMaster = $database->getDatabaseRecord("dragons.spells", array("spellId"=>$spellId));
+	$spellText .= "";
+
+
+
 echo json_encode($returnData);
 //-------------------------------------------------------------------------------------------

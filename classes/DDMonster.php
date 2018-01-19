@@ -125,6 +125,23 @@ class DDMonster extends DDCreature {
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
 		}
+		
+		// load magic spells
+		$this->magicSpells = array();
+		
+		$monsterSpellsStmt = "select * from dragons.monsterSpells where monsterId = ?";
+		
+		if ($monsterSpellsHandle = $this->database->databaseConnection->prepare($monsterSpellsStmt)) {
+			if (!$monsterSpellsHandle->execute(array(0=>$this->monsterId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($spellData = $monsterSpellsHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->magicSpells[] = $spellData['spellId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
 	}
 	//------------------------------------------------------------------------
 	
