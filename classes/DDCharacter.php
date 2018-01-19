@@ -60,6 +60,10 @@ class DDCharacter extends DDCreature {
 		$this->wisdomModifier = $this->calculateModifier($this->wisdom);
 		$this->charismaModifier = $this->calculateModifier($this->charisma);
 		
+		if (!$this->battleDetailId > 0) {
+			$this->currentHP = $characterRecord['currentHP'];
+		}
+		
 		// check for active quest
 		$questMaster = $this->database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$this->campaignId, "statusFlag"=>"A"));
 		
@@ -69,18 +73,15 @@ class DDCharacter extends DDCreature {
 			$this->questId = 0;
 		}
 		
-		if (!$this->battleDetailId > 0) {
-			$this->currentHP = $characterRecord['currentHP'];
-		}
-		
 		// check for active battle id 
 		$activeBattle = $this->database->getDatabaseRecord("dragons.battleHeader", array("questId"=>$this->questId, "statusFlag"=>"A"));
 		$activeBattleDetail = $this->database->getDatabaseRecord("dragons.battleDetail", array("battleId"=>$activeBattle['battleId'], "associatedId"=>$this->characterId, "entryType"=>"C"));
 
 		if ($activeBattleDetail['entryId'] > 0) {
 			$this->battleDetailId = $activeBattleDetail['entryId'];
+			$this->currentHP = $activeBattleDetail['currentHP'];
 		}
-	}
+	}	
 	//------------------------------------------------------------------------
 	
 	
@@ -135,12 +136,6 @@ class DDCharacter extends DDCreature {
 			$class = "adminCharacterCard";
 		}
 		
-		if ($this->battleDetailId > 0) {
-			$id = $this->battleDetailId;
-		} else {
-			$id = $this->characterId;
-		}
-		
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
@@ -152,7 +147,7 @@ class DDCharacter extends DDCreature {
 				Str: ' . $this->strength . ' (' . $this->strengthModifier . ') | Dex: ' . $this->dexterity . ' (' . $this->dexterityModifier . ')<br />
 				Con: ' . $this->constitution . 	' (' . $this->constitutionModifier . ') | Int: ' . $this->intelligence . ' (' . $this->intelligenceModifier . ')<br />
 				Wis: ' . $this->wisdom . ' (' . $this->wisdomModifier . ') | Cha: ' . $this->charisma . ' (' . $this->charismaModifier . ')<br />
-				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $id . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $id . ');">Heal</div>
+				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $this->characterId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $this->characterId . ');">Heal</div>
 			</div>
 		';
 	}
@@ -164,7 +159,6 @@ class DDCharacter extends DDCreature {
 	//------------------------------------------------------------------------
 	protected function updateHP() {
 		if ($this->battleDetailId > 0) {
-			echo 'BDID: ' . $this->battleDetailId;
 			$this->database->updateDatabaseRecord("dragons.battleDetail", array("currentHP"=>$this->currentHP), array("entryId"=>$this->battleDetailId));
 		} else {
 			$this->database->updateDatabaseRecord("dragons.characters", array("currentHP"=>$this->currentHP), array("characterId"=>$this->characterId));

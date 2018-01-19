@@ -23,7 +23,7 @@ include_once("classes/DDObject.php");
 class DDBattle extends DDObject {
 	// class properties
 	protected $battleId;
-	protected $playersArray;
+	protected $charactersArray;
 	protected $monstersArray;
 	protected $battleOrder;
 	protected $battleDifficulty;
@@ -48,9 +48,9 @@ class DDBattle extends DDObject {
 		$this->lastChange = $battleRecord['lastChange'];
 		$this->creationDate = $battleRecord['creationDate'];
 		
-		// load players
+		// load characters
 		$playersStmt = "select * from dragons.battleDetail where battleId = ? and entryType = 'C'";
-		$this->playersArray = array();
+		$this->charactersArray = array();
 		$this->playerXPStrength = 0;
 		
 		if ($playersHandle = $this->database->databaseConnection->prepare($playersStmt)) {
@@ -60,7 +60,7 @@ class DDBattle extends DDObject {
 			
 			while ($playerData = $playersHandle->fetch(PDO::FETCH_ASSOC)) {
 				$playerMaster = $this->database->getDatabaseRecord("dragons.players", array("playerId"=>$playerData['associatedId']));
-				$this->playersArray[] = $playerData['associatedId'];
+				$this->charactersArray[] = $playerData['associatedId'];
 				$this->playerXPStrength += $this->addPlayerXPFromLevel($playerMaster['playerLevel']);
 			}
 		} else {
@@ -108,6 +108,23 @@ class DDBattle extends DDObject {
 			}
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
+		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// end battle
+	//------------------------------------------------------------------------
+	public function endBattle() {
+		// update battle flag
+		$this->database->updateDatabaseRecord("dragons.battleHeader", array("statusFlag"=>"F"), array("battleId"=>$this->battleId));
+		
+		// update character HP
+		foreach ($this->charactersArray as $characterId) {
+			$currentRecord = $this->database->getDatabaseRecord("dragons.battleDetail", array("battleId"=>$this->battleId, "associatedId"=>$characterId, "entryType"=>"C"));
+			
+			$this->database->updateDatabaseRecord("dragons.characters", array("currentHP"=>$currentRecord['currentHP']), array("characterId"=>$characterId));
 		}
 	}
 	//------------------------------------------------------------------------
@@ -234,8 +251,8 @@ class DDBattle extends DDObject {
 	//------------------------------------------------------------------------
 	// get players array
 	//------------------------------------------------------------------------
-	public function getPlayersArray() {
-		return $this->playersArray;
+	public function getcharactersArray() {
+		return $this->charactersArray;
 	}
 	//------------------------------------------------------------------------
 	

@@ -23,6 +23,7 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
+require_once("classes/DDBattle.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -31,8 +32,12 @@ require_once("classes/DDDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
+$battle = new DDBattle($database);
 $questHeader = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$_GET['campaignId'], "statusFlag"=>"A"));
-$database->updateDatabaseRecord("dragons.battleHeader", array("statusFlag"=>"F"), array("questId"=>$questHeader['questId'], "statusFlag"=>"A"));
+$battleHeader = $database->getDatabaseRecord("dragons.battleHeader", array("questId"=>$questHeader['questId'], "statusFlag"=>"A"));
+$battle->loadBattleById($battleHeader['battleId']);
+
+$battle->endBattle();
 
 header("Location: DCBattleManager.php?campaignId=" . $_GET['campaignId']);
 //-------------------------------------------------------------------------------------------
