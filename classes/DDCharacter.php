@@ -112,9 +112,9 @@ class DDCharacter extends DDCreature {
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
-				<span class="characterName">' . $this->playerName . '</span><br />
+				<span class="characterName">' . $this->characterName . '</span><br />
 				<em>' . $this->characterRace . ' / ' . $this->characterClass . '</em><br />
-				AC: ' . $this->characterClass . '<br />
+				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
 			</div>
@@ -135,6 +135,12 @@ class DDCharacter extends DDCreature {
 			$class = "adminCharacterCard";
 		}
 		
+		if ($this->battleDetailId > 0) {
+			$id = $this->battleDetailId;
+		} else {
+			$id = $this->characterId;
+		}
+		
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
@@ -146,7 +152,7 @@ class DDCharacter extends DDCreature {
 				Str: ' . $this->strength . ' (' . $this->strengthModifier . ') | Dex: ' . $this->dexterity . ' (' . $this->dexterityModifier . ')<br />
 				Con: ' . $this->constitution . 	' (' . $this->constitutionModifier . ') | Int: ' . $this->intelligence . ' (' . $this->intelligenceModifier . ')<br />
 				Wis: ' . $this->wisdom . ' (' . $this->wisdomModifier . ') | Cha: ' . $this->charisma . ' (' . $this->charismaModifier . ')<br />
-				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $this->characterId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $this->characterId . ');">Heal</div>
+				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $id . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $id . ');">Heal</div>
 			</div>
 		';
 	}
@@ -158,6 +164,7 @@ class DDCharacter extends DDCreature {
 	//------------------------------------------------------------------------
 	protected function updateHP() {
 		if ($this->battleDetailId > 0) {
+			echo 'BDID: ' . $this->battleDetailId;
 			$this->database->updateDatabaseRecord("dragons.battleDetail", array("currentHP"=>$this->currentHP), array("entryId"=>$this->battleDetailId));
 		} else {
 			$this->database->updateDatabaseRecord("dragons.characters", array("currentHP"=>$this->currentHP), array("characterId"=>$this->characterId));

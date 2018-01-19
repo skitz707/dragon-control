@@ -37,7 +37,7 @@ $character = new DDCharacter($database);
 $monster = new DDMonster($database);
 
 if ($_GET['type'] == "C") {
-	$character->loadCharacterById($_POST['id']);
+	$character->loadCharacterByBattleDetailId($_POST['id']);
 	$character->heal($_POST['heal']);
 } else if ($_GET['type'] == "M") {
 	$monster->loadMonsterByBattleDetailId($_POST['id']);

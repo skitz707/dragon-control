@@ -149,7 +149,7 @@ class DDMonster extends DDCreature {
 		echo '
 			<div class="monsterCard">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
-				<span class="monsterName">' . $this->monsterName . '</span><br />
+				<span class="monsterName">' . $this->characterName . '</span><br />
 				AC: ' . $this->armorClass . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
 			</div>
