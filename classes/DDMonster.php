@@ -142,6 +142,22 @@ class DDMonster extends DDCreature {
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
 		}
+		
+		// load special skills
+		$this->specialSkills = array();
+		$specialSkillsStmt = "select specialSkillId from dragons.monsterSpecialSkills where monsterId = ?";
+		
+		if ($specialSkillsHandle = $this->database->databaseConnection->prepare($specialSkillsStmt)) {
+			if (!$specialSkillsHandle->execute(array(0=>$this->monsterId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($specialSkillData = $specialSkillsHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->specialSkills[] = $specialSkillData['specialSkillId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
 	}
 	//------------------------------------------------------------------------
 	

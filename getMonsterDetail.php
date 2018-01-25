@@ -86,6 +86,18 @@ foreach($conditionImmunities as $conditionImmunity) {
 
 $returnData['conditionImmunities'] = implode(",", $conditionImmunityNames);
 
+// get special skills
+$specialSkills = $monster->getSpecialSkills();
+$specialSkillText = "";
+
+foreach($specialSkills as $specialSkillId) {
+	$specialSkillsMaster = $database->getDatabaseRecord("dragons.specialSkills", array("specialSkillId"=>$specialSkillId));
+	
+	$specialSkillText .= '<span style="font-weight: bold;">' . $specialSkillsMaster['specialSkillName'] . '</span> <em>' . $specialSkillsMaster['specialSkillDescription'] . '</em><br /><br />';
+}
+
+$returnData['specialSkills'] = $specialSkillText;
+
 // get attack information
 $monsterAttacks = $monster->getMonsterAttacks();
 $attackText = "";

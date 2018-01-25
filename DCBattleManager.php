@@ -265,6 +265,7 @@ function monsterDetails(monsterId) {
 			divHTML += '<span style="font-weight: bold;">Damage Resistances:</span> <span style="font-style: italic;">' + data.damageResistances + '</span><br /><br />';
 			divHTML += '<span style="font-weight: bold;">Damage Immunities:</span> <span style="font-style: italic;">' + data.damageImmunities + '</span><br /><br />';
 			divHTML += '<span style="font-weight: bold;">Condition Immunities:</span> <span style="font-style: italic;">' + data.conditionImmunities + '</span><br /><br />';
+			divHTML += data.specialSkills;
 			divHTML += 'Attacks:<br />';
 			divHTML += data.monsterAttacks;
 			divHTML += '<br />Magic:<br />';
