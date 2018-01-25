@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// newBattle.php - Updates set inititative.
+// getMonsterDetail.php - Updates set inititative.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
 // December 21st, 2017
@@ -112,19 +112,27 @@ foreach($monsterAttacks as $attackId) {
 	} else {
 		var_dump($database->databaseConnection->errorInfo());
 	}
+	
+	$attackText .= '<br />';
+	
+	if ($monsterAttack['specialText'] > "") {
+		$attackText .= '<em>' . $monsterAttack['specialText'] . '</em><br />';
+	}
 }
 
 $returnData['monsterAttacks'] = $attackText;
 
+
 // build magic spell text
 $magicSpells = $monster->getMagicSpells();
-$spell
+$magicText = "";
 
 foreach ($magicSpells as $spellId) {
-	$spellMaster = $database->getDatabaseRecord("dragons.spells", array("spellId"=>$spellId));
-	$spellText .= "";
+	$magicSpellMaster = $database->getDatabaseRecord("dragons.spells", array("spellId"=>$spellId));
+	$magicText .= '<span style="font-weight: bold;">' . $magicSpellMaster['spellName'] . ':</span> <em>' . $magicSpellMaster['spellDescription'] . '</em><br />';
+}
 
-
+$returnData['magicSpells'] = $magicText;
 
 echo json_encode($returnData);
 //-------------------------------------------------------------------------------------------

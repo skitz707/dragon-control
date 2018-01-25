@@ -267,6 +267,8 @@ function monsterDetails(monsterId) {
 			divHTML += '<span style="font-weight: bold;">Condition Immunities:</span> <span style="font-style: italic;">' + data.conditionImmunities + '</span><br /><br />';
 			divHTML += 'Attacks:<br />';
 			divHTML += data.monsterAttacks;
+			divHTML += '<br />Magic:<br />';
+			divHTML += data.magicSpells;
 			
 			divHTML = divHTML.replace(/null/g, '');
 
