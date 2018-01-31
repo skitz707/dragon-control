@@ -73,15 +73,16 @@ require_once("includes/header.php");
 	<br /><br />
 	<span class="mediumHeading">Add Dice Rolls</span>
 	<br /><br />
-	# of Dice: <input type="text" class="textField" name="numberOfDice" id="numberOfDice" size="2" /> Dice Type: <?php echo getDiceDropdown($database); ?> 
-		<select id="damageHeal" name="damageHeal"><option value="D">Damage</option><option value="H">Heal</option></select> Damage Type: <?php echo getDamageTypeDropdown($database); ?>
-			<select id="primarySecondary" name="primarySecondary"><option value="P">Primary</option><option value="S">Secondary</option></select> <div class="blueButton" onClick="addDice()">Add Dice</div>
+	# of Dice: <input type="text" class="textField" name="numberOfDice" id="numberOfDice" size="2" /> Dice Type: <?php echo getDiceDropdown($database); ?> Modifier: <input type="text" id="rollModifier" name="rollModifier" size="2" value="0" />
+		<?php echo getItemActionTypesDropdown($database); ?> Damage Type: <?php echo getDamageTypeDropdown($database); ?>
+			<?php echo getDiceRoles($database); ?> <div class="blueButton" onClick="addDice()">Add Dice</div>
 	<br /><br />
 	<div id="hiddenParms"></div>
 	<table style="width: 35%; margin-left: auto; margin-right: auto; text-align: center;" id="diceRollsAssigned">
 		<tr>
 			<th># of Dice</th>
 			<th>Dice Roll</th>
+			<th>Modifier</th>
 			<th>Affect</th>
 			<th>Damage Type</th>
 			<th>P/S</th>
@@ -99,14 +100,15 @@ function addDice() {
 	hiddenParmsDiv = document.getElementById('hiddenParms');
 	
 	numberOfDice = document.getElementById('numberOfDice').value;
+	rollModifier = document.getElementById('rollModifier').value;
 	rollId = getSelectedValue('diceRollId');
 	rollText = getSelectedText('diceRollId');
-	damageHeal = getSelectedValue('damageHeal');
-	damageHealText = getSelectedText('damageHeal');
+	itemActionType = getSelectedValue('itemActionType');
+	itemActionTypeText = getSelectedText('itemActionType');
 	damageType = getSelectedValue('damageType');
 	damageTypeText = getSelectedText('damageType');
-	primarySecondary = getSelectedValue('primarySecondary');
-	primarySecondaryText = getSelectedText('primarySecondary');
+	diceRole = getSelectedValue('diceRole');
+	diceRoleText = getSelectedText('diceRole');
 	
 	// create a new row in the table
 	var newRow = diceRollsAssignedTable.insertRow(diceRollsAssignedTable.rows.length);
@@ -119,13 +121,16 @@ function addDice() {
 	newCell.appendChild(document.createTextNode(rollText));
 	
 	var newCell  = newRow.insertCell(2);
-	newCell.appendChild(document.createTextNode(damageHealText));
+	newCell.appendChild(document.createTextNode(rollModifier));
 	
 	var newCell  = newRow.insertCell(3);
-	newCell.appendChild(document.createTextNode(damageTypeText));
+	newCell.appendChild(document.createTextNode(itemActionTypeText));
 	
 	var newCell  = newRow.insertCell(4);
-	newCell.appendChild(document.createTextNode(primarySecondaryText));
+	newCell.appendChild(document.createTextNode(damageTypeText));
+	
+	var newCell  = newRow.insertCell(5);
+	newCell.appendChild(document.createTextNode(diceRoleText));
 
 	// create new hidden forms for posting
 	var input = document.createElement("input");
@@ -144,11 +149,19 @@ function addDice() {
 	document.getElementById('itemForm').appendChild(input);
 	
 	var input = document.createElement("input");
-
-	// create damage/heal hidden field
+	
+	// create roll modifiers hidden field
 	input.setAttribute("type", "hidden");
-	input.setAttribute("name", "damageHeals[]");
-	input.setAttribute("value", damageHeal);
+	input.setAttribute("name", "rollModifiers[]");
+	input.setAttribute("value", rollModifier);
+	document.getElementById('itemForm').appendChild(input);
+	
+	var input = document.createElement("input");
+
+	// create item action types hidden field
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "itemActionTypes[]");
+	input.setAttribute("value", itemActionType);
 	document.getElementById('itemForm').appendChild(input);
 	
 	// create damage type hidden field
@@ -158,13 +171,13 @@ function addDice() {
 	input.setAttribute("name", "damageTypes[]");
 	input.setAttribute("value", damageType);
 	document.getElementById('itemForm').appendChild(input);
-	
+
+	// create dice role hidden field
 	var input = document.createElement("input");
 
-	// create damage primary/secondary hidden field
 	input.setAttribute("type", "hidden");
-	input.setAttribute("name", "primarySecondary[]");
-	input.setAttribute("value", primarySecondary);
+	input.setAttribute("name", "diceRoles[]");
+	input.setAttribute("value", diceRole);
 	document.getElementById('itemForm').appendChild(input);
 }
 //--------------------------------------------------------------------------
@@ -327,6 +340,62 @@ function getPropertiesCheckboxes($database) {
 	}
 	
 	$returnHTML .= '</table>';
+	
+	return $returnHTML;
+}
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// get item roles
+//-------------------------------------------------------------------------------------------
+function getDiceRoles($database) {
+	$selectStmt = "select * from dragons.diceRoles order by diceRole";
+	$returnHTML = "";
+	
+	$returnHTML .= '<select id="diceRole" name="diceRole">';
+	
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute()) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+			$returnHTML .= '<option value="' . $data['diceRoleId'] . '">' . $data['diceRole'] . '</option>';
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+	
+	$returnHTML .= '</select>';
+	
+	return $returnHTML;
+}
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// get item action types dropdown 
+//-------------------------------------------------------------------------------------------
+function getItemActionTypesDropdown($database) {
+	$selectStmt = "select * from dragons.itemActionTypes order by itemActionType";
+	$returnHTML = "";
+	
+	$returnHTML .= '<select id="itemActionType" name="itemActionType">';
+	
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute()) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+			$returnHTML .= '<option value="' . $data['itemActionTypeId'] . '">' . $data['itemActionType'] . '</option>';
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+	
+	$returnHTML .= '</select>';
 	
 	return $returnHTML;
 }
