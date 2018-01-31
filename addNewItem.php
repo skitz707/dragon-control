@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// campaignDetail.php - Campaign detail page.
+// newBattle.php - Updates set inititative.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// January 15th, 2018
+// December 21st, 2017
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -31,41 +31,17 @@ require_once("classes/DDDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$pageTitle = "DC - Campaign Detail";
-$campaignId = $_GET['campaignId'];
-$campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
 
+$itemMaster['campaignId'] = $_POST['campaignId'];
+$itemMaster['itemName'] = $_POST['itemName'];
+$itemMaster['itemDescription'] = $_POST['itemDescription'];
+$itemMaster['itemType'] = $_POST['itemType'];
+$itemMaster['cost'] = $_POST['cost'];
+$itemMaster['itemWeight'] = $_POST['weight'];
 
-require_once("includes/header.php");
-?>
+var_dump($itemMaster);
 
-<div id="mainContent">
-	<span class="largeHeading">Campaign: <?php print($campaignHeader['campaignName']); ?></span>
-	<br /><br />
-	<table style="margin-left: auto; margin-right: auto;">
-		<tr>
-			<td>1.</td>
-			<td><a href="DCSessionManager.php?campaignId=<?php print($campaignId); ?>">Session Manager</a></td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td><a href="DCBattleManager.php?campaignId=<?php print($campaignId); ?>">Battle Manager</a></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><a href="manageCampaignCharacters.php?campaignId=<?php print($campaignId); ?>">Manage Characters</a></td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td><a href="manageMonsters.php?campaignId=<?php print($campaignId); ?>">Manage Monsters</a></td>
-		</tr>
-		<tr>
-			<td>5.</td>
-			<td><a href="manageItems.php?campaignId=<?php print($campaignId); ?>">Manage Items</a></td>
-		</tr>
-	</table>
-</div>
+var_dump($_POST);
 
-<?php
-require_once("includes/footer.php");
+//header("Location: manageMonsters.php?campaignId=" . $questMaster['campaignId']);
 //-------------------------------------------------------------------------------------------

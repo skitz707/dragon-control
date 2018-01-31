@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// manageItems.php - Manage Items
+// manageItems.php - Manage items.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// January 15th, 2018
+// January 31st, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -31,7 +31,8 @@ require_once("classes/DDDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$pageTitle = "DC - Manage Monsters";
+
+$pageTitle = "DC - Manage Items";
 $campaignId = $_GET['campaignId'];
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
 
@@ -39,11 +40,11 @@ require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-	<span class="largeHeading">Manage Monsters: <?php echo $campaignHeader['campaignName']; ?></span>
+	<span class="largeHeading">Manage Items: <?php echo $campaignHeader['campaignName']; ?></span>
 	<br /><br />
-	<a href="createMonster.php?campaignId=<?php echo $campaignId; ?>">Create Monster</a>
+	<a href="createItem.php?campaignId=<?php echo $campaignId; ?>">Create Item</a>
 	<br /><br />
-	<?php echo getMonsterTableHTML($database, $campaignId); ?>
+	<?php echo getItemTableHTML($database, $campaignId); ?>
 </div>
 
 <?php
@@ -52,18 +53,16 @@ require_once("includes/footer.php");
 
 
 //-------------------------------------------------------------------------------------------
-// get monster table
+// get item table
 //-------------------------------------------------------------------------------------------
-function getMonsterTableHTML($database, $campaignId) {
-	$selectStmt = "select * from dragons.monsters where campaignId = ? order by xpRating, monsterName";
+function getItemTableHTML($database, $campaignId) {
+	$selectStmt = "select * from dragons.itemMaster where campaignId = ? order by itemName";
 	$returnHTML = "";
 	
 	$returnHTML .= '<table class="standardResultTable">
 						<tr>
 							<th>Name</th>
-							<th>XP</th>
-							<th>HP</th>
-							<th>AC</th>
+							<th>Type</th>
 							<th></th>
 						</tr>
 	';
@@ -74,12 +73,12 @@ function getMonsterTableHTML($database, $campaignId) {
 		}
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+			$itemType = $database->getDatabaseRecord("dragons.itemTypes", array("itemTypeId"=>$data['itemType']));
+			
 			$returnHTML .= '<tr>
-								<td>' . $data['monsterName'] . '</td>
-								<td>' . $data['xpRating'] . '</td>
-								<td>' . $data['health'] . '</td>
-								<td>' . $data['armorClass'] . '</td>
-								<td><a href="editMonster.php?monsterId=' . $data['monsterId'] . '">Edit</a></td>
+								<td>' . $data['itemName'] . '</td>
+								<td>' . $itemType['itemType'] . '</td>
+								<td><a href="editItem.php?itemId=' . $data['itemId'] . '">Edit</a></td>
 							</tr>
 			';
 		}
