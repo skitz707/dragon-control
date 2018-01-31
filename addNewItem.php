@@ -69,5 +69,13 @@ foreach ($_POST['numberOfDice'] as $numberOfDice) {
 	$i++;
 }
 
-//header("Location: manageMonsters.php?campaignId=" . $questMaster['campaignId']);
+// check if armor class is set
+if ($_POST['armorClass'] > '') {
+	$armorClass['itemId'] = $itemId;
+	$armorClass['armorClass'] = $_POST['armorClass'];
+	
+	$database->insertDatabaseRecord("dragons.itemArmorClass", $armorClass);
+}
+
+header("Location: manageItems.php?campaignId=" . $_POST['campaignId']);
 //-------------------------------------------------------------------------------------------

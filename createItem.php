@@ -64,6 +64,10 @@ require_once("includes/header.php");
 			<td><input type="text" class="textField" name="weight" id="weight" size="3" /></td>
 		</tr>
 		<tr>
+			<td>AC</td>
+			<td><input type="text" class="textField" name="armorClass" id="armorClass" size="3" /></td>
+		</tr>
+		<tr>
 			<td>Properties</td>
 			<td><?php echo getPropertiesCheckboxes($database); ?></td>
 		</tr>
@@ -281,7 +285,7 @@ function getDamageTypeDropdown($database) {
 	$selectStmt = "select * from dragons.damageTypes order by damageType";
 	$returnHTML = "";
 	
-	$returnHTML .= '<select id="damageType" name="damageType"><option>[damage type]</option>';
+	$returnHTML .= '<select id="damageType" name="damageType"><option value="0">[damage type]</option>';
 	
 	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
 		if (!$selectHandle->execute()) {
