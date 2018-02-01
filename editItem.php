@@ -55,7 +55,7 @@ include_once("includes/leaderNavigation.php");
 <div id="mainContent">
 	<span class="largeHeading">Edit Item: <?php echo $itemMaster['itemName']; ?></span>
 	<br /><br />
-	<form method="post" id="itemForm" action="addNewItem.php">
+	<form method="post" id="itemForm" action="updateItem.php">
 	<table class="standardResultTable" style="width: 30%; margin-left: auto; margin-right: auto;">
 		<tr>
 			<td>Item Type</td>
@@ -86,7 +86,7 @@ include_once("includes/leaderNavigation.php");
 			<td><?php echo getPropertiesCheckboxes($database, $item); ?></td>
 		</tr>
 	</table>
-	<input type="hidden" name="campaignId" id="campaignId" value="<?php echo $campaignId; ?>" />
+	<input type="hidden" name="itemId" id="itemId" value="<?php echo $itemId; ?>" />
 	</form>
 	<br /><br />
 	<span class="mediumHeading">Add Dice Rolls</span>
@@ -97,8 +97,8 @@ include_once("includes/leaderNavigation.php");
 	<br /><br />
 	<div id="hiddenParms"></div>
 	<?php echo getItemDiceHTML($database, $itemId); ?>
-	
-	<div class="greenButton" onClick="document.getElementById('itemForm').submit();">Create Item</div>
+	<br />
+	<div class="greenButton" onClick="document.getElementById('itemForm').submit();">Update Item</div>
 </div>
 
 <script>
