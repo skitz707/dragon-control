@@ -35,10 +35,13 @@ $pageTitle = "DC - Edit Character";
 $characterId = $_GET['characterId'];
 $characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$characterMaster['campaignId']));
+$_GET['campaignId'] = $campaignHeader['campaignId'];
 
 require_once("includes/header.php");
+include_once("includes/leaderNavigation.php");
 ?>
 
+<br /><br />
 <div id="mainContent">
 	<span class="largeHeading">Edit Character: <?php echo $characterMaster['characterName']; ?></span>
 	<br /><br />

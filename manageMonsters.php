@@ -36,8 +36,10 @@ $campaignId = $_GET['campaignId'];
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
 
 require_once("includes/header.php");
+include_once("includes/leaderNavigation.php");
 ?>
 
+<br /><br />
 <div id="mainContent">
 	<span class="largeHeading">Manage Monsters: <?php echo $campaignHeader['campaignName']; ?></span>
 	<br /><br />

@@ -50,5 +50,5 @@ if ($itemExists['characterItemId'] > 0) {
 	$database->insertDatabaseRecord("dragons.characterItems", $characterItem);
 }
 
-header("Location: editCharacter?charcterId=" . $_POST['characterId']);
+header("Location: editCharacter.php?characterId=" . $_POST['characterId']);
 //-------------------------------------------------------------------------------------------
