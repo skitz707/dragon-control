@@ -108,6 +108,7 @@ if ($inBattle) {
 ?>
 <div id="popUpBox" title="Enter Values"></div>
 <div id="monsterDetail" title="Monster Detail"></div>
+<div id="characterDetail" title="Character Detail"></div>
 <script>
 //----------------------------------------------------------------------------
 // create battle
@@ -279,6 +280,55 @@ function monsterDetails(monsterId) {
 	
 	$(function() {
 		$( "#monsterDetail" ).dialog({
+			width: 450,
+			height: 550
+		});
+	});
+}
+//----------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------
+// pop character details
+//----------------------------------------------------------------------------
+function characterDetails(characterId) {
+	divObj = document.getElementById('characterDetail');
+	divHTML = "";
+	
+	$.ajax({
+		url: "getCharacterDetail.php?characterId=" + characterId,
+		data: "{}",
+		dataType: "json",
+		error: function (res, status) {
+			if (status === "error") {
+				var errorMessage = $.parseJSON(res.responseText);
+				alert(errorMessage.Message);
+			}
+		},
+		success: function (data) {
+			
+			divHTML += '<span style="font-size: 14pt; font-style: italic;">' + data.characterName + ' - ' + data.characterRace + '/' + data.characterClass + '</span><br /><br />';
+			divHTML += '<span style="font-weight: bold;">AC:</span> ' + data.armorClass + ' | <span style="font-weight: bold;">HP:</span> ' + data.currentHP + '/' + data.maxHP + '<br />';
+			divHTML += '<span style="font-weight: bold;">STR:</span> ' + data.strength + '(' + data.strengthModifier + ') | <span style="font-weight: bold;">DEX:</span> ' + data.dexterity + '(' + data.dexterityModifier + ')<br />';
+			divHTML += '<span style="font-weight: bold;">CON:</span> ' + data.constitution + '(' + data.constitutionModifier + ') | <span style="font-weight: bold;">INT:</span> ' + data.intelligence + '(' + data.intelligenceModifier + ')<br />';
+			divHTML += '<span style="font-weight: bold;">WIS:</span> ' + data.wisdom + '(' + data.wisdomModifier + ') | <span style="font-weight: bold;">CHA:</span> ' + data.charisma + '(' + data.charismaModifier + ')<br /><br />';
+			//divHTML += '<span style="font-weight: bold;">Damage Resistances:</span> <span style="font-style: italic;">' + data.damageResistances + '</span><br /><br />';
+			//divHTML += '<span style="font-weight: bold;">Damage Immunities:</span> <span style="font-style: italic;">' + data.damageImmunities + '</span><br /><br />';
+			//divHTML += '<span style="font-weight: bold;">Condition Immunities:</span> <span style="font-style: italic;">' + data.conditionImmunities + '</span><br /><br />';
+			//divHTML += data.specialSkills;
+			//divHTML += 'Attacks:<br />';
+			//divHTML += data.monsterAttacks;
+			//divHTML += '<br />Magic:<br />';
+			//divHTML += data.magicSpells;
+			
+			divHTML = divHTML.replace(/null/g, '');
+
+			divObj.innerHTML = divHTML;
+		}
+	});
+	
+	$(function() {
+		$( "#characterDetail" ).dialog({
 			width: 450,
 			height: 550
 		});

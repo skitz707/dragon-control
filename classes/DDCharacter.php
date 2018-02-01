@@ -138,7 +138,7 @@ class DDCharacter extends DDCreature {
 		
 		echo '
 			<div class="' . $class . '">
-				<img src="' . $this->imageLocation . '" width="80px" height="120px" /><br />
+				<img src="' . $this->imageLocation . '" width="80px" height="120px" onClick="characterDetails(' . $this->characterId . ');" /><br />
 				<span class="adminCharacterName">' . $this->characterName . '</span><br />
 				<em>' . $this->characterRace . ' / ' . $this->characterClass . '</em><br />
 				AC: ' . $this->armorClass . '<br />

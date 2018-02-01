@@ -82,7 +82,7 @@ function getCharacterTableHTML($database, $campaignId) {
 								<td style="text-align: right;">' . $data['maxHP'] . '</td>
 								<td style="text-align: right;">' . $data['armorClass'] . '</td>
 								<td style="text-align: center;">' . $data['statusFlag'] . '</td>
-								<td style="text-align: center;"><a href="editCharacter.php?characterId=' . $data['characterId'] . '">Edit</a></td>
+								<td style="text-align: center;"><a href="editCharacterInfo.php?characterId=' . $data['characterId'] . '">Edit</a></td>
 							</tr>
 			';
 		}

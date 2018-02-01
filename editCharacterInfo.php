@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// editCharacter.php - Edit character
+// editCharacterInfo.php - Edit character
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
 // January 31st, 2018
@@ -44,6 +44,9 @@ include_once("includes/leaderNavigation.php");
 <br /><br />
 <div id="mainContent">
 	<span class="largeHeading">Edit Character: <?php echo $characterMaster['characterName']; ?></span>
+	<br /><br />
+	<a href="editCharacterInfo.php?characterId=<?php echo $characterId; ?>">Character Info</a> | <a href="editCharacterItems.php?characterId=<?php echo $characterId; ?>">Character Items</a> |
+	<a href="editCharacterEquipment.php?characterId=<?php echo $characterId; ?>">Character Equipment</a>
 	<br /><br />
 	<form method="post" id="characterForm" action="updateCharacter.php">
 	<table class="standardResultTable" style="width: 30%; margin-left: auto; margin-right: auto;">
@@ -104,15 +107,6 @@ include_once("includes/leaderNavigation.php");
 	<input type="hidden" name="characterId" id="characterId" value="<?php echo $characterId; ?>" />
 	</form>
 	<div class="greenButton" onClick="document.getElementById('characterForm').submit();">Update Character</div>
-	<br /><br />
-	<span class="mediumHeading">Character Items</span>
-	<br /><br />
-	<form method="post" action="addCharacterItem.php" id="itemForm">
-	Add Item: <?php echo getItemDropdown($database); ?> Quantity: <input type="text" id="itemQuantity" name="itemQuantity" size="2" /> <div class="blueButton" onClick="document.getElementById('itemForm').submit();">Add Item</div>
-	<input type="hidden" id="characterId" name="characterId" value="<?php echo $characterId; ?>" />
-	</form>
-	<br /><br />
-	<?php echo getCharacterItems($database, $characterId); ?>
 </div>
 
 <?php
@@ -206,73 +200,3 @@ function getConditionTypesCheckboxes($database, $fieldName) {
 	return $returnHTML;
 }
 //-------------------------------------------------------------------------------------------
-
-
-//-------------------------------------------------------------------------------------------
-// get item dropdown
-//-------------------------------------------------------------------------------------------
-function getItemDropdown($database) {
-	$selectStmt = "select * from dragons.itemMaster order by itemName";
-	$returnHTML = "";
-	
-	$returnHTML .= '<select id="itemId" name="itemId"><option>[select an item]</option>';
-	
-	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
-		if (!$selectHandle->execute()) {
-			var_dump($database->databaseConnection->errorInfo());
-		}
-		
-		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-			$returnHTML .= '<option value="' . $data['itemId'] . '">' . $data['itemName'] . '</option>';
-		}
-	} else {
-		var_dump($database->databaseConnection->errorInfo());
-	}
-	
-	$returnHTML .= '</select>';
-	
-	return $returnHTML;
-}
-//-------------------------------------------------------------------------------------------
-
-
-//-------------------------------------------------------------------------------------------
-// get character items
-//-------------------------------------------------------------------------------------------
-function getCharacterItems($database, $characterId) {
-	$selectStmt = "select * from dragons.characterItems t1 inner join dragons.itemMaster t2 on t1.itemId = t2.itemId where t1.characterId = ? order by t2.itemName";
-	$returnHTML = "";
-	
-	$returnHTML .= '<table class="standardResultTable" style="width: 35%;">
-						<tr>
-							<th>Item</th>
-							<th>Type</th>
-							<th>Quantity</th>
-						</tr>
-	';
-	
-	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
-		if (!$selectHandle->execute(array(0=>$characterId))) {
-			var_dump($database->databaseConnection->errorInfo());
-		}
-		
-		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-			$itemType = $database->getDatabaseRecord("dragons.itemTypes", array("itemTypeId"=>$data['itemType']));
-			
-			$returnHTML .= '<tr>
-								<td>' . $data['itemName'] . '</td>
-								<td>' . $itemType['itemType'] . '</td>
-								<td>' . $data['quantity'] . '</td>
-							</tr>
-			';
-		}
-	} else {
-		var_dump($database->databaseConnection->errorInfo());
-	}
-	
-	$returnHTML .= '</table>';
-	
-	return $returnHTML;
-}
-//-------------------------------------------------------------------------------------------
-
