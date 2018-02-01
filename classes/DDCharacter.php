@@ -37,7 +37,6 @@ class DDCharacter extends DDCreature {
 		$this->characterName = $characterRecord['characterName'];
 		$this->characterRace = $this->database->getDatabaseRecord("dragons.characterRaces", array("characterRaceId"=>$characterRecord['characterRace']))['characterRace'];
 		$this->characterClass = $this->database->getDatabaseRecord("dragons.characterClasses", array("characterClassId"=>$characterRecord['characterClass']))['characterClass'];
-		$this->characterLevel = $characterRecord['characterLevel'];
 		$this->characterXP = $characterRecord['characterXP'];
 		$this->maxHP = $characterRecord['maxHP'];
 		$this->strength = $characterRecord['strength'];
@@ -61,6 +60,9 @@ class DDCharacter extends DDCreature {
 		
 		// calculate armor class
 		$this->armorClass = $this->calculateArmorClass();
+		
+		// get character level
+		$this->characterLevel = $this->calculateCharacterLevel();
 		
 		if (!$this->battleDetailId > 0) {
 			$this->currentHP = $characterRecord['currentHP'];
@@ -223,6 +225,27 @@ class DDCharacter extends DDCreature {
 		}
 		
 		return $armorClass;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// calculate character level
+	//------------------------------------------------------------------------
+	private function calculateCharacterLevel() {
+		$levelStmt = "select max(characterLevel) as level from dragons.xpLevels where xpAmount <= ?";
+		
+		if ($levelHandle = $this->database->databaseConnection->prepare($levelStmt)) {
+			if (!$levelHandle->execute(array(0=>$this->characterXP))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			$level = $levelHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		return $level['level'];
 	}
 	//------------------------------------------------------------------------
 }

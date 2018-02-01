@@ -38,6 +38,8 @@ $character->loadCharacterById($_GET['characterId']);
 $returnData['characterName'] = $character->getCharacterName();
 $returnData['characterRace'] = $character->getCharacterRace();
 $returnData['characterClass'] = $character->getCharacterClass();
+$returnData['characterLevel'] = $character->getCharacterLevel();
+$returnData['characterXP'] = $character->getCharacterXP();
 $returnData['currentHP'] = $character->getCurrentHP();
 $returnData['maxHP'] = $character->getMaxHP();
 $returnData['armorClass'] = $character->getArmorClass();

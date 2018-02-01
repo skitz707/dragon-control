@@ -307,7 +307,8 @@ function characterDetails(characterId) {
 		},
 		success: function (data) {
 			
-			divHTML += '<span style="font-size: 14pt; font-style: italic;">' + data.characterName + ' - ' + data.characterRace + '/' + data.characterClass + '</span><br /><br />';
+			divHTML += '<span style="font-size: 14pt; font-style: italic;">' + data.characterName + ' - ' + data.characterRace + '/' + data.characterClass + '</span><br />';
+			divHTML += '<span style="font-weight: bold;">Level: ' + data.characterLevel + ' | XP: ' + data.characterXP + '</span><br /><br />';
 			divHTML += '<span style="font-weight: bold;">AC:</span> ' + data.armorClass + ' | <span style="font-weight: bold;">HP:</span> ' + data.currentHP + '/' + data.maxHP + '<br />';
 			divHTML += '<span style="font-weight: bold;">STR:</span> ' + data.strength + '(' + data.strengthModifier + ') | <span style="font-weight: bold;">DEX:</span> ' + data.dexterity + '(' + data.dexterityModifier + ')<br />';
 			divHTML += '<span style="font-weight: bold;">CON:</span> ' + data.constitution + '(' + data.constitutionModifier + ') | <span style="font-weight: bold;">INT:</span> ' + data.intelligence + '(' + data.intelligenceModifier + ')<br />';
