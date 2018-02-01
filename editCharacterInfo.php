@@ -55,10 +55,6 @@ include_once("includes/leaderNavigation.php");
 			<td><input type="text" class="textField" name="characterName" id="characterName" size="20" value="<?php echo $characterMaster['characterName']; ?>" /></td>
 		</tr>
 		<tr>
-			<td>Armor Class</td>
-			<td><input type="text" class="textField" name="armorClass" id="armorClass" size="3" value="<?php echo $characterMaster['armorClass']; ?>" /></td>
-		</tr>
-		<tr>
 			<td>Health</td>
 			<td><input type="text" class="textField" name="health" id="health" size="3" value="<?php echo $characterMaster['maxHP']; ?>" /></td>
 		</tr>

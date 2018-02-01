@@ -33,7 +33,6 @@ require_once("classes/DDDatabase.php");
 $database = new DDDatabase();
 
 $character['characterName'] = $_POST['characterName'];
-$character['armorClass'] = $_POST['armorClass'];
 $character['maxHP'] = $_POST['health'];
 $character['strength'] = $_POST['strength'];
 $character['dexterity'] = $_POST['dexterity'];
