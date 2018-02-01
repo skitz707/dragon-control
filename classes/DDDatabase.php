@@ -91,8 +91,6 @@ class DDDatabase {
 			var_dump($this->databaseConnection->errorInfo());
 			print($deleteStmt);
 		}
-		
-		return $data;
 	}
 	//-------------------------------------------------------------------------------------------
 	

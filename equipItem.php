@@ -32,8 +32,15 @@ require_once("classes/DDDatabase.php");
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
 
-var_dump($_POST);
+$database->deleteDatabaseRecord("dragons.characterEquippedItems", array("characterId"=>$_POST['characterId'], "equipableLocationId"=>$_POST['equipableLocationId']));
 
+if ($_POST['itemId'] > 0) {
+	$equippedItem['characterId'] = $_POST['characterId'];
+	$equippedItem['itemId'] = $_POST['itemId'];
+	$equippedItem['equipableLocationId'] = $_POST['equipableLocationId'];
+	
+	$database->insertDatabaseRecord("dragons.characterEquippedItems", $equippedItem);
+}
 
-//header("Location: editCharacter.php?characterId=" . $_POST['characterId']);
+header("Location: editCharacterEquipment.php?characterId=" . $_POST['characterId']);
 //-------------------------------------------------------------------------------------------

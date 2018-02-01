@@ -40,7 +40,6 @@ class DDCharacter extends DDCreature {
 		$this->characterLevel = $characterRecord['characterLevel'];
 		$this->characterXP = $characterRecord['characterXP'];
 		$this->maxHP = $characterRecord['maxHP'];
-		$this->armorClass = $characterRecord['armorClass'];
 		$this->strength = $characterRecord['strength'];
 		$this->dexterity = $characterRecord['dexterity'];
 		$this->constitution = $characterRecord['constitution'];
@@ -59,6 +58,9 @@ class DDCharacter extends DDCreature {
 		$this->intelligenceModifier = $this->calculateModifier($this->intelligence);
 		$this->wisdomModifier = $this->calculateModifier($this->wisdom);
 		$this->charismaModifier = $this->calculateModifier($this->charisma);
+		
+		// calculate armor class
+		$this->armorClass = $this->calculateArmorClass();
 		
 		if (!$this->battleDetailId > 0) {
 			$this->currentHP = $characterRecord['currentHP'];
@@ -163,6 +165,64 @@ class DDCharacter extends DDCreature {
 		} else {
 			$this->database->updateDatabaseRecord("dragons.characters", array("currentHP"=>$this->currentHP), array("characterId"=>$this->characterId));
 		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// calculate armor class
+	//------------------------------------------------------------------------
+	private function calculateArmorClass() {
+		// check for equipped armor
+		$armorClass = 0;
+		$bodyId = $this->database->getDatabaseRecord("dragons.equipableLocations", array("equipableLocation"=>"Body"));
+		$armorEquipped = $this->database->getDatabaseRecord("dragons.characterEquippedItems", array("characterId"=>$this->characterId, "equipableLocationId"=>$bodyId['equipableLocationId']));
+		
+		// is there armor equipped?
+		if ($armorEquipped['characterEquippedItemId'] > 0) {
+			$itemMaster = $this->database->getDatabaseRecord("dragons.itemMaster", array("itemId"=>$armorEquipped['itemId']));
+			$itemArmorClass = $this->database->getDatabaseRecord("dragons.itemArmorClass", array("itemId"=>$armorEquipped['itemId']));
+			$armorClass = $itemArmorClass['armorClass'];
+			
+			// check armor type to determine if dex modifiers are added
+			// is it light armor?
+			if ($itemMaster['itemType'] == 8) {
+				$armorClass += $this->dexterityModifier;
+			// is it medium armor?
+			} else if ($itemMaster['itemType'] == 16) {
+				if ($this->dexterityModifier > 2) {
+					$armorClass += 2;
+				} else {
+					$armorClass += $this->dexterityModifier;
+				}
+			// is it heavy armor?
+			} else {
+				// no dexterity bonuses
+			}
+		} else {
+			$armorClass = 10 + $this->dexterityModifier;
+		}
+		
+		// check for an equipped shield
+		$shieldStmt = "select * from dragons.characterEquippedItems t1 inner join dragons.itemMaster t2 on t1.itemId = t2.itemId where characterId = ? and t2.itemType = 18";
+		
+		if ($shieldHandle = $this->database->databaseConnection->prepare($shieldStmt)) {
+			if (!$shieldHandle->execute(array(0=>$this->characterId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			$equippedShield = $shieldHandle->fetcH(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		if ($equippedShield['characterEquippedItemId'] > 0) {
+			$shieldArmorClass = $this->database->getDatabaseRecord("dragons.itemArmorClass", array("itemId"=>$equippedShield['itemId']));
+			
+			$armorClass += $shieldArmorClass['armorClass'];
+		}
+		
+		return $armorClass;
 	}
 	//------------------------------------------------------------------------
 }
