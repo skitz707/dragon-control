@@ -68,6 +68,22 @@ class DDItem extends DDObject {
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
 		}
+		
+		// load equipable locations
+		$equipableStmt = "select * from dragons.itemEquipableLocations where itemId = ?";
+		$this->itemEquipableLocations = array();
+		
+		if ($equipableHandle = $this->database->databaseConnection->prepare($equipableStmt)) {
+			if (!$equipableHandle->execute(array(0=>$this->itemId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($equipData = $equipableHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->itemEquipableLocations[] = $equipData['equipableLocationId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
 	}
 	//------------------------------------------------------------------------
 	
@@ -77,6 +93,15 @@ class DDItem extends DDObject {
 	//------------------------------------------------------------------------
 	public function getItemProperties() {
 		return $this->itemProperties;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get item equipable locations
+	//------------------------------------------------------------------------
+	public function getItemEquipableLocations() {
+		return $this->itemEquipableLocations;
 	}
 	//------------------------------------------------------------------------
 }	

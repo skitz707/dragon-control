@@ -35,8 +35,8 @@ class DDCharacter extends DDCreature {
 		$this->ownerId = $characterRecord['ownerId'];
 		$this->campaignId = $characterRecord['campaignId'];
 		$this->characterName = $characterRecord['characterName'];
-		$this->characterRace = $characterRecord['characterRace'];
-		$this->characterClass = $characterRecord['characterClass'];
+		$this->characterRace = $this->database->getDatabaseRecord("dragons.characterRaces", array("characterRaceId"=>$characterRecord['characterRace']))['characterRace'];
+		$this->characterClass = $this->database->getDatabaseRecord("dragons.characterClasses", array("characterClassId"=>$characterRecord['characterClass']))['characterClass'];
 		$this->characterLevel = $characterRecord['characterLevel'];
 		$this->characterXP = $characterRecord['characterXP'];
 		$this->maxHP = $characterRecord['maxHP'];
@@ -140,7 +140,7 @@ class DDCharacter extends DDCreature {
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="80px" height="120px" onClick="characterDetails(' . $this->characterId . ');" /><br />
 				<span class="adminCharacterName">' . $this->characterName . '</span><br />
-				<em>' . $this->characterRace . ' / ' . $this->characterClass . '</em><br />
+				<span style="font-size: 12pt; font-style: italic;">' . $this->characterRace . ' / ' . $this->characterClass . '</span><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '<br />

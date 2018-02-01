@@ -33,6 +33,8 @@ require_once("classes/DDDatabase.php");
 $database = new DDDatabase();
 $itemId = $_POST['itemId'];
 
+var_dump($_POST);
+
 $itemMaster['itemName'] = $_POST['itemName'];
 $itemMaster['itemDescription'] = $_POST['itemDescription'];
 $itemMaster['itemType'] = $_POST['itemType'];
@@ -77,6 +79,27 @@ foreach ($_POST['numberOfDice'] as $numberOfDice) {
 	$i++;
 }
 
+
+// remove all equipable locations
+$equipDeleteStmt = "delete from dragons.itemEquipableLocations where itemId = ?";
+
+if ($equipDeleteHandle = $database->databaseConnection->prepare($equipDeleteStmt)) {
+	if (!$equipDeleteHandle->execute(array(0=>$itemId))) {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+} else {
+	var_dump($database->databaseConnection->errorInfo());
+}
+
+// build equipable location data
+foreach ($_POST['equipableLocations'] as $equipableLocationId) {
+	$equipableLocation['itemId'] = $itemId;
+	$equipableLocation['equipableLocationId'] = $equipableLocationId;
+	
+	$database->insertDatabaseRecord("dragons.itemEquipableLocations", $equipableLocation);
+}
+
+
 // check if armor class is set
 if ($_POST['armorClass'] > '') {
 	// check for existing record
@@ -92,5 +115,5 @@ if ($_POST['armorClass'] > '') {
 	}
 }
 
-//header("Location: editItem.php?itemId=" . $itemId);
+header("Location: editItem.php?itemId=" . $itemId);
 //-------------------------------------------------------------------------------------------

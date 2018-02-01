@@ -83,12 +83,16 @@ function getEquippedItems($database, $characterId) {
 				$itemName = "[empty]";
 			}
 			
-			$returnHTML .= '<tr>
+			$returnHTML .= '<form method="post" action="equipItem.php" id="equipItemForm' . $data['equipableLocationId'] . '">
+							<tr>
 								<td>' . $data['equipableLocation'] . '</td>
 								<td>' . $itemName . '</td>
 								<td>' . getCharacterItemDropdown($database, $characterId, $data['equipableLocationId'], $equippedItem['itemId']) . '</td>
-								<td><div class="blueButton">Equip</div></td>
+								<td><div class="blueButton" onClick="document.getElementById(\'equipItemForm' . $data['equipableLocationId'] . '\').submit();">Equip</div></td>
 							</tr>
+							<input type="hidden" name="characterId" id="characterId" value="' . $characterId . '" />
+							<input type="hidden" name="equipableLocationId" id="equipableLocationId" value="' . $data['equipableLocationId'] . '" />
+							</form>
 			';
 		}
 	} else {
@@ -107,20 +111,25 @@ function getEquippedItems($database, $characterId) {
 // get character item dropdown
 //-------------------------------------------------------------------------------------------
 function getCharacterItemDropdown($database, $characterId, $equipableLocationId, $equippedItemId) {
-	$selectStmt = "select * from dragons.characterItems t1 inner join dragons.itemMaster t2 on t1.itemId = t2.itemId where t1.characterId = ? order by t2.itemName";
+	$selectStmt = "select * from dragons.characterItems t1 inner join dragons.itemMaster t2 on t1.itemId = t2.itemId 
+					left join dragons.itemEquipableLocations t3 on t1.itemId = t3.itemId where t1.characterId = ? and t3.equipableLocationId = ? order by t2.itemName";
 	$returnHTML = "";
+	
+	$returnHTML .= '<select id="itemId" name="itemId"><option>[select item]</option>';
 
 	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
-		if (!$selectHandle->execute(array(0=>$characterId))) {
+		if (!$selectHandle->execute(array(0=>$characterId, 1=>$equipableLocationId))) {
 			var_dump($database->databaseConnection->errorInfo());
 		}
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-			var_dump($data);
+			$returnHTML .= '<option value="' . $data['itemId'] . '">' . $data['itemName'] . '</option>';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());
 	}
+	
+	$returnHTML .= '</select>';
 	
 	return $returnHTML;
 }

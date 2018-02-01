@@ -38,6 +38,7 @@ $itemId = $_GET['itemId'];
 $item->loadItemById($itemId);
 $itemMaster = $database->getDatabaseRecord("dragons.itemMaster", array("itemId"=>$itemId));
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$itemMaster['campaignId']));
+$_GET['campaignId'] = $campaignHeader['campaignId'];
 
 // check for armor class entry
 $armorClass = $database->getDatabaseRecord("dragons.itemArmorClass", array("itemId"=>$itemId));
@@ -84,6 +85,10 @@ include_once("includes/leaderNavigation.php");
 		<tr>
 			<td>Properties</td>
 			<td><?php echo getPropertiesCheckboxes($database, $item); ?></td>
+		</tr>
+		<tr>
+			<td>Is Equipable</td>
+			<td><?php echo getEquipableCheckboxes($database, $item); ?></td>
 		</tr>
 	</table>
 	<input type="hidden" name="itemId" id="itemId" value="<?php echo $itemId; ?>" />
@@ -349,6 +354,58 @@ function getPropertiesCheckboxes($database, $item) {
 			
 			$returnHTML .= '<td><input type="checkbox" name="weaponProperties[]" id="' . $data['weaponProperty'] . '" value="' . $data['weaponPropertyId'] . '"' . $checked . ' /></td>';
 			$returnHTML .= '<td>' . $data['weaponProperty'] . '</td>';
+			
+			if ($i == $boxesPerLine) {
+				$returnHTML .= '</tr>';
+				$returnHTML .= '<tr>';
+				
+				$i = 1;
+			} else {
+				$i++;
+			}
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+	
+	$returnHTML .= '</table>';
+	
+	return $returnHTML;
+}
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// print equipable locations checkbox
+//-------------------------------------------------------------------------------------------
+function getEquipableCheckboxes($database, $item) {
+	$selectStmt = "select * from dragons.equipableLocations order by equipableLocationId";
+	$returnHTML = "";
+	$boxesPerLine = 3;
+	$i = 1;
+	$itemEquipableLocations = $item->getItemEquipableLocations();
+	
+	$returnHTML .= '<table>';
+	
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute()) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+			if ($i == 1) {
+				$returnHTML .= '<tr style="background-color: transparent;">';
+			}
+			
+			// check if weapon has property
+			if (in_array($data['equipableLocationId'], $itemEquipableLocations)) {
+				$checked = " checked";
+			} else {
+				$checked = "";
+			}
+			
+			$returnHTML .= '<td><input type="checkbox" name="equipableLocations[]" id="' . $data['equipableLocation'] . '" value="' . $data['equipableLocationId'] . '"' . $checked . ' /></td>';
+			$returnHTML .= '<td>' . $data['equipableLocation'] . '</td>';
 			
 			if ($i == $boxesPerLine) {
 				$returnHTML .= '</tr>';

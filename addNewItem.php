@@ -52,6 +52,14 @@ foreach ($_POST['weaponProperties'] as $weaponPropertyId) {
 	$database->insertDatabaseRecord("dragons.itemProperties", $itemProperty);
 }
 
+// build equipable location data
+foreach ($_POST['equipableLocations'] as $equipableLocationId) {
+	$equipableLocation['itemId'] = $itemId;
+	$equipableLocation['equipableLocationId'] = $equipableLocationId;
+	
+	$database->insertDatabaseRecord("dragons.itemEquipableLocations", $equipableLocation);
+}
+
 // build item dice entries
 $i = 0;
 
