@@ -32,6 +32,8 @@ require_once("classes/DDDatabase.php");
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
 
+var_dump($_POST);
+
 $character['characterName'] = $_POST['characterName'];
 $character['maxHP'] = $_POST['health'];
 $character['strength'] = $_POST['strength'];
@@ -43,6 +45,16 @@ $character['charisma'] = $_POST['charisma'];
 $character['statusFlag'] = $_POST['statusFlag'];
 
 $database->updateDatabaseRecord("dragons.characters", $character, array("characterId"=>$_POST['characterId']));
+
+// update character proficiencies
+$database->deleteDatabaseRecord("dragons.characterProficiencies", array("characterId"=>$_POST['characterId']));
+
+foreach ($_POST['proficiencyIds'] as $proficiencyId) {
+	$characterProf['characterId'] = $_POST['characterId'];
+	$characterProf['proficiencyId'] = $proficiencyId;
+	
+	$database->insertDatabaseRecord("dragons.characterProficiencies", $characterProf);
+}
 
 header("Location: manageCampaignCharacters.php?campaignId=" . $_POST['campaignId']);
 //-------------------------------------------------------------------------------------------

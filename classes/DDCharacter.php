@@ -23,7 +23,7 @@ include_once("classes/DDCreature.php");
 class DDCharacter extends DDCreature {
 	// class properties
 	protected $ownerId;
-	
+	protected $characterProficiencies;
 	
 	//------------------------------------------------------------------------
 	// load character by idd
@@ -35,7 +35,9 @@ class DDCharacter extends DDCreature {
 		$this->ownerId = $characterRecord['ownerId'];
 		$this->campaignId = $characterRecord['campaignId'];
 		$this->characterName = $characterRecord['characterName'];
+		$this->characterRaceId = $characterRecord['characterRace'];
 		$this->characterRace = $this->database->getDatabaseRecord("dragons.characterRaces", array("characterRaceId"=>$characterRecord['characterRace']))['characterRace'];
+		$this->characterClassId = $characterRecord['characterClass'];
 		$this->characterClass = $this->database->getDatabaseRecord("dragons.characterClasses", array("characterClassId"=>$characterRecord['characterClass']))['characterClass'];
 		$this->characterXP = $characterRecord['characterXP'];
 		$this->maxHP = $characterRecord['maxHP'];
@@ -63,6 +65,13 @@ class DDCharacter extends DDCreature {
 		
 		// get character level
 		$this->characterLevel = $this->calculateCharacterLevel();
+		
+		// load character proficiencies
+		$this->characterProficiencies = $this->setCharacterProficiencies();
+		
+		// set proficiency bonus
+		$profBonus = $this->database->getDatabaseRecord("dragons.classProficiencyBonus", array("characterClassId"=>$this->characterClassId));
+		$this->proficiencyBonus = $profBonus['proficiencyBonus'];
 		
 		if (!$this->battleDetailId > 0) {
 			$this->currentHP = $characterRecord['currentHP'];
@@ -246,6 +255,39 @@ class DDCharacter extends DDCreature {
 		}
 		
 		return $level['level'];
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// set character proficiencies
+	//------------------------------------------------------------------------
+	private function setCharacterProficiencies() {
+		$returnArray = array();
+		$selectStmt = "select * from dragons.characterProficiencies where characterId = ?";
+		
+		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
+			if (!$selectHandle->execute(array(0=>$this->characterId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+				$returnArray[] = $data['proficiencyId'];
+			}
+		} else {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		return $returnArray;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get character proficiencies
+	//------------------------------------------------------------------------
+	public function getCharacterProficiencies() {
+		return $this->characterProficiencies;
 	}
 	//------------------------------------------------------------------------
 }

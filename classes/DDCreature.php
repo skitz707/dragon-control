@@ -27,7 +27,9 @@ class DDCreature extends DDObject {
 	protected $questId;
 	protected $battleDetailId;
 	protected $characterName;
+	protected $characterRaceId;
 	protected $characterRace;
+	protected $characterClassId;
 	protected $characterClass;
 	protected $characterLevel;
 	protected $characterXP;
@@ -46,6 +48,7 @@ class DDCreature extends DDObject {
 	protected $wisdomModifier;
 	protected $charisma;
 	protected $charismaModifier;
+	protected $proficiencyBonus;
 	protected $initiative;
 	protected $damageResistances;
 	protected $damageImmunities;
@@ -305,6 +308,15 @@ class DDCreature extends DDObject {
 	//------------------------------------------------------------------------
 	public function getCharismaModifier() {
 		return $this->charismaModifier;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get proficiency bonus
+	//------------------------------------------------------------------------
+	public function getProficiencyBonus() {
+		return $this->proficiencyBonus;
 	}
 	//------------------------------------------------------------------------
 	

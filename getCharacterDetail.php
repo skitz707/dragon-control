@@ -55,7 +55,7 @@ $returnData['wisdom'] = $character->getWisdom();
 $returnData['wisdomModifier'] = $character->getWisdomModifier();
 $returnData['charisma'] = $character->getCharisma();
 $returnData['charismaModifier'] = $character->getCharismaModifier();
-
+$returnData['proficiencyBonus'] = $character->getProficiencyBonus();
 
 /*
 // get damage resistances

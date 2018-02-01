@@ -313,6 +313,7 @@ function characterDetails(characterId) {
 			divHTML += '<span style="font-weight: bold;">STR:</span> ' + data.strength + '(' + data.strengthModifier + ') | <span style="font-weight: bold;">DEX:</span> ' + data.dexterity + '(' + data.dexterityModifier + ')<br />';
 			divHTML += '<span style="font-weight: bold;">CON:</span> ' + data.constitution + '(' + data.constitutionModifier + ') | <span style="font-weight: bold;">INT:</span> ' + data.intelligence + '(' + data.intelligenceModifier + ')<br />';
 			divHTML += '<span style="font-weight: bold;">WIS:</span> ' + data.wisdom + '(' + data.wisdomModifier + ') | <span style="font-weight: bold;">CHA:</span> ' + data.charisma + '(' + data.charismaModifier + ')<br /><br />';
+			divHTML += '<span style="font-weight: bold;">Proficiency Bonus:</span> ' + data.proficiencyBonus + '<br /><br />';
 			//divHTML += '<span style="font-weight: bold;">Damage Resistances:</span> <span style="font-style: italic;">' + data.damageResistances + '</span><br /><br />';
 			//divHTML += '<span style="font-weight: bold;">Damage Immunities:</span> <span style="font-style: italic;">' + data.damageImmunities + '</span><br /><br />';
 			//divHTML += '<span style="font-weight: bold;">Condition Immunities:</span> <span style="font-style: italic;">' + data.conditionImmunities + '</span><br /><br />';
