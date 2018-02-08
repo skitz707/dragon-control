@@ -40,7 +40,7 @@ $itemExists = $database->getDatabaseRecord("dragons.characterItems", array("char
 if ($itemExists['characterItemId'] > 0) {
 	$newValue = $itemExists['quantity'] + $_POST['itemQuantity'];
 	
-	$database->updateDatabaseRecord("dragons.chracterItems", array("quantity"=>$newValue), array("characterItemId"=>$itemExists['characterItemId']));
+	$database->updateDatabaseRecord("dragons.characterItems", array("quantity"=>$newValue), array("characterItemId"=>$itemExists['characterItemId']));
 } else {
 
 	$characterItem['characterId'] = $_POST['characterId'];
@@ -50,5 +50,5 @@ if ($itemExists['characterItemId'] > 0) {
 	$database->insertDatabaseRecord("dragons.characterItems", $characterItem);
 }
 
-header("Location: editCharacter.php?characterId=" . $_POST['characterId']);
+header("Location: editCharacterItems.php?characterId=" . $_POST['characterId']);
 //-------------------------------------------------------------------------------------------

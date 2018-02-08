@@ -23,6 +23,7 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DDDatabase.php");
+require_once("classes/DDCharacter.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -31,6 +32,7 @@ require_once("classes/DDDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
+$character = new DDCharacter($database);
 $pageTitle = "DC - Manage Monsters";
 $campaignId = $_GET['campaignId'];
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
@@ -44,7 +46,7 @@ include_once("includes/leaderNavigation.php");
 	<br /><br />
 	<a href="createMonster.php?campaignId=<?php echo $campaignId; ?>">Create Character</a>
 	<br /><br />
-	<?php echo getCharacterTableHTML($database, $campaignId); ?>
+	<?php echo getCharacterTableHTML($database, $campaignId, $character); ?>
 </div>
 
 <?php
@@ -55,7 +57,7 @@ require_once("includes/footer.php");
 //-------------------------------------------------------------------------------------------
 // get monster table
 //-------------------------------------------------------------------------------------------
-function getCharacterTableHTML($database, $campaignId) {
+function getCharacterTableHTML($database, $campaignId, $character) {
 	$selectStmt = "select * from dragons.characters where campaignId = ? order by characterName";
 	$returnHTML = "";
 	
@@ -76,11 +78,13 @@ function getCharacterTableHTML($database, $campaignId) {
 		}
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+			$character->loadCharacterById($data['characterId']);
+			
 			$returnHTML .= '<tr>
 								<td style="text-align: left;">' . $data['characterName'] . '</td>
 								<td style="text-align: right;">' . $data['characterXP'] . '</td>
 								<td style="text-align: right;">' . $data['maxHP'] . '</td>
-								<td style="text-align: right;">' . $data['armorClass'] . '</td>
+								<td style="text-align: right;">' . $character->getArmorClass() . '</td>
 								<td style="text-align: center;">' . $data['statusFlag'] . '</td>
 								<td style="text-align: center;"><a href="editCharacterInfo.php?characterId=' . $data['characterId'] . '">Edit</a></td>
 							</tr>
