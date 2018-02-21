@@ -119,7 +119,7 @@ foreach($monsterAttacks as $attackId) {
 			$dice = $database->getDatabaseRecord("dragons.diceRolls", array("rollId"=>$diceData['rollId']));
 			$damageType = $database->getDatabaseRecord("dragons.damageTypes", array("damageTypeId"=>$diceData['damageTypeId']));
 			
-			$attackText .= '(' . $diceData['numberOfDice'] . $dice['diceRoll'] . '+' . $diceData['damageModifier'] . ') ' . $damageType['damageType'] . ' ';
+			$attackText .= '(' . $diceData['numberOfDice'] . $dice['diceRoll'] . '+' . $monster->getDamageModifier($monsterAttackMaster['monsterAttackId']) . ') ' . $damageType['damageType'] . ' ';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());

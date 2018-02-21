@@ -101,7 +101,7 @@ include_once("includes/leaderNavigation.php");
 	<input type="hidden" name="campaignId" id="campaignId" value="<?php echo $campaignId; ?>" />
 	</form>
 	<br /><br />
-	<span class="mediumHeading">Add Dice Rolls</span>
+	<span class="mediumHeading">Add Attacks</span>
 	<br /><br />
 	Attack: <?php echo getMonsterAttacksDropdown($database); ?> 
 	# of Dice: <input type="text" class="textField" name="numberOfDice" id="numberOfDice" size="2" /> Dice Type: <?php echo getDiceDropdown($database); ?> 
@@ -119,6 +119,13 @@ include_once("includes/leaderNavigation.php");
 			<th>P/S</th>
 		</tr>
 	</table>
+	<br /><br />
+	<span class="mediumHeading">Add Spells</span>
+	<br /><br />
+	Spell: <?php echo getSpellDropdown($database); ?> <div class="blueButton" onClick="addSpell()">Add Spell</div>
+	<br /><br />
+	Assigned Spells:<br />
+	<div id="magicSpellsAssigned"></div>
 	<br /><br />
 	<div class="greenButton" onClick="document.getElementById('monsterForm').submit();">Create Monster</div>
 </div>
@@ -213,6 +220,27 @@ function addDice() {
 	input.setAttribute("name", "diceRoles[]");
 	input.setAttribute("value", diceRole);
 	document.getElementById('monsterForm').appendChild(input);
+}
+//--------------------------------------------------------------------------
+
+
+//--------------------------------------------------------------------------
+// add spell
+//--------------------------------------------------------------------------
+function addSpell() {
+	spellId = getSelectedValue('spellId');
+	spellIdText = getSelectedText('spellId');
+	assignedSpellDiv = document.getElementById('magicSpellsAssigned');
+	
+	// create spells hidden field
+	var input = document.createElement("input");
+
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "spellIds[]");
+	input.setAttribute("value", spellId);
+	document.getElementById('monsterForm').appendChild(input);
+	
+	assignedSpellDiv.innerHTML += spellIdText + '<br />';
 }
 //--------------------------------------------------------------------------
 
@@ -468,6 +496,34 @@ function getMonsterAttacksDropdown($database) {
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
 			$returnHTML .= '<option value="' . $data['monsterAttackId'] . '">' . $data['attackName'] . '</option>';
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+	
+	$returnHTML .= '</select>';
+	
+	return $returnHTML;
+}
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// get spell dropdown 
+//-------------------------------------------------------------------------------------------
+function getSpellDropdown($database) {
+	$selectStmt = "select * from dragons.spells where campaignId = ? order by spellName";
+	$returnHTML = "";
+	
+	$returnHTML .= '<select id="spellId" name="spellId"><option>[magic spells]</option>';
+	
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute(array(0=>$_GET['campaignId']))) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		while ($data = $selectHandle->fetcH(PDO::FETCH_ASSOC)) {
+			$returnHTML .= '<option value="' . $data['spellId'] . '">' . $data['spellName'] . '</option>';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());

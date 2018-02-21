@@ -214,6 +214,43 @@ class DDMonster extends DDCreature {
 	
 	
 	//------------------------------------------------------------------------
+	// get roll modifier by attack id
+	//------------------------------------------------------------------------
+	public function getRollModifier($attackId) {
+		$monsterAttackMaster = $this->database->getDatabaseRecord("dragons.monsterAttackMaster", array("monsterAttackId"=>$attackId));
+		$proficiencyBonus = 2;
+		
+		// if melee attack, assume proficient and add bonus
+		if ($monsterAttackMaster['attackTypeId'] == 1) {
+			return $proficiencyBonus + $this->strengthModifier;
+		} else if ($monsterAttackMaster['attackTypeId'] == 2) {
+			return $proficiencyBonus + $this->dexterityModifier;
+		} else if ($monsterAttackMaster['attackTypeId'] == 3) {
+			return $proficiencyBonus + $this->intelligenceModifier;
+		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get damage modifier by attack id
+	//------------------------------------------------------------------------
+	public function getDamageModifier($attackId) {
+		$monsterAttackMaster = $this->database->getDatabaseRecord("dragons.monsterAttackMaster", array("monsterAttackId"=>$attackId));
+		
+		// if melee attack, assume proficient and add bonus
+		if ($monsterAttackMaster['attackTypeId'] == 1) {
+			return $this->strengthModifier;
+		} else if ($monsterAttackMaster['attackTypeId'] == 2) {
+			return $this->dexterityModifier;
+		} else if ($monsterAttackMaster['attackTypeId'] == 3) {
+			return $this->intelligenceModifier;
+		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
 	// update hp
 	//------------------------------------------------------------------------
 	protected function updateHP() {
