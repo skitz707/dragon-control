@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// manageItems.php - Manage Items
+// monsterAttacks.php
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// January 15th, 2018
+// February 21st, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ require_once("classes/DDDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
-$pageTitle = "DC - Manage Monsters";
+$pageTitle = "DC - Monster Attacks";
 $campaignId = $_GET['campaignId'];
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
 
@@ -41,13 +41,11 @@ include_once("includes/leaderNavigation.php");
 
 <br /><br />
 <div id="mainContent">
-	<span class="largeHeading">Manage Monsters: <?php echo $campaignHeader['campaignName']; ?></span>
+	<span class="largeHeading">Monster Attacks: <?php echo $campaignHeader['campaignName']; ?></span>
 	<br /><br />
-	<a href="createMonster.php?campaignId=<?php echo $campaignId; ?>">Create Monster</a> | 
-	<a href="monsterSkills.php?campaignId=<?php echo $campaignId; ?>">Monster Skills</a> |
-	<a href="monsterAttacks.php?campaignId=<?php echo $campaignId; ?>">Monster Attacks</a>
+	<a href="createMonsterAttack.php?campaignId=<?php echo $campaignId; ?>">Create Attack</a>
 	<br /><br />
-	<?php echo getMonsterTableHTML($database, $campaignId); ?>
+	<?php echo getMonsterAttacksTableHTML($database, $campaignId); ?>
 </div>
 
 <?php
@@ -56,18 +54,18 @@ require_once("includes/footer.php");
 
 
 //-------------------------------------------------------------------------------------------
-// get monster table
+// get monster attacks table html
 //-------------------------------------------------------------------------------------------
-function getMonsterTableHTML($database, $campaignId) {
-	$selectStmt = "select * from dragons.monsters where campaignId = ? order by xpRating, monsterName";
+function getMonsterAttacksTableHTML($database, $campaignId) {
+	$selectStmt = "select t1.monsterAttackId, t1.attackName as attackName, t2.attackName as attackType from dragons.monsterAttackMaster t1 
+					inner join dragons.attackTypes t2 on t1.attackTypeId = t2.attackTypeId 
+						where campaignId = ? order by attackName";
 	$returnHTML = "";
 	
-	$returnHTML .= '<table class="standardResultTable">
+	$returnHTML .= '<table class="standardResultTable" width="30%">
 						<tr>
-							<th>Name</th>
-							<th>XP</th>
-							<th>HP</th>
-							<th>AC</th>
+							<th>Attack Name</th>
+							<th>Attack Type</th>
 							<th></th>
 						</tr>
 	';
@@ -79,11 +77,9 @@ function getMonsterTableHTML($database, $campaignId) {
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
 			$returnHTML .= '<tr>
-								<td>' . $data['monsterName'] . '</td>
-								<td>' . $data['xpRating'] . '</td>
-								<td>' . $data['health'] . '</td>
-								<td>' . $data['armorClass'] . '</td>
-								<td><a href="editMonster.php?monsterId=' . $data['monsterId'] . '">Edit</a></td>
+								<td><span>' . $data['attackName'] . '</span></td>
+								<td>' . $data['attackType'] . '</td>
+								<td><a href="editMonsterAttack.php?monsterAttackId=' . $data['monsterAttackId'] . '">Edit</a></td>
 							</tr>
 			';
 		}

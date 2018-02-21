@@ -1,2 +1,3 @@
 <a href="manageCampaignCharacters.php?campaignId=<?php echo $_GET['campaignId']; ?>">Manage Characters</a> | <a href="manageMonsters.php?campaignId=<?php echo $_GET['campaignId']; ?>">Manage Monsters</a> | 
-<a href="manageItems.php?campaignId=<?php echo $_GET['campaignId']; ?>">Manage Items</a> | <a href="DCBattleManager.php?campaignId=<?php echo $_GET['campaignId']; ?>">Battle Manager</a>
+<a href="manageItems.php?campaignId=<?php echo $_GET['campaignId']; ?>">Manage Items</a> | <a href="manageSpells.php?campaignId=<?php echo $_GET['campaignId']; ?>">Manage Spells</a> |
+<a href="DCBattleManager.php?campaignId=<?php echo $_GET['campaignId']; ?>">Battle Manager</a>
