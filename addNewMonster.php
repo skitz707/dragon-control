@@ -45,7 +45,7 @@ $monsterData['wisdom'] = $_POST['wisdom'];
 $monsterData['charisma'] = $_POST['charisma'];
 $monsterData['xpRating'] = $_POST['xpRating'];
 
-$database->insertDatabaseRecord("dragons.monsters", $monsterData);
+//$database->insertDatabaseRecord("dragons.monsters", $monsterData);
 
 // get monster id
 $monsterId = $database->getColumnMax("dragons.monsters", "monsterId", array("campaignId"=>$_POST['campaignId']));
@@ -55,7 +55,7 @@ foreach ($_POST['damageResistances'] as $damageResistance) {
 	$damageResistanceData['monsterId'] = $monsterId;
 	$damageResistanceData['damageTypeId'] = $damageResistance;
 	
-	$database->insertDatabaseRecord("dragons.monsterResistances", $damageResistanceData);
+	//$database->insertDatabaseRecord("dragons.monsterResistances", $damageResistanceData);
 }
 
 // create monster damage immunities
@@ -63,7 +63,7 @@ foreach ($_POST['damageImmunities'] as $damageImmunity) {
 	$damageImmunityData['monsterId'] = $monsterId;
 	$damageImmunityData['damageTypeId'] = $damageImmunity;
 	
-	$database->insertDatabaseRecord("dragons.monsterDamageImmunities", $damageImmunityData);
+	//$database->insertDatabaseRecord("dragons.monsterDamageImmunities", $damageImmunityData);
 }
 
 // create condition immunities
@@ -71,8 +71,10 @@ foreach ($_POST['conditionImmunities'] as $conditionImmunity) {
 	$conditionImmunityData['monsterId'] = $monsterId;
 	$conditionImmunityData['conditionId'] = $conditionImmunity;
 	
-	$database->insertDatabaseRecord("dragons.monsterConditionImmunities", $conditionImmunityData);
+	//$database->insertDatabaseRecord("dragons.monsterConditionImmunities", $conditionImmunityData);
 }
 
-header("Location: manageMonsters.php?campaignId=" . $questMaster['campaignId']);
+var_dump($_POST);
+
+//header("Location: manageMonsters.php?campaignId=" . $questMaster['campaignId']);
 //-------------------------------------------------------------------------------------------
