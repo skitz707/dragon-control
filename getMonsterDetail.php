@@ -105,7 +105,7 @@ $attackText = "";
 foreach($monsterAttacks as $attackId) {
 	$monsterAttack = $database->getDatabaseRecord("dragons.monsterAttacks", array("monsterAttackId"=>$attackId));
 	$monsterAttackMaster = $database->getDatabaseRecord("dragons.monsterAttackMaster", array("monsterAttackId"=>$monsterAttack['monsterAttackMasterId']));
-	$attackText .= '<span style="font-weight: bold;">' . $monsterAttackMaster['attackName'] . '(+' . $monsterAttack['rollModifier'] . '):</span> ';
+	$attackText .= '<span style="font-weight: bold;">' . $monsterAttackMaster['attackName'] . '(+' . $monster->getRollModifier($monsterAttackMaster['monsterAttackId']) . '):</span> ';
 	
 	// get attack dice
 	$diceStmt = "select * from dragons.monsterAttackDice where monsterAttackId = ?";
