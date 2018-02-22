@@ -44,17 +44,17 @@ $returnData['currentHP'] = $character->getCurrentHP();
 $returnData['maxHP'] = $character->getMaxHP();
 $returnData['armorClass'] = $character->getArmorClass();
 $returnData['strength'] = $character->getStrength();
-$returnData['strengthModifier'] = $character->getStrengthModifier();
+$returnData['strengthModifier'] = sprintf("%+d", $character->getStrengthModifier());
 $returnData['dexterity'] = $character->getDexterity();
-$returnData['dexterityModifier'] = $character->getDexterityModifier();
+$returnData['dexterityModifier'] = sprintf("%+d", $character->getDexterityModifier());
 $returnData['constitution'] = $character->getConstitution();
-$returnData['constitutionModifier'] = $character->getConstitutionModifier();
+$returnData['constitutionModifier'] = sprintf("%+d", $character->getConstitutionModifier());
 $returnData['intelligence'] = $character->getIntelligence();
-$returnData['intelligenceModifier'] = $character->getIntelligenceModifier();
+$returnData['intelligenceModifier'] = sprintf("%+d", $character->getIntelligenceModifier());
 $returnData['wisdom'] = $character->getWisdom();
-$returnData['wisdomModifier'] = $character->getWisdomModifier();
+$returnData['wisdomModifier'] = sprintf("%+d", $character->getWisdomModifier());
 $returnData['charisma'] = $character->getCharisma();
-$returnData['charismaModifier'] = $character->getCharismaModifier();
+$returnData['charismaModifier'] = sprintf("%+d", $character->getCharismaModifier());
 $returnData['proficiencyBonus'] = $character->getProficiencyBonus();
 
 /*

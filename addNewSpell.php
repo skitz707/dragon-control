@@ -38,6 +38,7 @@ $spellData['spellLevel'] = $_POST['level'];
 $spellData['spellSchoolId'] = $_POST['magicSchoolId'];
 $spellData['castingTimeId'] = $_POST['castingTimeId'];
 $spellData['spellDescription'] = $_POST['spellDescription'];
+$spellData['recharge'] = $_POST['recharge'];
 
 $database->insertDatabaseRecord("dragons.spells", $spellData);
 

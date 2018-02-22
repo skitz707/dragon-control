@@ -32,7 +32,7 @@ div#mainContent {
 }
 
 .adminCharacterCard {
-	width: 200px;
+	width: 230px;
 	height: 450px;
 	font-size: 14pt;
 	float: left;
@@ -60,7 +60,7 @@ div#mainContent {
 }
 
 .adminMonsterCard {
-	width: 200px;
+	width: 230px;
 	height: 450px;
 	font-size: 14pt;
 	float: left;

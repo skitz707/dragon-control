@@ -53,27 +53,33 @@ $database->insertDatabaseRecord("dragons.monsters", $monsterData);
 $monsterId = $database->getColumnMax("dragons.monsters", "monsterId", array("campaignId"=>$_POST['campaignId']));
 
 // create damage resistances
-foreach ($_POST['damageResistances'] as $damageResistance) {
-	$damageResistanceData['monsterId'] = $monsterId;
-	$damageResistanceData['damageTypeId'] = $damageResistance;
-	
-	$database->insertDatabaseRecord("dragons.monsterResistances", $damageResistanceData);
+if (isset($_POST['damageResistances'])) {
+	foreach ($_POST['damageResistances'] as $damageResistance) {
+		$damageResistanceData['monsterId'] = $monsterId;
+		$damageResistanceData['damageTypeId'] = $damageResistance;
+		
+		$database->insertDatabaseRecord("dragons.monsterResistances", $damageResistanceData);
+	}
 }
 
 // create monster damage immunities
-foreach ($_POST['damageImmunities'] as $damageImmunity) {
-	$damageImmunityData['monsterId'] = $monsterId;
-	$damageImmunityData['damageTypeId'] = $damageImmunity;
-	
-	$database->insertDatabaseRecord("dragons.monsterDamageImmunities", $damageImmunityData);
+if (isset($_POST['damageImmunities'])) {
+	foreach ($_POST['damageImmunities'] as $damageImmunity) {
+		$damageImmunityData['monsterId'] = $monsterId;
+		$damageImmunityData['damageTypeId'] = $damageImmunity;
+		
+		$database->insertDatabaseRecord("dragons.monsterDamageImmunities", $damageImmunityData);
+	}
 }
 
 // create condition immunities
-foreach ($_POST['conditionImmunities'] as $conditionImmunity) {
-	$conditionImmunityData['monsterId'] = $monsterId;
-	$conditionImmunityData['conditionId'] = $conditionImmunity;
-	
-	$database->insertDatabaseRecord("dragons.monsterConditionImmunities", $conditionImmunityData);
+if (isset($_POST['conditionImmunities'])) {
+	foreach ($_POST['conditionImmunities'] as $conditionImmunity) {
+		$conditionImmunityData['monsterId'] = $monsterId;
+		$conditionImmunityData['conditionId'] = $conditionImmunity;
+		
+		$database->insertDatabaseRecord("dragons.monsterConditionImmunities", $conditionImmunityData);
+	}
 }
 
 // build array for sort
@@ -88,10 +94,6 @@ foreach($_POST['monsterAttackMasterId'] as $monsterAttackMasterId) {
 	
 	$i++;
 }
-
-echo '<pre>';
-
-var_dump($attackArray);
 
 foreach ($attackArray as $monsterAttackMasterId=>$attackValues) {
 	$a = 0;
@@ -119,22 +121,24 @@ foreach ($attackArray as $monsterAttackMasterId=>$attackValues) {
 }
 
 // process spells
-foreach($_POST['spellIds'] as $spellId) {
-	$spellData['monsterId'] = $monsterId;
-	$spellData['spellId'] = $spellId;
-	
-	$database->insertDatabaseRecord("dragons.monsterSpells", $spellData);
+if (isset($_POST['spellIds'])) {
+	foreach($_POST['spellIds'] as $spellId) {
+		$spellData['monsterId'] = $monsterId;
+		$spellData['spellId'] = $spellId;
+		
+		$database->insertDatabaseRecord("dragons.monsterSpells", $spellData);
+	}
 }
 
 // process special skills
-foreach ($_POST['specialSkillIds'] as $specialSkillId) {
-	$skillData['monsterId'] = $monsterId;
-	$skillData['specialSkillId'] = $specialSkillId;
-	
-	$database->insertDatabaseRecord("dragons.monsterSpecialSkills", $skillData);
+if (isset($_POST['specialSkillIds'])) {
+	foreach ($_POST['specialSkillIds'] as $specialSkillId) {
+		$skillData['monsterId'] = $monsterId;
+		$skillData['specialSkillId'] = $specialSkillId;
+		
+		$database->insertDatabaseRecord("dragons.monsterSpecialSkills", $skillData);
+	}
 }
-
-echo '</pre>';
 
 header("Location: manageMonsters.php?campaignId=" . $_POST['campaignId']);
 //-------------------------------------------------------------------------------------------

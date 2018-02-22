@@ -52,6 +52,175 @@ class DDCharacter extends DDCreature {
 		$this->lastChange = $characterRecord['lastChange'];
 		$this->creationDate = $characterRecord['creationDate'];
 		
+		//----------------------------------------------------------------------------
+		// check for additions to skill via feats or perks
+		$bonusStmt = "select sum(statModifier) as totalModified from dragons.featDetails where featId in (select featId from dragons.characterFeats where characterId = ?) and statId = ?";
+		$raceBonusStmt = "select sum(bonus) as totalBonus from dragons.raceBonuses where raceId = ? and statId = ?";
+		
+		if (!$bonusHandle = $this->database->databaseConnection->prepare($bonusStmt)) {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		if (!$raceBonusHandle = $this->database->databaseConnection->prepare($raceBonusStmt)) {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		//----------------------------------------------------------------------------
+		// strength additions
+		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"STR"));
+		
+		// race bonuses
+		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->strength += $raceBonus['totalBonus'];
+		
+		// class bonuses
+		
+		// feat bonuses
+		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->strength += $bonus['totalModified'];
+		//----------------------------------------------------------------------------
+		
+		
+		//----------------------------------------------------------------------------
+		// dexterity additions
+		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"DEX"));
+		
+		// race bonuses
+		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->dexterity += $raceBonus['totalBonus'];
+		
+		// class bonuses
+		
+		// feat bonuses
+		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->dexterity += $bonus['totalModified'];
+		//----------------------------------------------------------------------------
+		
+		
+		//----------------------------------------------------------------------------
+		// constitution additions by class
+		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"CON"));
+		
+		// race bonuses
+		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->constitution += $raceBonus['totalBonus'];
+		
+		// class bonuses
+		
+		// feat bonuses
+		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->constitution += $bonus['totalModified'];
+		//----------------------------------------------------------------------------
+		
+		
+		//----------------------------------------------------------------------------
+		// intelligence additions
+		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"INT"));
+		
+		// race bonuses
+		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->intelligence += $raceBonus['totalBonus'];
+		
+		// class bonuses
+		
+		// feat bonuses
+		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->intelligence += $bonus['totalModified'];
+		//----------------------------------------------------------------------------
+		
+		
+		//----------------------------------------------------------------------------
+		// wisdom additions
+		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"WIS"));
+		
+		// race bonuses
+		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->wisdom += $raceBonus['totalBonus'];
+		
+		// class bonuses
+		
+		// feat bonuses
+		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->wisdom += $bonus['totalModified'];
+		//----------------------------------------------------------------------------
+		
+		
+		//----------------------------------------------------------------------------
+		// charisma additions
+		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"CHA"));
+		
+		// race bonuses
+		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->charisma += $raceBonus['totalBonus'];
+		
+		// class bonuses
+		
+		// feat bonuses
+		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+		
+		$this->charisma += $bonus['totalModified'];
+		//----------------------------------------------------------------------------
+		
+		
 		// calculate modifiers
 		$this->strengthModifier = $this->calculateModifier($this->strength);
 		$this->dexterityModifier = $this->calculateModifier($this->dexterity);
@@ -157,9 +326,9 @@ class DDCharacter extends DDCreature {
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '<br />
-				Str: ' . $this->strength . ' (' . $this->strengthModifier . ') | Dex: ' . $this->dexterity . ' (' . $this->dexterityModifier . ')<br />
-				Con: ' . $this->constitution . 	' (' . $this->constitutionModifier . ') | Int: ' . $this->intelligence . ' (' . $this->intelligenceModifier . ')<br />
-				Wis: ' . $this->wisdom . ' (' . $this->wisdomModifier . ') | Cha: ' . $this->charisma . ' (' . $this->charismaModifier . ')<br />
+				Str: ' . $this->strength . ' (' . sprintf("%+d", $this->strengthModifier) . ') | Dex: ' . $this->dexterity . ' (' . sprintf("%+d", $this->dexterityModifier) . ')<br />
+				Con: ' . $this->constitution . 	' (' . sprintf("%+d", $this->constitutionModifier) . ') | Int: ' . $this->intelligence . ' (' . sprintf("%+d", $this->intelligenceModifier) . ')<br />
+				Wis: ' . $this->wisdom . ' (' . sprintf("%+d", $this->wisdomModifier) . ') | Cha: ' . $this->charisma . ' (' . sprintf("%+d", $this->charismaModifier) . ')<br />
 				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $this->characterId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $this->characterId . ');">Heal</div>
 			</div>
 		';
@@ -233,7 +402,38 @@ class DDCharacter extends DDCreature {
 			$armorClass += $shieldArmorClass['armorClass'];
 		}
 		
+		// check for feat bonuses
+		
+		
+		// check for race bonuses
+		
+		
+		// check for class bonuses
+		$armorClass += $this->getClassArmorBonus();
+		
 		return $armorClass;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get class armor bonus
+	//------------------------------------------------------------------------
+	protected function getClassArmorBonus() {
+		$bonusAC = 0;
+		
+		// fighter class
+		if ($this->characterClass == "Fighter") {
+			// bonus +1 to AC when wearing armor
+			$bodyId = $this->database->getDatabaseRecord("dragons.equipableLocations", array("equipableLocation"=>"Body"));
+			$armorEquipped = $this->database->getDatabaseRecord("dragons.characterEquippedItems", array("characterId"=>$this->characterId, "equipableLocationId"=>$bodyId['equipableLocationId']));
+			
+			if ($armorEquipped['characterEquippedItemId'] > 0) {
+				$bonusAC += 1;
+			}
+		}
+		
+		return $bonusAC;
 	}
 	//------------------------------------------------------------------------
 	

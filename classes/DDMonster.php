@@ -204,9 +204,9 @@ class DDMonster extends DDCreature {
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '<br />
-				Str: ' . $this->strength . ' (' . $this->strengthModifier . ') | Dex: ' . $this->dexterity . ' (' . $this->dexterityModifier . ')<br />
-				Con: ' . $this->constitution . 	' (' . $this->constitutionModifier . ') | Int: ' . $this->intelligence . ' (' . $this->intelligenceModifier . ')<br />
-				Wis: ' . $this->wisdom . ' (' . $this->wisdomModifier . ') | Cha: ' . $this->charisma . ' (' . $this->charismaModifier . ')<br />
+				Str: ' . $this->strength . ' (' . sprintf("%+d", $this->strengthModifier) . ') | Dex: ' . $this->dexterity . ' (' . sprintf("%+d", $this->dexterityModifier) . ')<br />
+				Con: ' . $this->constitution . 	' (' . sprintf("%+d", $this->constitutionModifier) . ') | Int: ' . $this->intelligence . ' (' . sprintf("%+d", $this->intelligenceModifier) . ')<br />
+				Wis: ' . $this->wisdom . ' (' . sprintf("%+d", $this->wisdomModifier) . ') | Cha: ' . $this->charisma . ' (' .sprintf("%+d",  $this->charismaModifier) . ')<br />
 				<div class="blueButton" onClick="setInit(\'M\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'M\', ' . $this->battleDetailId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'M\', ' . $this->battleDetailId . ');">Heal</div>
 			</div>
 		';
