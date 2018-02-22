@@ -127,6 +127,13 @@ include_once("includes/leaderNavigation.php");
 	Assigned Spells:<br />
 	<div id="magicSpellsAssigned"></div>
 	<br /><br />
+	<span class="mediumHeading">Add Special Skills</span>
+	<br /><br />
+	Spell: <?php echo getSpecialSkillsDropdown($database); ?> <div class="blueButton" onClick="addSpecialSkill()">Add Skill</div>
+	<br /><br />
+	Assigned Skills:<br />
+	<div id="specialSkillsAssigned"></div>
+	<br /><br />
 	<div class="greenButton" onClick="document.getElementById('monsterForm').submit();">Create Monster</div>
 </div>
 
@@ -241,6 +248,27 @@ function addSpell() {
 	document.getElementById('monsterForm').appendChild(input);
 	
 	assignedSpellDiv.innerHTML += spellIdText + '<br />';
+}
+//--------------------------------------------------------------------------
+
+
+//--------------------------------------------------------------------------
+// add special skill id
+//--------------------------------------------------------------------------
+function addSpecialSkill() {
+	specialSkillId = getSelectedValue('specialSkillId');
+	specialSkillText = getSelectedText('specialSkillId');
+	assignedSkillDiv = document.getElementById('specialSkillsAssigned');
+	
+	// create special skill ids
+	var input = document.createElement("input");
+
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "specialSkillIds[]");
+	input.setAttribute("value", specialSkillId);
+	document.getElementById('monsterForm').appendChild(input);
+	
+	assignedSkillDiv.innerHTML += specialSkillText + '<br />';
 }
 //--------------------------------------------------------------------------
 
@@ -524,6 +552,34 @@ function getSpellDropdown($database) {
 		
 		while ($data = $selectHandle->fetcH(PDO::FETCH_ASSOC)) {
 			$returnHTML .= '<option value="' . $data['spellId'] . '">' . $data['spellName'] . '</option>';
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+	
+	$returnHTML .= '</select>';
+	
+	return $returnHTML;
+}
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// get special skills dropdown
+//-------------------------------------------------------------------------------------------
+function getSpecialSkillsDropdown($database) {
+	$selectStmt = "select * from dragons.specialSkills where campaignId = ? order by specialSkillName";
+	$returnHTML = "";
+	
+	$returnHTML .= '<select id="specialSkillId" name="specialSkillId"><option>[special skill]</option>';
+	
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute(array(0=>$_GET['campaignId']))) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+		
+		while ($data = $selectHandle->fetcH(PDO::FETCH_ASSOC)) {
+			$returnHTML .= '<option value="' . $data['specialSkillId'] . '">' . $data['specialSkillName'] . '</option>';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());

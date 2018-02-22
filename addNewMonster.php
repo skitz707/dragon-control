@@ -97,12 +97,9 @@ foreach ($attackArray as $monsterAttackMasterId=>$attackValues) {
 	$monsterAttackData['specialText'] = "";
 	
 	$database->insertDatabaseRecord("dragons.monsterAttacks", $monsterAttackData);
-	var_dump($monsterAttackData);
 	
 	// get monster attack id
 	$monsterAttackId = $database->getColumnMax("dragons.monsterAttacks", "monsterAttackId", array("monsterId"=>$monsterId));
-	
-	echo "Attack Id: " . $monsterAttackMasterId . "\n";
 	
 	foreach ($attackValues['numberOfDice'] as $numberOfDice) {
 		$monsterAttackDiceData['monsterAttackId'] = $monsterAttackId;
@@ -111,10 +108,25 @@ foreach ($attackArray as $monsterAttackMasterId=>$attackValues) {
 		$monsterAttackDiceData['damageTypeId'] = $attackValues['damageType'][$a];
 		
 		$database->insertDatabaseRecord("dragons.monsterAttackDice", $monsterAttackDiceData);
-		var_dump($monsterAttackDiceData);
 		
 		$a++;
 	}
+}
+
+// process spells
+foreach($_POST['spellIds'] as $spellId) {
+	$spellData['monsterId'] = $monsterId;
+	$spellData['spellId'] = $spellId;
+	
+	$database->insertDatabaseRecord("dragons.monsterSpells", $spellData);
+}
+
+// process special skills
+foreach ($_POST['specialSkillIds'] as $specialSkillId) {
+	$skillData['monsterId'] = $monsterId;
+	$skillData['specialSkillId'] = $specialSkillId;
+	
+	$database->insertDatabaseRecord("dragons.monsterSpecialSkills", $skillData);
 }
 
 echo '</pre>';

@@ -141,7 +141,15 @@ $magicText = "";
 
 foreach ($magicSpells as $spellId) {
 	$magicSpellMaster = $database->getDatabaseRecord("dragons.spells", array("spellId"=>$spellId));
-	$magicText .= '<span style="font-weight: bold;">' . $magicSpellMaster['spellName'] . ':</span> <em>' . $magicSpellMaster['spellDescription'] . '</em><br />';
+	
+	// check for recharge
+	if ($magicSpellMaster['recharge'] > "") {
+		$recharge = '(Recharge ' . $magicSpellMaster['recharge'] . ')';
+	} else {
+		$recharge = "";
+	}
+	
+	$magicText .= '<span style="font-weight: bold;">' . $magicSpellMaster['spellName'] . $recharge . ':</span> <em>' . $magicSpellMaster['spellDescription'] . '</em><br />';
 }
 
 $returnData['magicSpells'] = $magicText;
