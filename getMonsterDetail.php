@@ -39,17 +39,17 @@ $returnData['monsterName'] = $monster->getCharacterName();
 $returnData['health'] = $monster->getMaxHP();
 $returnData['armorClass'] = $monster->getArmorClass();
 $returnData['strength'] = $monster->getStrength();
-$returnData['strengthModifier'] = $monster->getStrengthModifier();
+$returnData['strengthModifier'] = sprintf("%+d", $monster->getStrengthModifier());
 $returnData['dexterity'] = $monster->getDexterity();
-$returnData['dexterityModifier'] = $monster->getDexterityModifier();
+$returnData['dexterityModifier'] = sprintf("%+d", $monster->getDexterityModifier());
 $returnData['constitution'] = $monster->getConstitution();
-$returnData['constitutionModifier'] = $monster->getConstitutionModifier();
+$returnData['constitutionModifier'] = sprintf("%+d", $monster->getConstitutionModifier());
 $returnData['intelligence'] = $monster->getIntelligence();
-$returnData['intelligenceModifier'] = $monster->getIntelligenceModifier();
+$returnData['intelligenceModifier'] = sprintf("%+d", $monster->getIntelligenceModifier());
 $returnData['wisdom'] = $monster->getWisdom();
-$returnData['wisdomModifier'] = $monster->getWisdomModifier();
+$returnData['wisdomModifier'] = sprintf("%+d", $monster->getWisdomModifier());
 $returnData['charisma'] = $monster->getCharisma();
-$returnData['charismaModifier'] = $monster->getCharismaModifier();
+$returnData['charismaModifier'] = sprintf("%+d", $monster->getCharismaModifier());
 $returnData['xpRating'] = $monster->getXPRating();
 
 // get damage resistances

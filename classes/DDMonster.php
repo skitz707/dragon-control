@@ -54,6 +54,7 @@ class DDMonster extends DDCreature {
 		$this->intelligenceModifier = $this->calculateModifier($this->intelligence);
 		$this->wisdomModifier = $this->calculateModifier($this->wisdom);
 		$this->charismaModifier = $this->calculateModifier($this->charisma);
+		$this->proficiencyBonus = $this->calculateProficiencyBonus();
 		
 		// check for battle detail id to override hp
 		if ($this->battleDetailId > 0) {
@@ -218,15 +219,25 @@ class DDMonster extends DDCreature {
 	//------------------------------------------------------------------------
 	public function getRollModifier($attackId) {
 		$monsterAttackMaster = $this->database->getDatabaseRecord("dragons.monsterAttackMaster", array("monsterAttackId"=>$attackId));
-		$proficiencyBonus = 2;
 		
-		// if melee attack, assume proficient and add bonus
-		if ($monsterAttackMaster['attackTypeId'] == 1) {
-			return $proficiencyBonus + $this->strengthModifier;
-		} else if ($monsterAttackMaster['attackTypeId'] == 2) {
-			return $proficiencyBonus + $this->dexterityModifier;
-		} else if ($monsterAttackMaster['attackTypeId'] == 3) {
-			return $proficiencyBonus + $this->intelligenceModifier;
+		// if strength bonus for modifier
+		if ($monsterAttackMaster['proficiencyStatId'] == 1) {
+			return $this->proficiencyBonus + $this->strengthModifier;
+		// if dexterity bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 2) {
+			return $this->proficiencyBonus + $this->dexterityModifier;
+		// if constitution bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 3) {
+			return $this->proficiencyBonus + $this->constitutionModifier;
+		// if intelligence bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 4) {
+			return $this->proficiencyBonus + $this->intelligenceModifier;
+		// if wisdom bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 5) {
+			return $this->proficiencyBonus + $this->wisdomModifier;
+		// if charisma bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 6) {
+			return $this->proficiencyBonus + $this->charismaModifier;
 		}
 	}
 	//------------------------------------------------------------------------
@@ -238,14 +249,46 @@ class DDMonster extends DDCreature {
 	public function getDamageModifier($attackId) {
 		$monsterAttackMaster = $this->database->getDatabaseRecord("dragons.monsterAttackMaster", array("monsterAttackId"=>$attackId));
 		
-		// if melee attack, assume proficient and add bonus
-		if ($monsterAttackMaster['attackTypeId'] == 1) {
+		// if strength bonus for modifier
+		if ($monsterAttackMaster['proficiencyStatId'] == 1) {
 			return $this->strengthModifier;
-		} else if ($monsterAttackMaster['attackTypeId'] == 2) {
+		// if dexterity bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 2) {
 			return $this->dexterityModifier;
-		} else if ($monsterAttackMaster['attackTypeId'] == 3) {
+		// if constitution bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 3) {
+			return $this->constitutionModifier;
+		// if intelligence bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 4) {
 			return $this->intelligenceModifier;
+		// if wisdom bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 5) {
+			return $this->wisdomModifier;
+		// if charisma bonus for modifier
+		} else if ($monsterAttackMaster['proficiencyStatId'] == 6) {
+			return $this->charismaModifier;
 		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// calculate proficiency bonus
+	//------------------------------------------------------------------------
+	protected function calculateProficiencyBonus() {
+		$selectStmt = "select max(proficiencyBonus) as profBonus from dragons.monsterProficiencyBonus where xpThreshold <= ?";
+		
+		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
+			if (!$selectHandle->execute(array(0=>$this->xpRating))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			$data = $selectHandle->fetch(PDO::FETCH_ASSOC);
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+			
+		return $data['profBonus'];
 	}
 	//------------------------------------------------------------------------
 	

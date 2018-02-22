@@ -70,7 +70,7 @@ class DDCharacter extends DDCreature {
 		$this->characterProficiencies = $this->setCharacterProficiencies();
 		
 		// set proficiency bonus
-		$profBonus = $this->database->getDatabaseRecord("dragons.classProficiencyBonus", array("characterClassId"=>$this->characterClassId));
+		$profBonus = $this->database->getDatabaseRecord("dragons.classProficiencyBonus", array("characterClassId"=>$this->characterClassId, "characterLevel"=>$this->characterLevel));
 		$this->proficiencyBonus = $profBonus['proficiencyBonus'];
 		
 		if (!$this->battleDetailId > 0) {

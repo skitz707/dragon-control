@@ -403,7 +403,7 @@ function getDiceDropdown($database) {
 	$selectStmt = "select * from dragons.diceRolls order by rollid";
 	$returnHTML = "";
 	
-	$returnHTML .= '<select id="diceRollId" name="diceRollId"><option>[dice type]</option>';
+	$returnHTML .= '<select id="diceRollId" name="diceRollId"><option value="0">[dice type]</option>';
 	
 	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
 		if (!$selectHandle->execute()) {

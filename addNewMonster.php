@@ -32,6 +32,8 @@ require_once("classes/DDDatabase.php");
 //-------------------------------------------------------------------------------------------
 $database = new DDDatabase();
 
+var_dump($_POST);
+
 // create monster record
 $monsterData['campaignId'] = $_POST['campaignId'];
 $monsterData['monsterName'] = $_POST['monsterName'];
@@ -89,8 +91,11 @@ foreach($_POST['monsterAttackMasterId'] as $monsterAttackMasterId) {
 
 echo '<pre>';
 
-$a = 0;
+var_dump($attackArray);
+
 foreach ($attackArray as $monsterAttackMasterId=>$attackValues) {
+	$a = 0;
+	
 	// add monster attack record
 	$monsterAttackData['monsterId'] = $monsterId;
 	$monsterAttackData['monsterAttackMasterId'] = $monsterAttackMasterId;
@@ -131,5 +136,5 @@ foreach ($_POST['specialSkillIds'] as $specialSkillId) {
 
 echo '</pre>';
 
-//header("Location: manageMonsters.php?campaignId=" . $questMaster['campaignId']);
+header("Location: manageMonsters.php?campaignId=" . $_POST['campaignId']);
 //-------------------------------------------------------------------------------------------
