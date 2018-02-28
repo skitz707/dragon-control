@@ -298,8 +298,8 @@ class DCCharacter extends DCCreature {
 		echo '
 			<div class="' . $class . '">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
-				<span class="characterName">' . $this->characterName . '</span><br />
-				<em>' . $this->characterRace . ' / ' . $this->characterClass . '</em><br />
+				<span class="characterName">' . $this->name . '</span><br />
+				<em>' . $this->race . ' / ' . $this->className . '</em><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
@@ -323,16 +323,16 @@ class DCCharacter extends DCCreature {
 		
 		echo '
 			<div class="' . $class . '">
-				<img src="' . $this->imageLocation . '" width="80px" height="120px" onClick="characterDetails(' . $this->characterId . ');" /><br />
-				<span class="adminCharacterName">' . $this->characterName . '</span><br />
-				<span style="font-size: 12pt; font-style: italic;">' . $this->characterRace . ' / ' . $this->characterClass . '</span><br />
+				<img src="' . $this->imageLocation . '" width="80px" height="120px" onClick="characterDetails(' . $this->id . ');" /><br />
+				<span class="adminCharacterName">' . $this->name . '</span><br />
+				<span style="font-size: 12pt; font-style: italic;">' . $this->race . ' / ' . $this->className . '</span><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '<br />
 				Str: ' . $this->strength . ' (' . sprintf("%+d", $this->strengthModifier) . ') | Dex: ' . $this->dexterity . ' (' . sprintf("%+d", $this->dexterityModifier) . ')<br />
 				Con: ' . $this->constitution . 	' (' . sprintf("%+d", $this->constitutionModifier) . ') | Int: ' . $this->intelligence . ' (' . sprintf("%+d", $this->intelligenceModifier) . ')<br />
 				Wis: ' . $this->wisdom . ' (' . sprintf("%+d", $this->wisdomModifier) . ') | Cha: ' . $this->charisma . ' (' . sprintf("%+d", $this->charismaModifier) . ')<br />
-				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $this->characterId . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $this->characterId . ');">Heal</div>
+				<div class="blueButton" onClick="setInit(\'C\', ' . $this->battleDetailId . ');">Set Init</div><br /><div class="redButton" onClick="takeDamage(\'C\', ' . $this->id . ');">Take Damage</div><br /><div class="greenButton" onClick="heal(\'C\', ' . $this->id . ');">Heal</div>
 			</div>
 		';
 	}

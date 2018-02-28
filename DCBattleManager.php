@@ -46,6 +46,7 @@ $battle = new DCBattle($database);
 $pageTitle = "DD Battle Manager";
 $campaignId = $_GET['campaignId'];
 $campaign->loadCampaignById($campaignId);
+$crumbTrail = $campaign->getCampaignName() . " > Battle Manager";
 
 // get active quest
 $questHeader = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$campaignId, "statusFlag"=>"A"));
@@ -145,7 +146,7 @@ function aDCMonsters() {
 	
 	if (inBattle) {
 		divHTML = "";
-		divHTML += '<form method="post" action="aDCMonster.php" id="monsterForm">';
+		divHTML += '<form method="post" action="addMonster.php" id="monsterForm">';
 		divHTML += 'Monster: <?php printMonsterList($database); ?> Qty: <input type="text" size="2" id="quantity" name="quantity" /> <div class="redButton" onClick="document.getElementById(\'monsterForm\').submit();">Add</div>';
 		divHTML += '<input type="hidden" id="questId" name="questId" value="<?php print($questHeader['questId']); ?>" ?>';
 		divHTML += '</form>';
@@ -155,7 +156,7 @@ function aDCMonsters() {
 		
 		$(function() {
 			$( "#popUpBox" ).dialog({
-				width: 550,
+				width: 650,
 				height: 150
 			});
 		});
