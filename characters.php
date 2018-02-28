@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// index.php - Index/login page.
+// characters.php
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// January 14th, 2018
+// February 28th, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -49,71 +49,21 @@ $security->checkLogin();
 $user->loadUserById($_SESSION['userId']);
 
 $pageTitle = "Dragon Control - Login";
-$crumbTrail = "";
+$crumbTrail = "Characters";
 
 //$campaignsLeadingHTML = getCampaignsLeadingHTML($database, $user);
-//$activeCharactersHTML = getActiveCharactersHTML($database, $user);
+$activeCharactersHTML = getActiveCharactersHTML($database, $user);
 
 require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-	<!--
-	<span class="mediumHeading">Campaigns Leading:</span>
-	<br /><br />
-	<?php //print($campaignsLeadingHTML); ?>
-	<br /><br />
-	<span class="mediumHeading">Active Characters:</span>
-	<br /><br />
-	<?php //print($activeCharactersHTML); ?>
-	-->
+
 </div>
 
 <?php
 require_once("includes/footer.php");
 //-------------------------------------------------------------------------------------------
-
-
-//-------------------------------------------------------------------------------------------
-// get campaigns leading html
-//-------------------------------------------------------------------------------------------
-function getCampaignsLeadingHTML($database, $user) {
-	$returnHTML = "";
-	$campaignIds = $user->getCampaignsLeading();
-	
-	$returnHTML = '<table class="standardResultTable" style="width: 60%;">
-					<tr>
-						<th>Campaign Name</td>
-						<th># of Quests Played</td>
-						<th># of Characters</td>
-						<th>Date Started</td>
-						<th>Last Played</td>
-						<th></td>
-					</tr>
-	';
-	
-	foreach ($campaignIds as $campaignId) {
-		$campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
-		$numberOfQuestsPlayed = $database->getUniqueCount("dragons.questHeader", "questId", array("campaignId"=>$campaignId));
-		$numberOfCharactersInCampaign = $database->getUniqueCount("dragons.characters", "characterId", array("campaignId"=>$campaignId));
-		
-		$returnHTML .= '<tr>
-							<td><a href="campaignDetail.php?campaignId=' . $campaignId . '">' . $campaignHeader['campaignName'] . '</a></td>
-							<td>' . $numberOfQuestsPlayed . '</td>
-							<td>' . $numberOfCharactersInCampaign . '</td>
-							<td>' . $campaignHeader['creationDate'] . '</td>
-							<td>' . $campaignHeader['lastPlayed'] . '</td>
-							<td><a href="editCampaign.php?campaignId=' . $campaignId . '">Edit</a></td>
-						</tr>
-		';
-	}
-	
-	$returnHTML .= '</table>';
-	
-	return $returnHTML;
-}
-//-------------------------------------------------------------------------------------------
-
 
 
 //-------------------------------------------------------------------------------------------
@@ -123,17 +73,7 @@ function getActiveCharactersHTML($database, $user) {
 	$returnHTML = "";
 	$characterIds = $user->getActiveCharacters();
 	
-	$returnHTML .= '<table class="standardResultTable" style="width: 60%;">
-						<tr>
-							<th>Character</td>
-							<th>Race</td>
-							<th>Class</td>
-							<th>Level</td>
-							<th>Campaign</td>
-							<th>Active Quest</td>
-							<th></td>
-						</tr>
-	';
+	$returnHTML = '<div class="characterSelect">';
 	
 	foreach ($characterIds as $characterId) {
 		$characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
@@ -146,6 +86,9 @@ function getActiveCharactersHTML($database, $user) {
 			$activeQuest = "N/A";
 		}
 		
+		$returnHTML .= $characterMaster['characterName'];
+		
+		/*
 		$returnHTML .= '<tr>
 							<td>' . $characterMaster['characterName'] . '</td>
 							<td>' . $characterMaster['characterRace'] . '</td>
@@ -156,9 +99,10 @@ function getActiveCharactersHTML($database, $user) {
 							<td><a href="editCharacter.php?characterId=' . $characterId . '">Edit</a></td>
 						</tr>
 		';
+		*/
 	}
 	
-	$returnHTML .= '</table>';
+	$returnHTML .= '</div>';
 	
 	return $returnHTML;
 }

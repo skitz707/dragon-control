@@ -14,7 +14,7 @@
 //-------------------------------------------------------------------------------------------
 // database class definition
 //-------------------------------------------------------------------------------------------
-class DDCatabase {
+class DCDatabase {
 	// live database connection handle
 	public $databaseHandle;
 	

@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// index.php - Index/login page.
+// campaigns.php - Index/login page.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// January 14th, 2018
+// February 28th, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -58,15 +58,7 @@ require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-	<!--
-	<span class="mediumHeading">Campaigns Leading:</span>
-	<br /><br />
-	<?php //print($campaignsLeadingHTML); ?>
-	<br /><br />
-	<span class="mediumHeading">Active Characters:</span>
-	<br /><br />
-	<?php //print($activeCharactersHTML); ?>
-	-->
+
 </div>
 
 <?php
@@ -104,56 +96,6 @@ function getCampaignsLeadingHTML($database, $user) {
 							<td>' . $campaignHeader['creationDate'] . '</td>
 							<td>' . $campaignHeader['lastPlayed'] . '</td>
 							<td><a href="editCampaign.php?campaignId=' . $campaignId . '">Edit</a></td>
-						</tr>
-		';
-	}
-	
-	$returnHTML .= '</table>';
-	
-	return $returnHTML;
-}
-//-------------------------------------------------------------------------------------------
-
-
-
-//-------------------------------------------------------------------------------------------
-// get active characters html
-//-------------------------------------------------------------------------------------------
-function getActiveCharactersHTML($database, $user) {
-	$returnHTML = "";
-	$characterIds = $user->getActiveCharacters();
-	
-	$returnHTML .= '<table class="standardResultTable" style="width: 60%;">
-						<tr>
-							<th>Character</td>
-							<th>Race</td>
-							<th>Class</td>
-							<th>Level</td>
-							<th>Campaign</td>
-							<th>Active Quest</td>
-							<th></td>
-						</tr>
-	';
-	
-	foreach ($characterIds as $characterId) {
-		$characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
-		$campaignMaster = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$characterMaster['campaignId']));
-		$questMaster = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$characterMaster['campaignId'], "statusFlag"=>"A"));
-		
-		if ($questMaster['questId'] > 0) {
-			$activeQuest = $questMaster['questName'];
-		} else {
-			$activeQuest = "N/A";
-		}
-		
-		$returnHTML .= '<tr>
-							<td>' . $characterMaster['characterName'] . '</td>
-							<td>' . $characterMaster['characterRace'] . '</td>
-							<td>' . $characterMaster['characterClass'] . '</td>
-							<td>' . $characterMaster['characterLevel'] . '</td>
-							<td>' . $campaignMaster['campaignName'] . '</td>
-							<td>' . $activeQuest . '</td>
-							<td><a href="editCharacter.php?characterId=' . $characterId . '">Edit</a></td>
 						</tr>
 		';
 	}
