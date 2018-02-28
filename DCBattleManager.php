@@ -22,14 +22,14 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
-require_once("classes/DDSecurity.php");
-require_once("classes/DDUser.php");
-require_once("classes/DDCampaign.php");
-require_once("classes/DDQuest.php");
+require_once("classes/DCDatabase.php");
+require_once("classes/DCSecurity.php");
+require_once("classes/DCUser.php");
+require_once("classes/DCCampaign.php");
+require_once("classes/DCQuest.php");
 require_once("classes/DDBattle.php");
-require_once("classes/DDCharacter.php");
-require_once("classes/DDMonster.php");
+require_once("classes/DCCharacter.php");
+require_once("classes/DCMonster.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -37,11 +37,11 @@ require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
-$security = new DDSecurity($database);
-$campaign = new DDCampaign($database);
-$character = new DDCharacter($database);
-$monster = new DDMonster($database);
+$database = new DCDatabase();
+$security = new DCSecurity($database);
+$campaign = new DCCampaign($database);
+$character = new DCCharacter($database);
+$monster = new DCMonster($database);
 $battle = new DDBattle($database);					
 $pageTitle = "DD Battle Manager";
 $campaignId = $_GET['campaignId'];
@@ -83,7 +83,7 @@ require_once("includes/header.php");
 ?>
 <div class="battleHeader">
 	Battle Status: <span style="font-weight: bold;"><?php echo $battleStatus; ?> | </span> Easy: <span style="font-weight: bold;"><?php echo $battle->getEasyEncounter(); ?></span> | Medium: <span style="font-weight: bold;"><?php echo $battle->getMediumEncounter(); ?></span> | 
-	Hard: <span style="font-weight: bold;"><?php echo $battle->getHardEncounter(); ?></span> | Deadly: <span style="font-weight: bold;"><?php echo $battle->getDeadlyEncounter(); ?></span> | Difficulty Rating: <span style="font-weight: bold;"> <?php echo $battleDifficulty ?></span> | <div class="greenButton" onClick="createBattle();">New Battle</div> <div class="blueButton" onClick="addMonsters();">Add Monster</div> <div class="redButton" onClick="endBattle();">End Battle</div>
+	Hard: <span style="font-weight: bold;"><?php echo $battle->getHardEncounter(); ?></span> | Deadly: <span style="font-weight: bold;"><?php echo $battle->getDeadlyEncounter(); ?></span> | Difficulty Rating: <span style="font-weight: bold;"> <?php echo $battleDifficulty ?></span> | <div class="greenButton" onClick="createBattle();">New Battle</div> <div class="blueButton" onClick="aDCMonsters();">Add Monster</div> <div class="redButton" onClick="endBattle();">End Battle</div>
 </div>
 <?php
 
@@ -139,13 +139,13 @@ function endBattle() {
 //----------------------------------------------------------------------------
 // add monsters
 //----------------------------------------------------------------------------
-function addMonsters() {
+function aDCMonsters() {
 	inBattle = <?php if ($inBattle) { echo "true"; } else { echo "false"; } ?>;
 	divObj = document.getElementById('popUpBox');
 	
 	if (inBattle) {
 		divHTML = "";
-		divHTML += '<form method="post" action="addMonster.php" id="monsterForm">';
+		divHTML += '<form method="post" action="aDCMonster.php" id="monsterForm">';
 		divHTML += 'Monster: <?php printMonsterList($database); ?> Qty: <input type="text" size="2" id="quantity" name="quantity" /> <div class="redButton" onClick="document.getElementById(\'monsterForm\').submit();">Add</div>';
 		divHTML += '<input type="hidden" id="questId" name="questId" value="<?php print($questHeader['questId']); ?>" ?>';
 		divHTML += '</form>';

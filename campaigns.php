@@ -60,7 +60,7 @@ require_once("includes/header.php");
 
 <div id="mainContent">
 	<div id="characterList" style="margin-top: 95px;">
-	<?php echo $activeCharactersHTML; ?>
+	<?php echo $campaignsLeadingHTML; ?>
 	</div>
 </div>
 
@@ -78,10 +78,12 @@ function getCampaignsLeadingHTML($database, $user) {
 	$returnHTML = "";
 
 	foreach ($campaignIds as $campaignId) {
-		$campaign->loaCampaignById($campaignId);
+		$campaign->loadCampaignById($campaignId);
 
 		$returnHTML .= '<div class="characterSelect" onClick="document.location.href=\'campaignDetail.php?campaignId=' . $campaignId . '\';">
-						<span style="font-size: 56pt;">' . $campaign->getCampaignName() . '</span><br /></div>';
+						<span style="font-size: 56pt;">' . $campaign->getCampaignName() . '</span><br />
+						<span style="font-size: 32pt; font-style: italic;">Characters: ' . count($campaign->getActiveCharacters()) . ' | 
+						Started: ' . $campaign->getCreationDate() . '</div>';
 		
 		/*
 		$returnHTML .= '<tr>

@@ -22,8 +22,8 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
-require_once("classes/DDCharacter.php");
+require_once("classes/DCDatabase.php");
+require_once("classes/DCCharacter.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -31,8 +31,8 @@ require_once("classes/DDCharacter.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
-$character = new DDCharacter($database);
+$database = new DCDatabase();
+$character = new DCCharacter($database);
 $pageTitle = "DC - Edit Character";
 $characterId = $_GET['characterId'];
 $characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));

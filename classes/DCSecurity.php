@@ -3,7 +3,7 @@
 // DCSecurity.php
 // Written by: Michael C. Szczepanik
 // January 14th, 2018
-// DDSecurity() class definition.
+// DCSecurity() class definition.
 //
 // Change Log:
 //-------------------------------------------------------------------------------------------

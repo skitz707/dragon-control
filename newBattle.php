@@ -22,8 +22,8 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
-require_once("classes/DDQuest.php");
+require_once("classes/DCDatabase.php");
+require_once("classes/DCQuest.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -31,8 +31,8 @@ require_once("classes/DDQuest.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
-$quest = new DDQuest($database);
+$database = new DCDatabase();
+$quest = new DCQuest($database);
 
 $quest->loadQuestById($_GET['questId']);
 $quest->createNewBattle();

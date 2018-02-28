@@ -22,8 +22,8 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
-require_once("classes/DDMonster.php");
+require_once("classes/DCDatabase.php");
+require_once("classes/DCMonster.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -31,8 +31,8 @@ require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
-$monster = new DDMonster($database);
+$database = new DCDatabase();
+$monster = new DCMonster($database);
 $monster->loadMonsterById($_GET['monsterId']);
 
 $returnData['monsterName'] = $monster->getCharacterName();

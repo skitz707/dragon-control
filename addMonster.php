@@ -22,7 +22,7 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
+require_once("classes/DCDatabase.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -30,7 +30,7 @@ require_once("classes/DDDatabase.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
+$database = new DCDatabase();
 $battleId = $database->getColumnMax("dragons.battleHeader", "battleId", array("questId"=>$_POST['questId'], "statusFlag"=>"A"));
 $questMaster = $database->getDatabaseRecord("dragons.questHeader", array("questId"=>$_POST['questId']));
 $i = 1;

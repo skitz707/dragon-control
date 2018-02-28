@@ -22,9 +22,9 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
-require_once("classes/DDCharacter.php");
-require_once("classes/DDMonster.php");
+require_once("classes/DCDatabase.php");
+require_once("classes/DCCharacter.php");
+require_once("classes/DCMonster.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -32,9 +32,9 @@ require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
-$character = new DDCharacter($database);
-$monster = new DDMonster($database);
+$database = new DCDatabase();
+$character = new DCCharacter($database);
+$monster = new DCMonster($database);
 
 if ($_GET['type'] == "C") {
 	$character->loadCharacterById($_POST['id']);

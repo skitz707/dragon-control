@@ -3,7 +3,7 @@
 // DCUser.php
 // Written by: Michael C. Szczepanik
 // January 14th, 2018
-// DDUser() class definition.
+// DCUser() class definition.
 //
 // Change Log:
 //-------------------------------------------------------------------------------------------

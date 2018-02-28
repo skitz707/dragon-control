@@ -22,7 +22,7 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
+require_once("classes/DCDatabase.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -30,7 +30,7 @@ require_once("classes/DDDatabase.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
+$database = new DCDatabase();
 $pageTitle = "DC - Edit Character";
 $characterId = $_GET['characterId'];
 $characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
@@ -50,7 +50,7 @@ include_once("includes/leaderNavigation.php");
 	<br /><br />
 	<span class="mediumHeading">Character Items</span>
 	<br /><br />
-	<form method="post" action="addCharacterItem.php" id="itemForm">
+	<form method="post" action="aDCCharacterItem.php" id="itemForm">
 	Add Item: <?php echo getItemDropdown($database); ?> Quantity: <input type="text" id="itemQuantity" name="itemQuantity" size="2" /> <div class="blueButton" onClick="document.getElementById('itemForm').submit();">Add Item</div>
 	<input type="hidden" id="characterId" name="characterId" value="<?php echo $characterId; ?>" />
 	</form>

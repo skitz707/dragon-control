@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// DDMonster.php
+// DCMonster.php
 // Written by: Michael C. Szczepanik
 // November 19th, 2017
 // DDEnemy() class definition.
@@ -20,7 +20,7 @@ include_once("classes/DDCreature.php");
 //-------------------------------------------------------------------------------------------
 // database class definition
 //-------------------------------------------------------------------------------------------
-class DDMonster extends DDCreature {
+class DCMonster extends DDCreature {
 	// class properties
 	protected $xpRating;
 	protected $monsterAttacks;

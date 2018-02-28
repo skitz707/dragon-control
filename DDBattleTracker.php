@@ -22,11 +22,11 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
-require_once("classes/DDCampaign.php");
+require_once("classes/DCDatabase.php");
+require_once("classes/DCCampaign.php");
 require_once("classes/DDBattle.php");
-require_once("classes/DDCharacter.php");
-require_once("classes/DDMonster.php");
+require_once("classes/DCCharacter.php");
+require_once("classes/DCMonster.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -34,11 +34,11 @@ require_once("classes/DDMonster.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
-$campaign = new DDCampaign($database);
+$database = new DCDatabase();
+$campaign = new DCCampaign($database);
 $battle = new DDBattle($database);
-$character = new DDCharacter($database);
-$monster = new DDMonster($database);
+$character = new DCCharacter($database);
+$monster = new DCMonster($database);
 
 $campaign->loadCampaignById($_GET['campaignId']);
 

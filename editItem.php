@@ -22,8 +22,8 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
-require_once("classes/DDItem.php");
+require_once("classes/DCDatabase.php");
+require_once("classes/DCItem.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -31,8 +31,8 @@ require_once("classes/DDItem.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
-$item = new DDItem($database);
+$database = new DCDatabase();
+$item = new DCItem($database);
 $pageTitle = "DC - Edit Item";
 $itemId = $_GET['itemId'];
 $item->loadItemById($itemId);

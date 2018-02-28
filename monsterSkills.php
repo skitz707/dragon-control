@@ -22,7 +22,7 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 // program includes
 //-------------------------------------------------------------------------------------------
-require_once("classes/DDDatabase.php");
+require_once("classes/DCDatabase.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -30,7 +30,7 @@ require_once("classes/DDDatabase.php");
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
-$database = new DDDatabase();
+$database = new DCDatabase();
 $pageTitle = "DC - Monster Skills";
 $campaignId = $_GET['campaignId'];
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
