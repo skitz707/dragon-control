@@ -1,7 +1,17 @@
+body {
+	background: linear-gradient(#aa0000, #000000);
+	background: -o-linear-gradient(#aa0000, #000000);
+	background: -moz-linear-gradient(#aa0000, #000000);
+	background: linear-gradient(#aa0000, #000000);
+	color: white;
+	font-family: Arial, sans-serif;
+	font-size: 14pt;
+}
+
 div#mainContainer {
 	text-align: center;
 	font-family: Arial, sans-serif;
-	width: 1850px;
+	width: 98%;
 }
 
 div#mainContent {
@@ -10,6 +20,66 @@ div#mainContent {
 	width: 95%;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#controlBar {
+	width: 100%;
+	height: 40px;
+	background-color: #000000;
+	position: fixed;
+	z-index: 100;
+	top: 0;
+	left: 0;
+	color: #eaeaea;
+	border-bottom: 1px solid #999999;
+}
+
+#controlBar a {
+	color: #eeeeee;
+}
+
+#controlBar a:visited {
+	color: #eeeeee;
+}
+
+#controlBar a:hover {
+	color: #d3d3d3;
+}
+
+#controlBar a:active {
+	color: #ffffff;
+}
+
+#controlLeft {
+	width: 50%;
+	text-align: left;
+	padding: 4px;
+	float: left;
+}
+
+#controlRight {
+	width: 48%;
+	text-align: right;
+	float: left;
+	padding: 4px;
+}
+
+#menuBox {
+	width: 30px;
+	height: 30px;
+	background-color: #cc5555;
+	float: left;
+	margin-right: 5px;
+	cursor: pointer;
+	cursor: hand;
+}
+
+#menuBox:hover {
+	background-color: #ccccff;
+}
+
+#menuBox:active {
+	background-color: #ffffcc;
 }
 
 .battleHeader {
@@ -127,7 +197,7 @@ div#mainContent {
 	cursor: pointer;
 	cursor: hand;
 	margin: 2px;
-	padding: 2px;
+	padding: 5px;
 }
 .redButton:hover {
 	background: linear-gradient(#890000, #690000);
@@ -166,4 +236,17 @@ div#mainContent {
 
 .standardResultTable tr:nth-child(odd) {
 	background: #eeeeee;
+}
+
+.loginTextField {
+	font-family: Calibri, sans-serif;
+	font-size: 18pt;
+	border: 1px solid #999999;
+	height: 35px;
+	border-radius: 2px;
+	padding: 2px;
+	background: linear-gradient(#ffa1a1, #ff8888);
+	background: -o-linear-gradient(#ffa1a1, #ff8888);
+	background: -moz-linear-gradient(#ffa1a1, #ff8888);
+	background: linear-gradient(#ffa1a1, #ff8888);
 }
