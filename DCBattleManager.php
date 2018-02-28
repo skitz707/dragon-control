@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// DDBattleManager.php - Tracks and admins the current active battle.
+// DCBattleManager.php - Tracks and admins the current active battle.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
 // December 1st, 2017
@@ -27,7 +27,7 @@ require_once("classes/DCSecurity.php");
 require_once("classes/DCUser.php");
 require_once("classes/DCCampaign.php");
 require_once("classes/DCQuest.php");
-require_once("classes/DDBattle.php");
+require_once("classes/DCBattle.php");
 require_once("classes/DCCharacter.php");
 require_once("classes/DCMonster.php");
 //-------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ $security = new DCSecurity($database);
 $campaign = new DCCampaign($database);
 $character = new DCCharacter($database);
 $monster = new DCMonster($database);
-$battle = new DDBattle($database);					
+$battle = new DCBattle($database);					
 $pageTitle = "DD Battle Manager";
 $campaignId = $_GET['campaignId'];
 $campaign->loadCampaignById($campaignId);

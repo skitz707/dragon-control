@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// DDBattleTracker.php - Tracks the current active battle.
+// DCBattleTracker.php - Tracks the current active battle.
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
 // November 30th, 2017
@@ -24,7 +24,7 @@ ini_set('display_errors', 1);
 //-------------------------------------------------------------------------------------------
 require_once("classes/DCDatabase.php");
 require_once("classes/DCCampaign.php");
-require_once("classes/DDBattle.php");
+require_once("classes/DCBattle.php");
 require_once("classes/DCCharacter.php");
 require_once("classes/DCMonster.php");
 //-------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ require_once("classes/DCMonster.php");
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
 $campaign = new DCCampaign($database);
-$battle = new DDBattle($database);
+$battle = new DCBattle($database);
 $character = new DCCharacter($database);
 $monster = new DCMonster($database);
 

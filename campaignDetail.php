@@ -23,6 +23,7 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DCDatabase.php");
+require_once("classes/DCCampaign.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -31,10 +32,16 @@ require_once("classes/DCDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
-$pageTitle = "DC - Campaign Detail";
-$campaignId = $_GET['campaignId'];
-$campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
+$campaign = new DCCampaign($database);
+$campaign->loadCampaignById($_GET['campaignId']);
 
+$pageTitle = "DC - Campaign Detail";
+$crumbTrail = "Campaigns > " . $campaign->getCampaignName();
+
+// get menu options
+ob_start();
+require('includes/campaignMenuOptions.php');
+$menuOptions = ob_get_clean();
 
 require_once("includes/header.php");
 ?>
