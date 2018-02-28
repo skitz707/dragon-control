@@ -25,6 +25,7 @@ ini_set('display_errors', 1);
 require_once("classes/DCDatabase.php");
 require_once("classes/DCSecurity.php");
 require_once("classes/DCUser.php");
+require_once("classes/DCCharacter.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -58,7 +59,9 @@ require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-
+	<div id="characterList" style="margin-top: 95px;">
+	<?php echo $activeCharactersHTML; ?>
+	</div>
 </div>
 
 <?php
@@ -70,23 +73,21 @@ require_once("includes/footer.php");
 // get active characters html
 //-------------------------------------------------------------------------------------------
 function getActiveCharactersHTML($database, $user) {
+	$character = new DCCharacter($database);
 	$returnHTML = "";
 	$characterIds = $user->getActiveCharacters();
 	
-	$returnHTML = '<div class="characterSelect">';
+	
 	
 	foreach ($characterIds as $characterId) {
-		$characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
-		$campaignMaster = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$characterMaster['campaignId']));
-		$questMaster = $database->getDatabaseRecord("dragons.questHeader", array("campaignId"=>$characterMaster['campaignId'], "statusFlag"=>"A"));
-		
-		if ($questMaster['questId'] > 0) {
-			$activeQuest = $questMaster['questName'];
-		} else {
-			$activeQuest = "N/A";
-		}
-		
-		$returnHTML .= $characterMaster['characterName'];
+		$character->loadCharacterById($characterId);
+		$campaignMaster = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$character->getCampaignId()));
+
+		$returnHTML .= '<div class="characterSelect" onClick="document.location.href=\'characterDetail.php?characterId=' . $characterId . '\';">
+						<img src="' . $character->getImageLocation() .'" height="180px" width="180px" style="float: left; padding-right: 25px;" />' . 
+						'<span style="font-size: 56pt;">' . $character->getCharacterName() . '</span><br />
+						<span style="font-size: 32pt; font-style: italic;">Aborrition/Sprite - Level: 1<br />
+						Campaign: ' . $campaignMaster['campaignName'] . '</span></div>';
 		
 		/*
 		$returnHTML .= '<tr>
@@ -101,8 +102,6 @@ function getActiveCharactersHTML($database, $user) {
 		';
 		*/
 	}
-	
-	$returnHTML .= '</div>';
 	
 	return $returnHTML;
 }
