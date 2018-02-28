@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// DDCampaign.php
+// DCCampaign.php
 // Written by: Michael C. Szczepanik
 // January 14th, 2018
 // DDCampaign() class definition.
@@ -13,14 +13,14 @@
 //-------------------------------------------------------------------------------------------
 // includes
 //-------------------------------------------------------------------------------------------
-include_once("classes/DDObject.php");
+include_once("classes/DCObject.php");
 //-------------------------------------------------------------------------------------------
 
 
 //-------------------------------------------------------------------------------------------
 // campaign class definition
 //-------------------------------------------------------------------------------------------
-class DDCampaign extends DDObject {
+class DCCampaign extends DCObject {
 	// class properties
 	protected $campaignId;
 	protected $campaignName;

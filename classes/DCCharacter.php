@@ -31,15 +31,15 @@ class DCCharacter extends DCCreature {
 	public function loadCharacterById($characterId) {
 		$characterRecord = $this->database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
 		
-		$this->characterId = $characterId;
+		$this->id = $characterId;
 		$this->ownerId = $characterRecord['ownerId'];
 		$this->campaignId = $characterRecord['campaignId'];
-		$this->creatureName = $characterRecord['characterName'];
-		$this->creatureRaceId = $characterRecord['characterRace'];
-		$this->creatureRace = $this->database->getDatabaseRecord("dragons.characterRaces", array("characterRaceId"=>$characterRecord['characterRace']))['characterRace'];
-		$this->creatureClassId = $characterRecord['characterClass'];
-		$this->creatureClass = $this->database->getDatabaseRecord("dragons.characterClasses", array("characterClassId"=>$characterRecord['characterClass']))['characterClass'];
-		$this->creatureXP = $characterRecord['characterXP'];
+		$this->name = $characterRecord['characterName'];
+		$this->raceId = $characterRecord['characterRace'];
+		$this->race = $this->database->getDatabaseRecord("dragons.characterRaces", array("characterRaceId"=>$characterRecord['characterRace']))['characterRace'];
+		$this->classId = $characterRecord['characterClass'];
+		$this->className = $this->database->getDatabaseRecord("dragons.characterClasses", array("characterClassId"=>$characterRecord['characterClass']))['characterClass'];
+		$this->XP = $characterRecord['characterXP'];
 		$this->maxHP = $characterRecord['maxHP'];
 		$this->strength = $characterRecord['strength'];
 		$this->dexterity = $characterRecord['dexterity'];
@@ -70,7 +70,7 @@ class DCCharacter extends DCCreature {
 		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"STR"));
 		
 		// race bonuses
-		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+		if ($raceBonusHandle->execute(array(0=>$this->raceId, 1=>$statId['statId']))) {
 			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -81,7 +81,7 @@ class DCCharacter extends DCCreature {
 		// class bonuses
 		
 		// feat bonuses
-		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+		if ($bonusHandle->execute(array(0=>$this->id, 1=>$statId['statId']))) {
 			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -96,7 +96,7 @@ class DCCharacter extends DCCreature {
 		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"DEX"));
 		
 		// race bonuses
-		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+		if ($raceBonusHandle->execute(array(0=>$this->raceId, 1=>$statId['statId']))) {
 			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -107,7 +107,7 @@ class DCCharacter extends DCCreature {
 		// class bonuses
 		
 		// feat bonuses
-		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+		if ($bonusHandle->execute(array(0=>$this->id, 1=>$statId['statId']))) {
 			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -122,7 +122,7 @@ class DCCharacter extends DCCreature {
 		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"CON"));
 		
 		// race bonuses
-		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+		if ($raceBonusHandle->execute(array(0=>$this->raceId, 1=>$statId['statId']))) {
 			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -133,7 +133,7 @@ class DCCharacter extends DCCreature {
 		// class bonuses
 		
 		// feat bonuses
-		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+		if ($bonusHandle->execute(array(0=>$this->id, 1=>$statId['statId']))) {
 			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -148,7 +148,7 @@ class DCCharacter extends DCCreature {
 		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"INT"));
 		
 		// race bonuses
-		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+		if ($raceBonusHandle->execute(array(0=>$this->raceId, 1=>$statId['statId']))) {
 			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -159,7 +159,7 @@ class DCCharacter extends DCCreature {
 		// class bonuses
 		
 		// feat bonuses
-		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+		if ($bonusHandle->execute(array(0=>$this->id, 1=>$statId['statId']))) {
 			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -174,7 +174,7 @@ class DCCharacter extends DCCreature {
 		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"WIS"));
 		
 		// race bonuses
-		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+		if ($raceBonusHandle->execute(array(0=>$this->raceId, 1=>$statId['statId']))) {
 			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -185,7 +185,7 @@ class DCCharacter extends DCCreature {
 		// class bonuses
 		
 		// feat bonuses
-		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+		if ($bonusHandle->execute(array(0=>$this->id, 1=>$statId['statId']))) {
 			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -200,7 +200,7 @@ class DCCharacter extends DCCreature {
 		$statId = $this->database->getDatabaseRecord("dragons.creatureStats", array("statAbbrv"=>"CHA"));
 		
 		// race bonuses
-		if ($raceBonusHandle->execute(array(0=>$this->characterRaceId, 1=>$statId['statId']))) {
+		if ($raceBonusHandle->execute(array(0=>$this->raceId, 1=>$statId['statId']))) {
 			$raceBonus = $raceBonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -211,7 +211,7 @@ class DCCharacter extends DCCreature {
 		// class bonuses
 		
 		// feat bonuses
-		if ($bonusHandle->execute(array(0=>$this->characterId, 1=>$statId['statId']))) {
+		if ($bonusHandle->execute(array(0=>$this->id, 1=>$statId['statId']))) {
 			$bonus = $bonusHandle->fetch(PDO::FETCH_ASSOC);
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -233,13 +233,13 @@ class DCCharacter extends DCCreature {
 		$this->armorClass = $this->calculateArmorClass();
 		
 		// get character level
-		$this->characterLevel = $this->calculateCharacterLevel();
+		$this->level = $this->calculateCharacterLevel();
 		
 		// load character proficiencies
 		$this->characterProficiencies = $this->setCharacterProficiencies();
 		
 		// set proficiency bonus
-		$profBonus = $this->database->getDatabaseRecord("dragons.classProficiencyBonus", array("characterClassId"=>$this->characterClassId, "characterLevel"=>$this->characterLevel));
+		$profBonus = $this->database->getDatabaseRecord("dragons.classProficiencyBonus", array("characterClassId"=>$this->classId, "characterLevel"=>$this->level));
 		$this->proficiencyBonus = $profBonus['proficiencyBonus'];
 		
 		if (!$this->battleDetailId > 0) {
@@ -257,11 +257,14 @@ class DCCharacter extends DCCreature {
 		
 		// check for active battle id 
 		$activeBattle = $this->database->getDatabaseRecord("dragons.battleHeader", array("questId"=>$this->questId, "statusFlag"=>"A"));
-		$activeBattleDetail = $this->database->getDatabaseRecord("dragons.battleDetail", array("battleId"=>$activeBattle['battleId'], "associatedId"=>$this->characterId, "entryType"=>"C"));
+		$activeBattleDetail = $this->database->getDatabaseRecord("dragons.battleDetail", array("battleId"=>$activeBattle['battleId'], "associatedId"=>$this->id, "entryType"=>"C"));
 
 		if ($activeBattleDetail['entryId'] > 0) {
 			$this->battleDetailId = $activeBattleDetail['entryId'];
 			$this->currentHP = $activeBattleDetail['currentHP'];
+			
+			// load initiative
+			$this->initiative = $activeBattleDetail['initiative'];
 		}
 	}	
 	//------------------------------------------------------------------------
@@ -356,7 +359,7 @@ class DCCharacter extends DCCreature {
 		// check for equipped armor
 		$armorClass = 0;
 		$bodyId = $this->database->getDatabaseRecord("dragons.equipableLocations", array("equipableLocation"=>"Body"));
-		$armorEquipped = $this->database->getDatabaseRecord("dragons.characterEquippedItems", array("characterId"=>$this->characterId, "equipableLocationId"=>$bodyId['equipableLocationId']));
+		$armorEquipped = $this->database->getDatabaseRecord("dragons.characterEquippedItems", array("characterId"=>$this->id, "equipableLocationId"=>$bodyId['equipableLocationId']));
 		
 		// is there armor equipped?
 		if ($armorEquipped['characterEquippedItemId'] > 0) {
@@ -387,7 +390,7 @@ class DCCharacter extends DCCreature {
 		$shieldStmt = "select * from dragons.characterEquippedItems t1 inner join dragons.itemMaster t2 on t1.itemId = t2.itemId where characterId = ? and t2.itemType = 18";
 		
 		if ($shieldHandle = $this->database->databaseConnection->prepare($shieldStmt)) {
-			if (!$shieldHandle->execute(array(0=>$this->characterId))) {
+			if (!$shieldHandle->execute(array(0=>$this->id))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
@@ -423,10 +426,10 @@ class DCCharacter extends DCCreature {
 		$bonusAC = 0;
 		
 		// fighter class
-		if ($this->characterClass == "Fighter") {
+		if ($this->className == "Fighter") {
 			// bonus +1 to AC when wearing armor
 			$bodyId = $this->database->getDatabaseRecord("dragons.equipableLocations", array("equipableLocation"=>"Body"));
-			$armorEquipped = $this->database->getDatabaseRecord("dragons.characterEquippedItems", array("characterId"=>$this->characterId, "equipableLocationId"=>$bodyId['equipableLocationId']));
+			$armorEquipped = $this->database->getDatabaseRecord("dragons.characterEquippedItems", array("characterId"=>$this->id, "equipableLocationId"=>$bodyId['equipableLocationId']));
 			
 			if ($armorEquipped['characterEquippedItemId'] > 0) {
 				$bonusAC += 1;
@@ -445,7 +448,7 @@ class DCCharacter extends DCCreature {
 		$levelStmt = "select max(characterLevel) as level from dragons.xpLevels where xpAmount <= ?";
 		
 		if ($levelHandle = $this->database->databaseConnection->prepare($levelStmt)) {
-			if (!$levelHandle->execute(array(0=>$this->characterXP))) {
+			if (!$levelHandle->execute(array(0=>$this->XP))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
@@ -467,7 +470,7 @@ class DCCharacter extends DCCreature {
 		$selectStmt = "select * from dragons.characterProficiencies where characterId = ?";
 		
 		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
-			if (!$selectHandle->execute(array(0=>$this->characterId))) {
+			if (!$selectHandle->execute(array(0=>$this->id))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			

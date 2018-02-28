@@ -51,6 +51,7 @@ $user->loadUserById($_SESSION['userId']);
 
 $pageTitle = "Dragon Control - Login";
 $crumbTrail = "Characters";
+$menuOptions = file_get_contents('includes/mainMenuOptions.php');
 
 //$campaignsLeadingHTML = getCampaignsLeadingHTML($database, $user);
 $activeCharactersHTML = getActiveCharactersHTML($database, $user);
@@ -85,8 +86,8 @@ function getActiveCharactersHTML($database, $user) {
 
 		$returnHTML .= '<div class="characterSelect" onClick="document.location.href=\'characterDetail.php?characterId=' . $characterId . '\';">
 						<img src="' . $character->getImageLocation() .'" height="180px" width="180px" style="float: left; padding-right: 25px;" />' . 
-						'<span style="font-size: 56pt;">' . $character->getCharacterName() . '</span><br />
-						<span style="font-size: 32pt; font-style: italic;">Aborrition/Sprite - Level: 1<br />
+						'<span style="font-size: 56pt;">' . $character->getName() . '</span><br />
+						<span style="font-size: 32pt; font-style: italic;">' . $character->getRace() .'/' . $character->getClass() . ' - Level: ' . $character->getLevel() . '<br />
 						Campaign: ' . $campaignMaster['campaignName'] . '</span></div>';
 		
 		/*

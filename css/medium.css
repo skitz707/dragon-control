@@ -23,7 +23,7 @@ div#mainContent {
 }
 
 #menu {
-	margin-top: 90px;
+	margin-top: 50px;
 	width: 100%;
 	background-color: #790000;
 	visibility: hidden;
@@ -63,7 +63,7 @@ div#mainContent {
 }
 
 #controlLeft {
-	width: 50%;
+	width: 90%;
 	text-align: left;
 	padding: 4px;
 	float: left;
@@ -71,7 +71,7 @@ div#mainContent {
 }
 
 #controlRight {
-	width: 48%;
+	width: 0%;
 	text-align: right;
 	float: left;
 	padding: 4px;
@@ -98,7 +98,7 @@ div#mainContent {
 }
 
 .menuOption {
-	font-size: 34pt;
+	font-size: 48pt;
 	color: #eeeeee;
 	text-align: center;
 	padding: 20px;
@@ -204,14 +204,14 @@ div#mainContent {
 .blueButton {
 	display: inline-block;
 	border: 1px solid #000000;
-	-moz-border-radius: 5px;
-	border-radius: 4px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
 	color: #eeeeee;
 	background: linear-gradient(#000079, #000059);
 	cursor: pointer;
 	cursor: hand;
-	margin: 2px;
-	padding: 2px;
+	margin: 10px;
+	padding: 10px;
 }
 .blueButton:hover {
 	background: linear-gradient(#000089, #000069);
@@ -301,9 +301,9 @@ div#mainContent {
 }
 
 .characterSelect:hover {
-	background-color: #99cccc;
+	background-color: #cc5555;
 }
 	
 .characterSelect:active {
-	background: #99dddd;
+	background: #cc6666;
 }	

@@ -1,6 +1,6 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// campaigns.php - Index/login page.
+// campaigns.php
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
 // February 28th, 2018
@@ -25,6 +25,7 @@ ini_set('display_errors', 1);
 require_once("classes/DCDatabase.php");
 require_once("classes/DCSecurity.php");
 require_once("classes/DCUser.php");
+require_once("classes/DCCampaign.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -49,16 +50,18 @@ $security->checkLogin();
 $user->loadUserById($_SESSION['userId']);
 
 $pageTitle = "Dragon Control - Login";
-$crumbTrail = "";
+$crumbTrail = "Characters";
+$menuOptions = file_get_contents('includes/mainMenuOptions.php');
 
-//$campaignsLeadingHTML = getCampaignsLeadingHTML($database, $user);
-//$activeCharactersHTML = getActiveCharactersHTML($database, $user);
+$campaignsLeadingHTML = getCampaignsLeadingHTML($database, $user);
 
 require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-
+	<div id="characterList" style="margin-top: 95px;">
+	<?php echo $activeCharactersHTML; ?>
+	</div>
 </div>
 
 <?php
@@ -67,40 +70,32 @@ require_once("includes/footer.php");
 
 
 //-------------------------------------------------------------------------------------------
-// get campaigns leading html
+// get active characters html
 //-------------------------------------------------------------------------------------------
 function getCampaignsLeadingHTML($database, $user) {
-	$returnHTML = "";
+	$campaign = new DCCampaign($database);
 	$campaignIds = $user->getCampaignsLeading();
-	
-	$returnHTML = '<table class="standardResultTable" style="width: 60%;">
-					<tr>
-						<th>Campaign Name</td>
-						<th># of Quests Played</td>
-						<th># of Characters</td>
-						<th>Date Started</td>
-						<th>Last Played</td>
-						<th></td>
-					</tr>
-	';
-	
+	$returnHTML = "";
+
 	foreach ($campaignIds as $campaignId) {
-		$campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
-		$numberOfQuestsPlayed = $database->getUniqueCount("dragons.questHeader", "questId", array("campaignId"=>$campaignId));
-		$numberOfCharactersInCampaign = $database->getUniqueCount("dragons.characters", "characterId", array("campaignId"=>$campaignId));
+		$campaign->loaCampaignById($campaignId);
+
+		$returnHTML .= '<div class="characterSelect" onClick="document.location.href=\'campaignDetail.php?campaignId=' . $campaignId . '\';">
+						<span style="font-size: 56pt;">' . $campaign->getCampaignName() . '</span><br /></div>';
 		
+		/*
 		$returnHTML .= '<tr>
-							<td><a href="campaignDetail.php?campaignId=' . $campaignId . '">' . $campaignHeader['campaignName'] . '</a></td>
-							<td>' . $numberOfQuestsPlayed . '</td>
-							<td>' . $numberOfCharactersInCampaign . '</td>
-							<td>' . $campaignHeader['creationDate'] . '</td>
-							<td>' . $campaignHeader['lastPlayed'] . '</td>
-							<td><a href="editCampaign.php?campaignId=' . $campaignId . '">Edit</a></td>
+							<td>' . $characterMaster['characterName'] . '</td>
+							<td>' . $characterMaster['characterRace'] . '</td>
+							<td>' . $characterMaster['characterClass'] . '</td>
+							<td>' . $characterMaster['characterLevel'] . '</td>
+							<td>' . $campaignMaster['campaignName'] . '</td>
+							<td>' . $activeQuest . '</td>
+							<td><a href="editCharacter.php?characterId=' . $characterId . '">Edit</a></td>
 						</tr>
 		';
+		*/
 	}
-	
-	$returnHTML .= '</table>';
 	
 	return $returnHTML;
 }

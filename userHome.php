@@ -50,6 +50,7 @@ $user->loadUserById($_SESSION['userId']);
 
 $pageTitle = "Dragon Control - Login";
 $crumbTrail = "";
+$menuOptions = file_get_contents('includes/mainMenuOptions.php');
 
 //$campaignsLeadingHTML = getCampaignsLeadingHTML($database, $user);
 //$activeCharactersHTML = getActiveCharactersHTML($database, $user);

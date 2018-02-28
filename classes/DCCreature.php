@@ -22,17 +22,17 @@ include_once("classes/DCObject.php");
 //-------------------------------------------------------------------------------------------
 class DCCreature extends DCObject {
 	// class properties
-	protected $characterId;
+	protected $id;
 	protected $campaignId;
 	protected $questId;
 	protected $battleDetailId;
-	protected $creatureName;
-	protected $creatureRaceId;
-	protected $creatureRace;
-	protected $creatureClassId;
-	protected $creatureClass;
-	protected $creatureLevel;
-	protected $creatureXP;
+	protected $name;
+	protected $raceId;
+	protected $race;
+	protected $classId;
+	protected $className;
+	protected $level;
+	protected $XP;
 	protected $maxHP;
 	protected $currentHP;
 	protected $armorClass;
@@ -135,8 +135,8 @@ class DCCreature extends DCObject {
 	//------------------------------------------------------------------------
 	// get character name
 	//------------------------------------------------------------------------
-	public function getCharacterName() {
-		return $this->characterName;
+	public function getName() {
+		return $this->name;
 	}
 	//------------------------------------------------------------------------
 	
@@ -144,8 +144,8 @@ class DCCreature extends DCObject {
 	//------------------------------------------------------------------------
 	// get character race
 	//------------------------------------------------------------------------
-	public function getCharacterRace() {
-		return $this->characterRace;
+	public function getRace() {
+		return $this->race;
 	}
 	//------------------------------------------------------------------------
 	
@@ -153,8 +153,8 @@ class DCCreature extends DCObject {
 	//------------------------------------------------------------------------
 	// get character class
 	//------------------------------------------------------------------------
-	public function getCharacterClass() {
-		return $this->characterClass;
+	public function getClass() {
+		return $this->className;
 	}
 	//------------------------------------------------------------------------
 	
@@ -180,8 +180,8 @@ class DCCreature extends DCObject {
 	//------------------------------------------------------------------------
 	// get xp
 	//------------------------------------------------------------------------
-	public function getCharacterXP() {
-		return $this->characterXP;
+	public function getXP() {
+		return $this->XP;
 	}
 	//------------------------------------------------------------------------
 	
@@ -189,8 +189,8 @@ class DCCreature extends DCObject {
 	//------------------------------------------------------------------------
 	// get level
 	//------------------------------------------------------------------------
-	public function getCharacterLevel() {
-		return $this->characterLevel;
+	public function getLevel() {
+		return $this->level;
 	}
 	//------------------------------------------------------------------------
 	
@@ -389,6 +389,15 @@ class DCCreature extends DCObject {
 	//------------------------------------------------------------------------
 	public function getImageLocation() {
 		return $this->imageLocation;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get initiative
+	//------------------------------------------------------------------------
+	public function getInitiative() {
+		return $this->initiative;
 	}
 	//------------------------------------------------------------------------
 }	

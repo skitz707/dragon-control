@@ -31,8 +31,8 @@ class DDMonster extends DDCreature {
 	public function loadMonsterById($monsterId) {
 		$monsterRecord = $this->database->getDatabaseRecord("dragons.monsters", array("monsterId"=>$monsterId));
 		
-		$this->monsterId = $monsterId;
-		$this->creatureName = $monsterRecord['monsterName'];
+		$this->id = $monsterId;
+		$this->name = $monsterRecord['monsterName'];
 		$this->maxHP = $monsterRecord['health'];
 		$this->currentHP = $monsterRecord['health'];
 		$this->armorClass = $monsterRecord['armorClass'];
