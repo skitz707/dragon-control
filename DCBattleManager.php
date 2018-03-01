@@ -84,7 +84,7 @@ require_once("includes/header.php");
 ?>
 <div class="battleHeader">
 	Battle Status: <span style="font-weight: bold;"><?php echo $battleStatus; ?> | </span> Easy: <span style="font-weight: bold;"><?php echo $battle->getEasyEncounter(); ?></span> | Medium: <span style="font-weight: bold;"><?php echo $battle->getMediumEncounter(); ?></span> | 
-	Hard: <span style="font-weight: bold;"><?php echo $battle->getHardEncounter(); ?></span> | Deadly: <span style="font-weight: bold;"><?php echo $battle->getDeadlyEncounter(); ?></span> | Difficulty Rating: <span style="font-weight: bold;"> <?php echo $battleDifficulty ?></span> | <div class="greenButton" onClick="createBattle();">New Battle</div> <div class="blueButton" onClick="aDCMonsters();">Add Monster</div> <div class="redButton" onClick="endBattle();">End Battle</div>
+	Hard: <span style="font-weight: bold;"><?php echo $battle->getHardEncounter(); ?></span> | Deadly: <span style="font-weight: bold;"><?php echo $battle->getDeadlyEncounter(); ?></span> | Difficulty Rating: <span style="font-weight: bold;"> <?php echo $battleDifficulty ?></span> | <div class="greenButton" onClick="createBattle();">New Battle</div> <div class="blueButton" onClick="addMonsters();">Add Monster</div> <div class="redButton" onClick="endBattle();">End Battle</div>
 </div>
 <?php
 
@@ -140,7 +140,7 @@ function endBattle() {
 //----------------------------------------------------------------------------
 // add monsters
 //----------------------------------------------------------------------------
-function aDCMonsters() {
+function addMonsters() {
 	inBattle = <?php if ($inBattle) { echo "true"; } else { echo "false"; } ?>;
 	divObj = document.getElementById('popUpBox');
 	
@@ -174,7 +174,7 @@ function setInit(type, id) {
 	divHTML += '<form method="post" action="setInitiative.php?type=' + type + '" id="initForm">';
 	divHTML += 'Initiative: <input type="text" size="2" id="initiative" name="initiative" /> <div class="blueButton" onClick="document.getElementById(\'initForm\').submit();">Set</div>';
 	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
-	divHTML += '<input type="hidden" name="campaignId" id="campaignId" value="<?php print($campaignId); ?>" />';
+	divHTML += '<input type="hidden" name="returnTo" id="returnTo" value="DCBattleManager.php?campaignId=<?php echo $campaignId; ?>" />';
 	divHTML += '</form>';
 	
 	divHTML = divHTML.replace(/null/g, '');

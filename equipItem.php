@@ -42,5 +42,5 @@ if ($_POST['itemId'] > 0) {
 	$database->insertDatabaseRecord("dragons.characterEquippedItems", $equippedItem);
 }
 
-header("Location: editCharacterEquipment.php?characterId=" . $_POST['characterId']);
+header("Location: " . $_POST['returnTo']);
 //-------------------------------------------------------------------------------------------

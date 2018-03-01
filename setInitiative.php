@@ -23,8 +23,6 @@ ini_set('display_errors', 1);
 // program includes
 //-------------------------------------------------------------------------------------------
 require_once("classes/DCDatabase.php");
-require_once("classes/DDPlayer.php");
-require_once("classes/DDEnemy.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -35,5 +33,5 @@ require_once("classes/DDEnemy.php");
 $database = new DCDatabase();
 $database->updateDatabaseRecord("dragons.battleDetail", array("initiative"=>$_POST['initiative']), array("entryId"=>$_POST['id']));
 
-header("Location: DCBattleManager.php?campaignId=" . $_POST['campaignId']);
+header("Location: " . $_POST['returnTo']);
 //-------------------------------------------------------------------------------------------

@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// characters.php
+// characterItems.php
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// February 28th, 2018
+// March 1st, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -26,6 +26,7 @@ require_once("classes/DCDatabase.php");
 require_once("classes/DCSecurity.php");
 require_once("classes/DCUser.php");
 require_once("classes/DCCharacter.php");
+require_once("classes/DCItem.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -44,6 +45,7 @@ $database = new DCDatabase();
 $security = new DCSecurity($database);
 $user = new DCUser($database);
 $character = new DCCharacter($database);
+$item = new DCItem($database);
 $character->loadCharacterById($_GET['characterId']);
 
 // check for active user
@@ -51,52 +53,22 @@ $security->checkLogin();
 
 $user->loadUserById($_SESSION['userId']);
 
-$pageTitle = "Dragon Control - Login";
-$crumbTrail = "Characters > " . $character->getName();
+$pageTitle = "DC - Items";
+$crumbTrail = "Characters > " . $character->getName() . " &gt Items";
 
 // get menu options
 ob_start();
 require('includes/characterMenuOptions.php');
 $menuOptions = ob_get_clean();
 
+$itemsHTML = getItemsHTML($database, $character, $item);
+
 require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-	<div id="characterDetail" style="padding-top: 110px; text-align: left;">
-		<img src="<?php echo $character->getImageLocation(); ?>" width="250px" height="250px" style="float: left; padding-right: 25px; padding-left: 25px;" />
-		<span style="font-size: 62pt;"><?php echo $character->getName(); ?></span><br />
-		<span style="font-style: italic; font-size: 38pt;"><?php echo $character->getRace(); ?> / <?php echo $character->getClass(); ?></span>
-		<span style="font-size: 38pt;">Level: <?php echo $character->getLevel(); ?> | XP: <?php echo $character->getXP(); ?></span>
-		<div style="clear:both"></div>
-		<br />
-		<div style="text-align: center; font-size: 62pt;">
-			AC: <?php echo $character->getArmorClass(); ?><br />
-			Prof Bonus: <?php echo $character->getProficiencyBonus(); ?><br />
-			Initiative: <?php echo number_format($character->getInitiative(), 0, "", ""); ?><br />
-			HP: <?php echo $character->getCurrentHP() . '/' . $character->getMaxHP(); ?><br />
-			<table style="font-size:46pt; width: 90%; margin-left: auto; margin-right: auto; margin-top: 25px; margin-bottom: 25px;">
-				<tr>
-					<td>STR:</td>
-					<td><?php echo $character->getStrength() .'(' . sprintf("%+d", $character->getStrengthModifier()); ?>)</td>
-					<td>DEX:</td>
-					<td><?php echo $character->getDexterity() .'(' . sprintf("%+d", $character->getDexterityModifier()); ?>)</td>
-				</tr>
-				<tr>
-					<td>CON:</td>
-					<td><?php echo $character->getConstitution() .'(' . sprintf("%+d", $character->getConstitutionModifier()); ?>)</td>
-					<td>INT:</td>
-					<td><?php echo $character->getIntelligence() .'(' . sprintf("%+d", $character->getIntelligenceModifier()); ?>)</td>
-				</tr>
-				<tr>
-					<td>WIS:</td>
-					<td><?php echo $character->getWisdom() .'(' . sprintf("%+d", $character->getWisdomModifier()); ?>)</td>
-					<td>CHA:</td>
-					<td><?php echo $character->getCharisma() .'(' . sprintf("%+d", $character->getCharismaModifier()); ?>)</td>
-				</tr>
-			</table>
-			<div class="blueButton" onClick="setInitiative('<?php echo $character->getBattleDetailId(); ?>');">Set Initiative</div>
-		</div>
+	<div id="items" style="padding-top: 110px; text-align: left;">
+		<?php echo $itemsHTML; ?>
 	</div>
 	<div id="popUpBox"></div>
 </div>
@@ -105,7 +77,7 @@ require_once("includes/header.php");
 //----------------------------------------------------------------------------
 // set initiative
 //----------------------------------------------------------------------------
-function setInitiative(id) {
+function useItem(id) {
 	divObj = document.getElementById('popUpBox');
 	divHTML = "";
 	divHTML += '<form method="post" action="setInitiative.php?type=C" id="initForm">';
@@ -130,4 +102,28 @@ function setInitiative(id) {
 
 <?php
 require_once("includes/footer.php");
+//-------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
+// get items html
+//-------------------------------------------------------------------------------------------
+function getItemsHTML($database, $character, $item) {
+	$characterItemIds = $character->getItems();
+	$returnHTML = "";
+	
+	foreach ($characterItemIds as $characterItemId) {
+		$characterItemData = $database->getDatabaseRecord("dragons.characterItems", array("characterItemId"=>$characterItemId));
+		$item->loadItemById($characterItemData['itemId']);
+		
+		$returnHTML .= '<div class="itemSelect" onClick="document.location.href=\'itemDetail.php?characterItemId=' . $characterItemId . '\';">
+						<img src="' . $item->getImageLocation() . '" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
+						<span style="font-size: 38pt;">' . $item->getItemName() . '</span><br />
+						<span style="font-size: 26pt; font-style: italic;">' . $item->getItemType() . '</span><br />
+						<span style="font-size: 22pt;">Qty: ' . $characterItemData['quantity'] . '<span style="padding-left: 30px;">Weight: ' . $item->getItemWeight() . '</span>
+						<span style="padding-left: 30px;">Value: ' . number_format($item->getItemCost(), 0, "", "") . 'gp</span></span></div>';
+	}
+	
+	return $returnHTML;
+}
 //-------------------------------------------------------------------------------------------

@@ -266,6 +266,9 @@ class DCCharacter extends DCCreature {
 			// load initiative
 			$this->initiative = $activeBattleDetail['initiative'];
 		}
+		
+		// load character items
+		$this->loadCharacterItems();
 	}	
 	//------------------------------------------------------------------------
 	
@@ -482,6 +485,29 @@ class DCCharacter extends DCCreature {
 		}
 		
 		return $returnArray;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// load character items
+	//------------------------------------------------------------------------
+	private function loadCharacterItems() {
+		$selectStmt = "select t1.characterItemId from dragons.characterItems t1 inner join dragons.itemMaster t2 
+						on t1.itemId = t2.itemId where t1.characterId = ? order by t2.itemName";
+		$this->itemArray = array();
+		
+		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
+			if (!$selectHandle->execute(array(0=>$this->id))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->itemArray[] = $data['characterItemId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
 	}
 	//------------------------------------------------------------------------
 	

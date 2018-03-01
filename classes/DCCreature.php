@@ -56,6 +56,7 @@ class DCCreature extends DCObject {
 	protected $magicSpells;
 	protected $specialSkills;
 	protected $imageLocation;
+	protected $itemArray;
 	protected $statusFlag;
 	protected $lastChange;
 	protected $creationDate;
@@ -398,6 +399,33 @@ class DCCreature extends DCObject {
 	//------------------------------------------------------------------------
 	public function getInitiative() {
 		return $this->initiative;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get battle detail id
+	//------------------------------------------------------------------------
+	public function getBattleDetailId() {
+		return $this->battleDetailId;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get id
+	//------------------------------------------------------------------------
+	public function getId() {
+		return $this->id;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get items
+	//------------------------------------------------------------------------
+	public function getItems() {
+		return $this->itemArray;
 	}
 	//------------------------------------------------------------------------
 }	

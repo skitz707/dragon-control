@@ -27,12 +27,13 @@ class DCItem extends DCObject {
 	protected $itemName;
 	protected $itemDescription;
 	protected $itemTypeId;
-	protected $itemTypeText;
+	protected $itemType;
 	protected $itemCost;
 	protected $itemWeight;
 	protected $itemProperties;
 	protected $itemDice;
 	protected $itemEquipableLocations;
+	protected $imageLocation;
 	protected $lastChange;
 	protected $creationDate;
 	
@@ -49,7 +50,7 @@ class DCItem extends DCObject {
 		$this->itemName = $itemMaster['itemName'];
 		$this->itemDescription = $itemMaster['itemDescription'];
 		$this->itemTypeId = $itemMaster['itemType'];
-		$this->itemTypeText = $itemTypes['itemType'];
+		$this->itemType = $itemTypes['itemType'];
 		$this->itemCost = $itemMaster['cost'];
 		$this->itemWeight = $itemMaster['itemWeight'];
 		
@@ -102,6 +103,51 @@ class DCItem extends DCObject {
 	//------------------------------------------------------------------------
 	public function getItemEquipableLocations() {
 		return $this->itemEquipableLocations;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get item name
+	//------------------------------------------------------------------------
+	public function getItemName() {
+		return $this->itemName;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get image location
+	//------------------------------------------------------------------------
+	public function getImageLocation() {
+		return $this->imageLocation;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get item type
+	//------------------------------------------------------------------------
+	public function getItemType() {
+		return $this->itemType;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get item weight
+	//------------------------------------------------------------------------
+	public function getItemWeight() {
+		return $this->itemWeight;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get item cost
+	//------------------------------------------------------------------------
+	public function getItemCost() {
+		return $this->itemCost;
 	}
 	//------------------------------------------------------------------------
 }	

@@ -35,7 +35,7 @@ $database = new DCDatabase();
 $monster = new DCMonster($database);
 $monster->loadMonsterById($_GET['monsterId']);
 
-$returnData['monsterName'] = $monster->getCharacterName();
+$returnData['monsterName'] = $monster->getName();
 $returnData['health'] = $monster->getMaxHP();
 $returnData['armorClass'] = $monster->getArmorClass();
 $returnData['strength'] = $monster->getStrength();

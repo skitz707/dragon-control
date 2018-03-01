@@ -67,7 +67,7 @@ class DCMonster extends DCCreature {
 		$damageResistancesStmt = "select * from dragons.monsterResistances where monsterId = ?";
 		
 		if ($damageResistanceHandle = $this->database->databaseConnection->prepare($damageResistancesStmt)) {
-			if (!$damageResistanceHandle->execute(array(0=>$this->monsterId))) {
+			if (!$damageResistanceHandle->execute(array(0=>$this->id))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
@@ -83,7 +83,7 @@ class DCMonster extends DCCreature {
 		$damageImmunitiesStmt = "select * from dragons.monsterDamageImmunities where monsterId = ?";
 		
 		if ($damageImmunitiesHandle = $this->database->databaseConnection->prepare($damageImmunitiesStmt)) {
-			if (!$damageImmunitiesHandle->execute(array(0=>$this->monsterId))) {
+			if (!$damageImmunitiesHandle->execute(array(0=>$this->id))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
@@ -99,7 +99,7 @@ class DCMonster extends DCCreature {
 		$conditionImmunitiesStmt = "select * from dragons.monsterConditionImmunities where monsterId = ?";
 		
 		if ($conditionImmunitiesHandle = $this->database->databaseConnection->prepare($conditionImmunitiesStmt)) {
-			if (!$conditionImmunitiesHandle->execute(array(0=>$this->monsterId))) {
+			if (!$conditionImmunitiesHandle->execute(array(0=>$this->id))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
@@ -116,7 +116,7 @@ class DCMonster extends DCCreature {
 		$monsterAttackStmt = "select * from dragons.monsterAttacks where monsterId = ?";
 		
 		if ($monsterAttackHandle = $this->database->databaseConnection->prepare($monsterAttackStmt)) {
-			if (!$monsterAttackHandle->execute(array($this->monsterId))) {
+			if (!$monsterAttackHandle->execute(array($this->id))) {
 				var_dump($database->databaseConnection->errorInfo());
 			}
 			
@@ -133,7 +133,7 @@ class DCMonster extends DCCreature {
 		$monsterSpellsStmt = "select * from dragons.monsterSpells where monsterId = ?";
 		
 		if ($monsterSpellsHandle = $this->database->databaseConnection->prepare($monsterSpellsStmt)) {
-			if (!$monsterSpellsHandle->execute(array(0=>$this->monsterId))) {
+			if (!$monsterSpellsHandle->execute(array(0=>$this->id))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
@@ -149,7 +149,7 @@ class DCMonster extends DCCreature {
 		$specialSkillsStmt = "select specialSkillId from dragons.monsterSpecialSkills where monsterId = ?";
 		
 		if ($specialSkillsHandle = $this->database->databaseConnection->prepare($specialSkillsStmt)) {
-			if (!$specialSkillsHandle->execute(array(0=>$this->monsterId))) {
+			if (!$specialSkillsHandle->execute(array(0=>$this->id))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
@@ -183,7 +183,7 @@ class DCMonster extends DCCreature {
 		echo '
 			<div class="monsterCard">
 				<img src="' . $this->imageLocation . '" width="120px" height="160px" /><br />
-				<span class="monsterName">' . $this->characterName . '</span><br />
+				<span class="monsterName">' . $this->name . '</span><br />
 				AC: ' . $this->armorClass . '<br />
 				Initiative: ' . number_format($this->initiative, 0, "", "") . '
 			</div>
@@ -198,8 +198,8 @@ class DCMonster extends DCCreature {
 	public function printAdminMonsterCard() {
 		echo '
 			<div class="adminMonsterCard">
-				<img src="' . $this->imageLocation . '" width="80px" height="120px" onClick="monsterDetails(\'' . $this->monsterId . '\');" /><br />
-				<span class="adminMonsterName">' . $this->characterName . '</span><br />
+				<img src="' . $this->imageLocation . '" width="80px" height="120px" onClick="monsterDetails(\'' . $this->id . '\');" /><br />
+				<span class="adminMonsterName">' . $this->name . '</span><br />
 				<em>Enemy</em><br />
 				AC: ' . $this->armorClass . '<br />
 				HP: ' . $this->currentHP . '/' . $this->maxHP . '<br />

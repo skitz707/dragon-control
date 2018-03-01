@@ -53,14 +53,12 @@ $pageTitle = "Dragon Control - Login";
 $crumbTrail = "Characters";
 $menuOptions = file_get_contents('includes/mainMenuOptions.php');
 
-//$campaignsLeadingHTML = getCampaignsLeadingHTML($database, $user);
 $activeCharactersHTML = getActiveCharactersHTML($database, $user);
 
 require_once("includes/header.php");
 ?>
-
 <div id="mainContent">
-	<div id="characterList" style="margin-top: 95px;">
+	<div id="characterList" style="padding-top: 100px; vertical-align: text-top;">
 	<?php echo $activeCharactersHTML; ?>
 	</div>
 </div>
@@ -77,8 +75,6 @@ function getActiveCharactersHTML($database, $user) {
 	$character = new DCCharacter($database);
 	$returnHTML = "";
 	$characterIds = $user->getActiveCharacters();
-	
-	
 	
 	foreach ($characterIds as $characterId) {
 		$character->loadCharacterById($characterId);

@@ -35,11 +35,11 @@ $database = new DCDatabase();
 $character = new DCCharacter($database);
 $character->loadCharacterById($_GET['characterId']);
 
-$returnData['characterName'] = $character->getCharacterName();
-$returnData['characterRace'] = $character->getCharacterRace();
-$returnData['characterClass'] = $character->getCharacterClass();
-$returnData['characterLevel'] = $character->getCharacterLevel();
-$returnData['characterXP'] = $character->getCharacterXP();
+$returnData['characterName'] = $character->getName();
+$returnData['characterRace'] = $character->getRace();
+$returnData['characterClass'] = $character->getClass();
+$returnData['characterLevel'] = $character->getLevel();
+$returnData['characterXP'] = $character->getXP();
 $returnData['currentHP'] = $character->getCurrentHP();
 $returnData['maxHP'] = $character->getMaxHP();
 $returnData['armorClass'] = $character->getArmorClass();
