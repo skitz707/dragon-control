@@ -54,33 +54,74 @@ class DCItem extends DCObject {
 		$this->itemCost = $itemMaster['cost'];
 		$this->itemWeight = $itemMaster['itemWeight'];
 		
+		$this->loadItemProperties();
+		$this->loadEquipableLocations();
+		$this->loadItemDice();
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// load item properties
+	//------------------------------------------------------------------------
+	private function loadItemProperties() {
 		// load item properties
-		$propertiesStmt = "select * from dragons.itemProperties where itemId = ?";
+		$selectStmt = "select * from dragons.itemProperties where itemId = ?";
 		$this->itemProperties = array();
 		
-		if ($propertiesHandle = $this->database->databaseConnection->prepare($propertiesStmt)) {
-			if (!$propertiesHandle->execute(array(0=>$this->itemId))) {
+		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
+			if (!$selectHandle->execute(array(0=>$this->itemId))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
-			while ($propertyData = $propertiesHandle->fetch(PDO::FETCH_ASSOC)) {
-				$this->itemProperties[] = $propertyData['weaponPropertyId'];
+			while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->itemProperties[] = $data['weaponPropertyId'];
 			}
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
 		}
-		
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// load equipable locations
+	//------------------------------------------------------------------------
+	private function loadEquipableLocations() {
 		// load equipable locations
-		$equipableStmt = "select * from dragons.itemEquipableLocations where itemId = ?";
+		$selectStmt = "select * from dragons.itemEquipableLocations where itemId = ?";
 		$this->itemEquipableLocations = array();
 		
-		if ($equipableHandle = $this->database->databaseConnection->prepare($equipableStmt)) {
-			if (!$equipableHandle->execute(array(0=>$this->itemId))) {
+		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
+			if (!$selectHandle->execute(array(0=>$this->itemId))) {
 				var_dump($this->database->databaseConnection->errorInfo());
 			}
 			
-			while ($equipData = $equipableHandle->fetch(PDO::FETCH_ASSOC)) {
-				$this->itemEquipableLocations[] = $equipData['equipableLocationId'];
+			while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->itemEquipableLocations[] = $data['equipableLocationId'];
+			}
+		} else {
+			var_dump($this->database->databaseConnection->errorInfo());
+		}
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// load item dice
+	//------------------------------------------------------------------------
+	private function loadItemDice() {
+		// load equipable locations
+		$selectStmt = "select * from dragons.itemDice where itemId = ? order by itemDiceId";
+		$this->itemDice = array();
+		
+		if ($selectHandle = $this->database->databaseConnection->prepare($selectStmt)) {
+			if (!$selectHandle->execute(array(0=>$this->itemId))) {
+				var_dump($this->database->databaseConnection->errorInfo());
+			}
+			
+			while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
+				$this->itemDice[] = $data['itemDiceId'];
 			}
 		} else {
 			var_dump($this->database->databaseConnection->errorInfo());
@@ -148,6 +189,15 @@ class DCItem extends DCObject {
 	//------------------------------------------------------------------------
 	public function getItemCost() {
 		return $this->itemCost;
+	}
+	//------------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------------
+	// get item dice
+	//------------------------------------------------------------------------
+	public function getItemDice() {
+		return $this->itemDice;
 	}
 	//------------------------------------------------------------------------
 }	

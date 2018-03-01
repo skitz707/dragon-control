@@ -33,7 +33,6 @@ require_once("classes/DCItem.php");
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
 $item = new DCItem($database);
-$pageTitle = "DC - Edit Item";
 $itemId = $_GET['itemId'];
 $item->loadItemById($itemId);
 $itemMaster = $database->getDatabaseRecord("dragons.itemMaster", array("itemId"=>$itemId));
@@ -47,6 +46,10 @@ if ($armorClass['itemArmorClassId'] > 0) {
 } else {
 	$itemArmorClass = "";
 }
+
+$pageTitle = "DC - Edit Item";
+$crumbTrail = "";
+$menuOptions = "";
 
 require_once("includes/header.php");
 include_once("includes/leaderNavigation.php");

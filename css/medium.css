@@ -65,7 +65,7 @@ div#mainContent {
 
 #controlLeft {
 	vertical-align: text-middle;
-	width: 90%;
+	width: 98%;
 	text-align: left;
 	padding: 4px;
 	float: left;
@@ -186,14 +186,14 @@ div#mainContent {
 .greenButton {
 	display: inline-block;
 	border: 1px solid #000000;
-	-moz-border-radius: 5px;
-	border-radius: 4px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
 	color: #eeeeee;
 	background: linear-gradient(#007900, #005900);
 	cursor: pointer;
 	cursor: hand;
-	margin: 2px;
-	padding: 2px;
+	margin: 10px;
+	padding: 10px;
 }
 .greenButton:hover {
 	background: linear-gradient(#008900, #006900);
@@ -226,14 +226,14 @@ div#mainContent {
 .redButton {
 	display: inline-block;
 	border: 1px solid #000000;
-	-moz-border-radius: 5px;
-	border-radius: 4px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
 	color: #eeeeee;
 	background: linear-gradient(#790000, #590000);
 	cursor: pointer;
 	cursor: hand;
-	margin: 2px;
-	padding: 5px;
+	margin: 10px;
+	padding: 10px;
 }
 .redButton:hover {
 	background: linear-gradient(#890000, #690000);
@@ -288,7 +288,7 @@ div#mainContent {
 }
 
 .crumbTrail {
-	font-size: 36pt;
+	font-size: 26pt;
 	padding-left: 15px;
 }
 

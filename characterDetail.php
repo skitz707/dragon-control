@@ -65,8 +65,8 @@ require_once("includes/header.php");
 <div id="mainContent">
 	<div id="characterDetail" style="padding-top: 110px; text-align: left;">
 		<img src="<?php echo $character->getImageLocation(); ?>" width="250px" height="250px" style="float: left; padding-right: 25px; padding-left: 25px;" />
-		<span style="font-size: 62pt;"><?php echo $character->getName(); ?></span><br />
-		<span style="font-style: italic; font-size: 38pt;"><?php echo $character->getRace(); ?> / <?php echo $character->getClass(); ?></span>
+		<span style="font-size: 6vw;"><?php echo $character->getName(); ?></span><br />
+		<span style="font-style: italic; font-size: 38pt;"><?php echo $character->getRace(); ?> / <?php echo $character->getClass(); ?></span><br />
 		<span style="font-size: 38pt;">Level: <?php echo $character->getLevel(); ?> | XP: <?php echo $character->getXP(); ?></span>
 		<div style="clear:both"></div>
 		<br />

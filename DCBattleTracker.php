@@ -57,8 +57,11 @@ if ($battleRecord['battleId'] > 0) {
 }
 				
 $pageTitle = "DD Battle Tracker";
+$crumbTrail = "Battle Tracker";
 
 require_once("includes/header.php");
+
+echo '<div style="padding-top: 25px;">';
 
 // battle or expoloration views
 if ($inBattle) {
@@ -77,6 +80,8 @@ if ($inBattle) {
 		$character->printCharacterCard();
 	}
 }
+
+echo '</div>';
 
 ?>
 <script>

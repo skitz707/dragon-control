@@ -75,7 +75,7 @@ require_once("includes/header.php");
 
 <script>
 //----------------------------------------------------------------------------
-// set initiative
+// use item
 //----------------------------------------------------------------------------
 function useItem(id) {
 	divObj = document.getElementById('popUpBox');
@@ -112,11 +112,16 @@ function getItemsHTML($database, $character, $item) {
 	$characterItemIds = $character->getItems();
 	$returnHTML = "";
 	
+	// add item options
+	$returnHTML .= '<div class="itemSelect" onClick="addItem();">
+					<img src="images/addItem.jpg" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
+					<span style="font-size: 58pt;">Add Item</span></div>';
+	
 	foreach ($characterItemIds as $characterItemId) {
 		$characterItemData = $database->getDatabaseRecord("dragons.characterItems", array("characterItemId"=>$characterItemId));
 		$item->loadItemById($characterItemData['itemId']);
 		
-		$returnHTML .= '<div class="itemSelect" onClick="document.location.href=\'itemDetail.php?characterItemId=' . $characterItemId . '\';">
+		$returnHTML .= '<div class="itemSelect" onClick="document.location.href=\'itemDetail.php?characterId=' . $character->getId() . '&characterItemId=' . $characterItemId . '\';">
 						<img src="' . $item->getImageLocation() . '" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
 						<span style="font-size: 38pt;">' . $item->getItemName() . '</span><br />
 						<span style="font-size: 26pt; font-style: italic;">' . $item->getItemType() . '</span><br />
