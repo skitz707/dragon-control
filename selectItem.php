@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// characterItems.php
+// characters.php
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// March 1st, 2018
+// February 28th, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -26,7 +26,6 @@ require_once("classes/DCDatabase.php");
 require_once("classes/DCSecurity.php");
 require_once("classes/DCUser.php");
 require_once("classes/DCCharacter.php");
-require_once("classes/DCItem.php");
 //-------------------------------------------------------------------------------------------
 
 
@@ -45,7 +44,7 @@ $database = new DCDatabase();
 $security = new DCSecurity($database);
 $user = new DCUser($database);
 $character = new DCCharacter($database);
-$item = new DCItem($database);
+
 $character->loadCharacterById($_GET['characterId']);
 
 // check for active user
@@ -53,24 +52,29 @@ $security->checkLogin();
 
 $user->loadUserById($_SESSION['userId']);
 
-$pageTitle = "DC - Items";
-$crumbTrail = "Characters > " . $character->getName() . " &gt Items";
+$pageTitle = "DC - Item Detail";
+$crumbTrail = "Characters > " . $character->getName() . " &gt Item";
 
 // get menu options
 ob_start();
 require('includes/characterMenuOptions.php');
 $menuOptions = ob_get_clean();
 
-$itemsHTML = getItemsHTML($database, $character, $item);
+$itemDropDownHTML = getItemDropdownHTML($database, $character->getCampaignId());
 
 require_once("includes/header.php");
 ?>
 
 <div id="mainContent">
-	<div id="items" style="padding-top: 110px; text-align: left;">
-		<?php echo $itemsHTML; ?>
+	<div id="selectItem" style="padding-top: 110px; text-align: left;">
+		<form method="post" action="addCharacterItem.php" id="itemForm">
+		<span style="font-size: 56pt;">Item:<br />
+		<?php echo $itemDropDownHTML; ?><br /><br />
+		Qty: <input type="text" id="itemQuantity" name="itemQuantity" size="1" style="font-size: 56pt;" /> <div class="greenButton" onClick="document.getElementById('itemForm').submit();">Add</div></span>
+		<input type="hidden" name="returnTo" id="returnTo" value="characterItems.php?characterId=<?php echo $character->getId(); ?>" />';
+		<input type="hidden" name="characterId" id="characterId" value="<?php echo $character->getId(); ?>" />
+		</form>
 	</div>
-	<div id="popUpBox"></div>
 </div>
 
 <script>
@@ -83,28 +87,27 @@ require_once("includes/footer.php");
 
 
 //-------------------------------------------------------------------------------------------
-// get items html
+// get item dropdown html
 //-------------------------------------------------------------------------------------------
-function getItemsHTML($database, $character, $item) {
-	$characterItemIds = $character->getItems();
+function getItemDropdownHTML($database, $campaignId) {
+	$selectStmt = "select * from dragons.itemMaster where campaignId = ? order by itemName";
 	$returnHTML = "";
 	
-	// add item options
-	$returnHTML .= '<div class="itemSelect" onClick="document.location.href=\'selectItem.php?characterId=' . $character->getId() . '\';">
-					<img src="images/addItem.jpg" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
-					<span style="font-size: 58pt;">Add Item</span></div>';
+	$returnHTML .= '<select id="itemId" name="itemId" style="font-size: 42pt;"><option value="0">[select item]</option>';
 	
-	foreach ($characterItemIds as $characterItemId) {
-		$characterItemData = $database->getDatabaseRecord("dragons.characterItems", array("characterItemId"=>$characterItemId));
-		$item->loadItemById($characterItemData['itemId']);
+	if ($selectHandle = $database->databaseConnection->prepare($selectStmt)) {
+		if (!$selectHandle->execute(array(0=>$campaignId))) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
 		
-		$returnHTML .= '<div class="itemSelect" onClick="document.location.href=\'itemDetail.php?characterId=' . $character->getId() . '&characterItemId=' . $characterItemId . '\';">
-						<img src="' . $item->getImageLocation() . '" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
-						<span style="font-size: 38pt;">' . $item->getItemName() . '</span><br />
-						<span style="font-size: 26pt; font-style: italic;">' . $item->getItemType() . '</span><br />
-						<span style="font-size: 22pt;">Qty: ' . $characterItemData['quantity'] . '<span style="padding-left: 30px;">Weight: ' . $item->getItemWeight() . '</span>
-						<span style="padding-left: 30px;">Value: ' . number_format($item->getItemCost(), 0, "", "") . 'gp</span></span></div>';
+		while ($data = $selectHandle->fetcH(PDO::FETCH_ASSOC)) {
+			$returnHTML .= '<option value="' . $data['itemId'] . '">' . $data['itemName'] . '</option>';
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
 	}
+	
+	$returnHTML .= "</select>";
 	
 	return $returnHTML;
 }

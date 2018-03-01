@@ -1,9 +1,9 @@
 <?php
 //-------------------------------------------------------------------------------------------
-// createMonsterSkill.php
+// useItem.php
 // Written by: Michael C. Szczepanik
 // rocknrollwontdie@gmail.com
-// February 21st, 2018
+// March 1st, 2018
 //
 // Change log:
 //-------------------------------------------------------------------------------------------
@@ -31,38 +31,22 @@ require_once("classes/DCDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
-$campaignId = $_GET['campaignId'];
-$campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
+$characterItemData = $database->getDatabaseRecord("dragons.characterItems", array("characterItemId"=>$_POST['id']));
+$deleteStmt = "delete from dragons.characterItems where characterItemId = ?";
 
-$pageTitle = "DC - Manage Monster Skills";
-$crumbTrail = "";
-$menuOptions = "";
+$newQuantity = $characterItemData['quantity'] - $_POST['quantity'];
 
-require_once("includes/header.php");
-include_once("includes/leaderNavigation.php");
-?>
+if ($newQuantity > 0) {
+	$database->updateDatabaseRecord("dragons.characterItems", array("quantity"=>$newQuantity), array("characterItemId"=>$_POST['id']));
+} else {
+	if ($deleteHandle = $database->databaseConnection->prepare($deleteStmt)) {
+		if (!$deleteHandle->execute(array(0=>$_POST['id']))) {
+			var_dump($database->databaseConnection->errorInfo());
+		}
+	} else {
+		var_dump($database->databaseConnection->errorInfo());
+	}
+}
 
-<br /><br />
-<div id="mainContent">
-	<span class="largeHeading">Create Monster Skill: <?php echo $campaignHeader['campaignName']; ?></span>
-	<br /><br />
-	<form method="post" id="monsterSkillForm" action="addNewMonsterSkill.php">
-	<table class="standardResultTable" style="width: 30%; margin-left: auto; margin-right: auto;">
-		<tr>
-			<td>Skill Name</td>
-			<td><input type="text" class="textField" name="skillName" id="skillName" size="20" /></td>
-		</tr>
-		<tr>
-			<td>Skill Description</td>
-			<td><textarea id="skillDescription" name="skillDescription" cols="40" rows="4"></textarea></td>
-		</tr>
-	</table>
-	<input type="hidden" name="campaignId" id="campaignId" value="<?php echo $campaignId; ?>" />
-	</form>
-	<div class="greenButton" onClick="document.getElementById('monsterSkillForm').submit();">Create Skill</div>
-	
-</div>
-
-<?php
-require_once("includes/footer.php");
+header("Location: " . $_POST['returnTo']);
 //-------------------------------------------------------------------------------------------

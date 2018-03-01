@@ -85,7 +85,8 @@ require_once("includes/header.php");
 		<br /><br /><br />
 		<div style="text-align: center; font-size: 62pt;">
 			<div class="redButton" onClick="dropItem('<?php echo $_GET['characterItemId']; ?>');">Drop</div> 
-			<div class="blueButton">Use</div> <div class="greenButton">Give</div><br /><br />
+			<div class="blueButton" onClick="useItem('<?php echo $_GET['characterItemId']; ?>');">Use</div> 
+			<div class="greenButton">Give</div><br /><br />
 			<div class="blueButton" onClick="document.location.href='characterItems.php?characterId=<?php echo $character->getId(); ?>';">&lt Back</div>
 		</div>
 	</div>
@@ -94,7 +95,7 @@ require_once("includes/header.php");
 
 <script>
 //----------------------------------------------------------------------------
-// set initiative
+// drop item
 //----------------------------------------------------------------------------
 function dropItem(id) {
 	divObj = document.getElementById('popUpBox');
@@ -102,6 +103,7 @@ function dropItem(id) {
 	divHTML += '<form method="post" action="dropItem.php" id="dropForm">';
 	divHTML += '<span style="font-size: 48pt;">Are you sure?<br /> <div class="greenButton" onClick="document.getElementById(\'dropForm\').submit();">Yes</div> <div class="redButton">Cancel</div></span>';
 	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
+	divHTML += '<input type="hidden" name="returnTo" id="returnTo" value="characterItems.php?characterId=<?php echo $character->getId(); ?>" />';
 	divHTML += '</form>';
 	
 	divHTML = divHTML.replace(/null/g, '');
@@ -110,6 +112,31 @@ function dropItem(id) {
 	$(function() {
 		$( "#popUpBox" ).dialog({
 			width: 500,
+			height: 300
+		});
+	});
+}
+//----------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------
+// use item
+//----------------------------------------------------------------------------
+function useItem(id) {
+	divObj = document.getElementById('popUpBox');
+	divHTML = "";
+	divHTML += '<form method="post" action="useItem.php" id="useForm">';
+	divHTML += '<span style="font-size: 48pt;">How many?<br /> <input type="text" size="2" id="quantity" name="quantity" /> <div class="blueButton" onClick="document.getElementById(\'useForm\').submit();">Use</div></span>';
+	divHTML += '<input type="hidden" name="id" id="id" value="' + id + '" />';
+	divHTML += '<input type="hidden" name="returnTo" id="returnTo" value="characterItems.php?characterId=<?php echo $character->getId(); ?>" />';
+	divHTML += '</form>';
+	
+	divHTML = divHTML.replace(/null/g, '');
+	divObj.innerHTML = divHTML;
+	
+	$(function() {
+		$( "#popUpBox" ).dialog({
+			width: 450,
 			height: 300
 		});
 	});

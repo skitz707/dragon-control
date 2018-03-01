@@ -32,8 +32,6 @@ require_once("classes/DCDatabase.php");
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
 
-var_dump($_POST);
-
 // check if character already has itemId
 $itemExists = $database->getDatabaseRecord("dragons.characterItems", array("characterId"=>$_POST['characterId'], "itemId"=>$_POST['itemId']));
 
@@ -50,5 +48,5 @@ if ($itemExists['characterItemId'] > 0) {
 	$database->insertDatabaseRecord("dragons.characterItems", $characterItem);
 }
 
-header("Location: editCharacterItems.php?characterId=" . $_POST['characterId']);
+header("Location: " . $_POST['returnTo']);
 //-------------------------------------------------------------------------------------------
