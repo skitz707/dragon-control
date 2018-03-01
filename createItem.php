@@ -31,9 +31,12 @@ require_once("classes/DCDatabase.php");
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
-$pageTitle = "DC - Manage Monsters";
 $campaignId = $_GET['campaignId'];
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$campaignId));
+
+$pageTitle = "DC - Create Item";
+$crumbTrail = "";
+$menuOptions = "";
 
 require_once("includes/header.php");
 include_once("includes/leaderNavigation.php");
