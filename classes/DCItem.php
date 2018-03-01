@@ -53,6 +53,7 @@ class DCItem extends DCObject {
 		$this->itemType = $itemTypes['itemType'];
 		$this->itemCost = $itemMaster['cost'];
 		$this->itemWeight = $itemMaster['itemWeight'];
+		$this->imageLocation = $itemMaster['imageLocation'];
 		
 		$this->loadItemProperties();
 		$this->loadEquipableLocations();

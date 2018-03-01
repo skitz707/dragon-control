@@ -91,7 +91,7 @@ function getItemsHTML($database, $character, $item) {
 	
 	// add item options
 	$returnHTML .= '<div class="itemSelect" onClick="document.location.href=\'selectItem.php?characterId=' . $character->getId() . '\';">
-					<img src="images/addItem.jpg" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
+					<img src="images/addbutton.png" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
 					<span style="font-size: 58pt;">Add Item</span></div>';
 	
 	foreach ($characterItemIds as $characterItemId) {
