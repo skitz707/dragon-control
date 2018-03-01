@@ -145,7 +145,7 @@ function getEquipmentHTML($database, $character, $item) {
 			}
 	
 			$returnHTML .= '<div class="itemSelect" onClick="equipItem(\'' . $data['equipableLocationId'] . '\');">
-							<img src="images/head.jpg" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
+							<img src="' . $data['imageLocation'] . '" width="150px" height="150px" style="float: left; padding-right: 25px; padding-left: 25px;" />
 							<span style="font-size: 38pt;">' . $data['equipableLocation'] . '</span><br />
 							<span style="font-size: 26pt; font-style: italic;">' . $itemName . '</span><br /></div>';
 		}

@@ -33,12 +33,15 @@ require_once("classes/DCCharacter.php");
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
 $character = new DCCharacter($database);
-$pageTitle = "DC - Edit Character";
 $characterId = $_GET['characterId'];
 $characterMaster = $database->getDatabaseRecord("dragons.characters", array("characterId"=>$characterId));
 $campaignHeader = $database->getDatabaseRecord("dragons.campaignHeader", array("campaignId"=>$characterMaster['campaignId']));
 $_GET['campaignId'] = $campaignHeader['campaignId'];
 $character->loadCharacterById($characterId);
+
+$pageTitle = "DC - Edit Character";
+$crumbTrail = "";
+$menuOptions = "";
 
 require_once("includes/header.php");
 include_once("includes/leaderNavigation.php");
