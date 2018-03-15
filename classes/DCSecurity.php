@@ -25,7 +25,7 @@ class DCSecurity extends DCObject {
 	protected $securtyId;
 	
 	public function checkLogin() {
-		$userId = $_SESSION['userId'];
+		$userId = $_COOKIE['userId'];
 		
 		if ($userId > 0) {
 			$userMaster = $this->database->getDatabaseRecord("dragons.userMaster", array("userId"));

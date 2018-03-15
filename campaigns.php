@@ -47,8 +47,6 @@ $user = new DCUser($database);
 // check for active user
 $security->checkLogin();
 
-$user->loadUserById($_SESSION['userId']);
-
 $pageTitle = "Dragon Control - Login";
 $crumbTrail = "Characters";
 $menuOptions = file_get_contents('includes/mainMenuOptions.php');

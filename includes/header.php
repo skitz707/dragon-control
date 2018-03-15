@@ -31,7 +31,7 @@
 				<span id="menuBox" onClick="launchMenu();"></span> <span class="crumbTrail"><?php print($crumbTrail); ?></span>
 			</div>
 			<div id="controlRight">
-				<?php if (isset($_SESSION['userId'])) { print(date("l, F jS h:iA")); ?> | <?php print($user->getEmailAddress()); ?> | <a href="logout.php">Logout</a><?php } ?>
+				<?php if (isset($_COOKIE['userId'])) { print(date("l, F jS h:iA")); ?> | <?php print($user->getEmailAddress()); ?> | <a href="logout.php">Logout</a><?php } ?>
 			</div>
 		</div>
 

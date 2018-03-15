@@ -30,14 +30,6 @@ require_once("classes/DCCharacter.php");
 
 
 //-------------------------------------------------------------------------------------------
-// program directives
-//-------------------------------------------------------------------------------------------
-session_start();
-//-------------------------------------------------------------------------------------------
-
-
-
-//-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
@@ -48,8 +40,6 @@ $character->loadCharacterById($_GET['characterId']);
 
 // check for active user
 $security->checkLogin();
-
-$user->loadUserById($_SESSION['userId']);
 
 $pageTitle = "Dragon Control - Login";
 $crumbTrail = "Characters > " . $character->getName();

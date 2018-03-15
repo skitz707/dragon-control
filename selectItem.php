@@ -50,8 +50,6 @@ $character->loadCharacterById($_GET['characterId']);
 // check for active user
 $security->checkLogin();
 
-$user->loadUserById($_SESSION['userId']);
-
 $pageTitle = "DC - Item Detail";
 $crumbTrail = "Characters > " . $character->getName() . " &gt Item";
 

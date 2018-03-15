@@ -26,25 +26,18 @@ require_once("classes/DCDatabase.php");
 //-------------------------------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------------------------------
-// program directives
-//-------------------------------------------------------------------------------------------
-session_start();
-//-------------------------------------------------------------------------------------------
-
-
 
 //-------------------------------------------------------------------------------------------
 // mainline
 //-------------------------------------------------------------------------------------------
 $database = new DCDatabase();
-
 $passwordHash = md5($_POST['password']);
-
 $userMaster = $database->getDatabaseRecord("dragons.userMaster", array("emailAddress"=>$_POST['emailAddress'], "passwordHash"=>$passwordHash));
+$cookieExpirationTime = time() + 60 * 60 * 4; // four hours from now
 
 if ($userMaster['userId'] > 0) {
-	$_SESSION['userId'] = $userMaster['userId'];
+	setcookie('userId', $userMaster['userId'], $cookieExpirationTime);
+	
 	header("Location: userHome.php");
 } else {
 	header("Location: index.php?error=loginFailed");

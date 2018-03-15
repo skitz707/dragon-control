@@ -32,6 +32,20 @@ class DCUser extends DCObject {
 	
 	
 	//-----------------------------------------------------------------------
+	// constructor override
+	//-----------------------------------------------------------------------
+	public function __construct($database) {
+		parent::__construct($database);
+		
+		// get user cookie
+		if (isset($_COOKIE['userId'])) {
+			$this->loadUserById($_COOKIE['userId']);
+		}
+	}
+	//-----------------------------------------------------------------------
+	
+	
+	//-----------------------------------------------------------------------
 	// load user by id
 	//-----------------------------------------------------------------------
 	public function loadUserById($userId) {
