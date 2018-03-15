@@ -172,7 +172,7 @@ function getCharacterItemDropdown($database, $characterId, $equipableLocationId,
 		}
 		
 		while ($data = $selectHandle->fetch(PDO::FETCH_ASSOC)) {
-			$returnHTML .= '<option value="' . $data['itemId'] . '">' . $data['itemName'] . '</option>';
+			$returnHTML .= '<option value="' . $data['itemId'] . '">' . addslashes($data['itemName']) . '</option>';
 		}
 	} else {
 		var_dump($database->databaseConnection->errorInfo());
