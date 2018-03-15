@@ -33,8 +33,6 @@ require_once("classes/DCDatabase.php");
 $database = new DCDatabase();
 $itemId = $_POST['itemId'];
 
-var_dump($_POST);
-
 $itemMaster['itemName'] = $_POST['itemName'];
 $itemMaster['itemDescription'] = $_POST['itemDescription'];
 $itemMaster['itemType'] = $_POST['itemType'];
